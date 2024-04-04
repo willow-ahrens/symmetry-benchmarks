@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
   splatt_idx_t nmodes;
   splatt_csf * tt;
  
-  const int nfactors = 25;
+  const int nfactors = 2;
   
   splatt_kruskal factored;
   ret = splatt_csf_load(argv[3], &nmodes, &tt, cpd_opts);
