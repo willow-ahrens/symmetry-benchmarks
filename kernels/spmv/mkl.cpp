@@ -24,7 +24,7 @@ int main() {
 
     float A[N * (N + 1) / 2] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
     int row_offsets[] = {1, 4, 6};
-    int column_indices[] = {1, 2, 3, 2, 3, 3}
+    int column_indices[] = {1, 2, 3, 2, 3, 3};
     double x[N] = {1.0, 2.0, 3.0};
     double y[N] = {0.0};
     
