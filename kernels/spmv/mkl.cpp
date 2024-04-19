@@ -1,8 +1,11 @@
 #include <iostream>
 #include "/tmp/home/radhapatel/miniconda3/pkgs/mkl-include-2023.1.0-h06a4308_46344/include/mkl.h"
+#include "../../deps/SparseRooflineBenchmark/src/benchmark.hpp"
 
-int main()
-{
+int main(int argc, char **argv){
+    auto params = parse(argc, argv);
+    std::cout << params.input << std::endl;
+
     // Matrix dimensions
     const int N = 3;
 
