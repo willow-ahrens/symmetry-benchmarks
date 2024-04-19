@@ -1,32 +1,35 @@
 #include <iostream>
 #include "/tmp/home/radhapatel/miniconda3/pkgs/mkl-include-2023.1.0-h06a4308_46344/include/mkl.h"
 
-void spmv(MKL_INT m,
-        MKL_INT n,
-        float values[],
-        MKL_INT row_offsets[],
-        MKL_INT column_indices[],
-        float x[],
-        float y[])
+int main()
 {
-        sparse_matrix_t A;
-        mkl_sparse_s_create_csr(&A, SPARSE_INDEX_BASE_ZERO, m, n, row_offsets, row_offsets+1, column_indices, values);
-
-        matrix_descr desr;
-        desr.type = SPARSE_MATRIX_TYPE_GENERAL;
-        mkl_sparse_s_mv(SPARSE_OPERATION_NON_TRANSPOSE, 1.0f, A, desr, x, 0.0f, y);
-}
-
-
-int main() {
-    const int M = 3;
+    // Matrix dimensions
     const int N = 3;
 
-    float A[N * (N + 1) / 2] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
-    int row_offsets[] = {1, 4, 6};
-    int column_indices[] = {1, 2, 3, 2, 3, 3};
-    float x[N] = {1.0, 2.0, 3.0};
-    float y[N] = {0.0};
-    
-    spmv(M, N, A, row_offsets, column_indices, x, y);
+    // Define a symmetric matrix A (stored in packed format)
+    double A[N * (N + 1) / 2] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+
+    // Define the vector x
+    double x[N] = {1.0, 2.0, 3.0};
+
+    // Define the output vector y
+    double y[N] = {0.0};
+
+    // Perform symmetric matrix-vector multiplication
+    char uplo = 'U'; // Use upper triangular part of A
+    double alpha = 1.0;
+    double beta = 0.0;
+    int incx = 1;
+    int incy = 1;
+    cblas_dspmv(CblasRowMajor, CblasUpper, N, alpha, A, x, incx, beta, y, incy);
+
+    // Print the result
+    std::cout << "Result vector y:" << std::endl;
+    for (int i = 0; i < N; ++i)
+    {
+        std::cout << y[i] << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
 }
