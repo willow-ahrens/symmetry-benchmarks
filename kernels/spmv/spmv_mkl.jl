@@ -16,11 +16,10 @@ function spmv_mkl_helper(args, A, x)
     end
 end
 
+spmv_mkl(y, A, x) = spmv_mkl_helper("", A, x)
 
-n = 100
-# A = Tensor(Dense(SparseList(Element(0))), fsprand(Int, n, n, 0.1))
-# x = Tensor(Dense(Element(0)), rand(Int, n))
-A = rand(n, n)
-x = rand(n)
-result = spmv_mkl_helper("", A, x)
-println(result)
+# n = 100
+# A = rand(n, n)
+# x = rand(n)
+# result = spmv_mkl_helper("", A, x)
+# println(result)
