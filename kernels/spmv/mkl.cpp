@@ -2,10 +2,16 @@
 #include "/tmp/home/radhapatel/miniconda3/pkgs/mkl-include-2024.1.0-intel_691/include/mkl.h"
 #include "../../deps/SparseRooflineBenchmark/src/benchmark.hpp"
 #include "../../deps/taco/include/taco.h"
+#include "../../deps/taco/include/taco/util/timers.h"
 
 namespace fs = std::filesystem;
 
 using namespace taco;
+
+#define BENCH(CODE, NAME, REPEAT, TIMER, COLD)  { \
+    TACO_TIME_REPEAT(CODE, REPEAT, TIMER, COLD); \
+    std::cout << NAME << " time (ms)" << std::endl << TIMER << std::endl; \
+}
 
 int main(int argc, char **argv){
     auto params = parse(argc, argv);
@@ -47,9 +53,24 @@ int main(int argc, char **argv){
     descrA.mode = SPARSE_FILL_MODE_UPPER;
     descrA.diag = SPARSE_DIAG_NON_UNIT;
 
-    mkl_sparse_d_mv(SPARSE_OPERATION_NON_TRANSPOSE, 1.0, A, descrA,
-                    (double *)(_x.getStorage().getValues().getData()), 0.0,
-                    (double *)(y_mkl.getStorage().getValues().getData()));
+    // mkl_sparse_d_mv(SPARSE_OPERATION_NON_TRANSPOSE, 1.0, A, descrA,
+    //                 (double *)(_x.getStorage().getValues().getData()), 0.0,
+    //                 (double *)(y_mkl.getStorage().getValues().getData()));
+
+    taco::util::TimeResults timevalue;
+    BENCH(mkl_sparse_d_mv(SPARSE_OPERATION_NON_TRANSPOSE, 1.0, A, descrA,
+                          (double *)(_x.getStorage().getValues().getData()), 0.0,
+                          (double *)(y_mkl.getStorage().getValues().getData()));,
+        "\nMKL", 1, timevalue, true)
+
+    write(fs::path(params.input) / "y.ttx", y_mkl);
+
+    json measurements;
+    measurements["time"] = timevalue.mean;
+    measurements["memory"] = 0;
+    std::ofstream measurements_file(fs::path(params.output) / "measurements.json");
+    measurements_file << measurements;
+    measurements_file.close();
 
     std::cout
         << "Finished computation" << std::endl;
