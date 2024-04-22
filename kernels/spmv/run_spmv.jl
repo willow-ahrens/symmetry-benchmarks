@@ -1,7 +1,7 @@
 using SparseArrays
 
 n = 10000
-A = rand(n, n)
+A = sprand(n, n, 0.1)
 x = rand(n)
 y = zeros(n)
 
