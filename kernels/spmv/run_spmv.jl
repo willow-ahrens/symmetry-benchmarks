@@ -1,5 +1,7 @@
+using SparseArrays
+
 n = 100
-A = sprand(n, n, 0.1)
+A = rand(n, n)
 x = rand(n)
 y = zeros(n)
 
@@ -12,6 +14,8 @@ include("spmv_finch.jl")
 # )
 
 results = spmv_finch(y, A, x)
-println(results)
+println(results.time)
+println(results.y)
 results = spmv_mkl(y, A, x)
-println(results)
+println(results.time)
+println(results.y)

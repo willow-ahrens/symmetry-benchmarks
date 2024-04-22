@@ -1,25 +1,30 @@
 using Finch
 using BenchmarkTools
 
-eval(@finch_kernel mode=fastfinch function spmv_finch_helper(y, A, x, temp)
-    y .= 0
+_A = Tensor(Dense(SparseList(Element(0.0))))
+_x = Tensor(Dense(Element(0.0)))
+_y = Tensor(Dense(Element(0.0)))
+_temp = Scalar(0.0)
+
+eval(@finch_kernel mode=fastfinch function spmv_finch_helper(_y, _A, _x, _temp)
+    _y .= 0
     for j = _
-        let temp1 = x[j]
-            temp .= 0
+        let x_j = _x[j]
+            _temp .= 0
             for i = _
-                let temp3 = A[i, j]
+                let A_ij = _A[i, j]
                     if i <= j
-                        y[i] += temp1 * temp3
+                        _y[i] += x_j * A_ij
                     end
                     if i < j
-                        temp[] += temp3 * x[i]
+                        _temp[] += A_ij * _x[i]
                     end
                 end
             end
-            y[j] += temp[]
+            _y[j] += _temp[]
         end
     end
-    y
+    return _y
 end)
 
 function spmv_finch(y, A, x) 
@@ -29,6 +34,6 @@ function spmv_finch(y, A, x)
     temp = Scalar(0.0)
 
     y = Ref{Any}()
-    time = @belapsed $y[] = spmv_finch_helper($y, $A, $x, $temp)
+    time = @belapsed $y[] = spmv_finch_helper($_y, $_A, $_x, $temp)
     return (;time = time, y = y[])
 end
