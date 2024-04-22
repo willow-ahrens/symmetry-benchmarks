@@ -76,12 +76,12 @@ int main(int argc, char **argv){
         << "Finished computation" << std::endl;
 
     // Print the result
-    std::cout << "Result vector y:" << std::endl;
-    for (int i = 0; i < m; ++i)
-    {
-        std::cout << y_mkl(i) << " ";
-    }
-    std::cout << std::endl;
+    // std::cout << "Result vector y:" << std::endl;
+    // for (int i = 0; i < m; ++i)
+    // {
+    //     std::cout << y_mkl(i) << " ";
+    // }
+    // std::cout << std::endl;
 
     return 0;
 }
