@@ -34,12 +34,6 @@ int main(int argc, char **argv){
     int *ia_CSR;
     int *ja_CSR;
     getCSRArrays(ACSR, &ia_CSR, &ja_CSR, &a_CSR);
-    for (int i = 0; i < m + 1; ++i) {
-        ia_CSR[i] = ia_CSR[i] + 1;
-    }
-    for (int i = 0; i < nnz; ++i) {
-        ja_CSR[i] = ja_CSR[i] + 1;
-    }
 
     Tensor<double> y_mkl({m}, Dense);
     y_mkl.pack();
