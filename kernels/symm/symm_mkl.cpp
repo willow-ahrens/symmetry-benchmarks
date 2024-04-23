@@ -8,24 +8,27 @@ namespace fs = std::filesystem;
 
 using namespace taco;
 
-#define BENCH(CODE, NAME, REPEAT, TIMER, COLD)  { \
-    TACO_TIME_REPEAT(CODE, REPEAT, TIMER, COLD); \
-    std::cout << NAME << " time (ms)" << std::endl << TIMER << std::endl; \
-}
+#define BENCH(CODE, NAME, REPEAT, TIMER, COLD)         \
+    {                                                  \
+        TACO_TIME_REPEAT(CODE, REPEAT, TIMER, COLD);   \
+        std::cout << NAME << " time (ms)" << std::endl \
+                  << TIMER << std::endl;               \
+    }
 
-int main(int argc, char **argv){
+int main(int argc, char **argv)
+{
     auto params = parse(argc, argv);
     std::cout << params.input << std::endl;
 
     Tensor<double> _A = read(fs::path(params.input) / "A.ttx", Format({Dense, Sparse}), true);
-    Tensor<double> _x = read(fs::path(params.input) / "x.ttx", Format({Dense}), true);
-    int m = _A.getDimension(0);
-    int n = _A.getDimension(1);
+    Tensor<double> _B = read(fs::path(params.input) / "B.ttx", Format({Dense, Dense}), true);
+    int n = _A.getDimension(0);
     int nnz = _A.getStorage().getValues().getSize();
 
     // convert to CSR
-    Tensor<double> ACSR({m, n}, CSR);
-    for (auto &value : iterate<double>(_A)) {
+    Tensor<double> ACSR({n, n}, CSR);
+    for (auto &value : iterate<double>(_A))
+    {
         ACSR.insert({value.first.toVector().at(0), value.first.toVector().at(1)}, value.second);
     }
 
@@ -35,8 +38,8 @@ int main(int argc, char **argv){
     int *ja_CSR;
     getCSRArrays(ACSR, &ia_CSR, &ja_CSR, &a_CSR);
 
-    Tensor<double> y_mkl({m}, Dense);
-    y_mkl.pack();
+    double *C_mkl = (double *)malloc(sizeof(double) * n * n);
+    C_mkl.pack();
 
     sparse_matrix_t A;
     mkl_sparse_d_create_csr(&A, SPARSE_INDEX_BASE_ZERO, m, n, ia_CSR, ia_CSR + 1, ja_CSR, a_CSR);
@@ -52,12 +55,12 @@ int main(int argc, char **argv){
     //                 (double *)(y_mkl.getStorage().getValues().getData()));
 
     taco::util::TimeResults timevalue;
-    BENCH(mkl_sparse_d_mv(SPARSE_OPERATION_NON_TRANSPOSE, 1.0, A, descrA,
-                          (double *)(_x.getStorage().getValues().getData()), 0.0,
-                          (double *)(y_mkl.getStorage().getValues().getData()));,
-        "\nMKL", 1, timevalue, true)
+    BENCH(mkl_sparse_d_mm(SPARSE_OPERATION_NON_TRANSPOSE, 1.0, A, descrA, SPARSE_LAYOUT_ROW_MAJOR,
+                            (double *)(_B.getStorage().getValues().getData()), n, n, 0.0,
+                            (double *)(y_mkl.getStorage().getValues().getData()), n);,
+          "\nMKL", 1, timevalue, true)
 
-    write(fs::path(params.input) / "y.ttx", y_mkl);
+    write(fs::path(params.input) / "C.ttx", C_mkl);
 
     json measurements;
     measurements["time"] = timevalue.mean;
@@ -66,13 +69,7 @@ int main(int argc, char **argv){
     measurements_file << measurements;
     measurements_file.close();
 
-    // Print the result
-    // std::cout << "Result vector y:" << std::endl;
-    // for (int i = 0; i < m; ++i)
-    // {
-    //     std::cout << y_mkl(i) << " ";
-    // }
-    // std::cout << std::endl;
+    free(C_mkl)
 
     return 0;
 }

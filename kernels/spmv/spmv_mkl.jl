@@ -17,9 +17,3 @@ function spmv_mkl_helper(args, A, x)
 end
 
 spmv_mkl(y, A, x) = spmv_mkl_helper("", A, x)
-
-# n = 100
-# A = rand(n, n)
-# x = rand(n)
-# result = spmv_mkl_helper("", A, x)
-# println(result)
