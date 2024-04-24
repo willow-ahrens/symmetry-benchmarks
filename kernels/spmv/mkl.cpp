@@ -10,7 +10,6 @@ using namespace taco;
 
 #define BENCH(CODE, NAME, REPEAT, TIMER, COLD)  { \
     TACO_TIME_REPEAT(CODE, REPEAT, TIMER, COLD); \
-    std::cout << NAME << " time (ms)" << std::endl << TIMER << std::endl; \
 }
 
 int main(int argc, char **argv){
