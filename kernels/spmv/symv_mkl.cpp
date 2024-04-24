@@ -17,31 +17,27 @@ int main(int argc, char **argv){
     auto params = parse(argc, argv);
     std::cout << params.input << std::endl;
 
-    Tensor<double> _A = read(fs::path(params.input) / "A.ttx", Format({Dense, Sparse}), true);
+    Tensor<double> _A = read(fs::path(params.input) / "A.ttx", Format({Dense, Dense}), true);
     Tensor<double> _x = read(fs::path(params.input) / "x.ttx", Format({Dense}), true);
     int m = _A.getDimension(0);
     int n = _A.getDimension(1);
-    int nnz = _A.getStorage().getValues().getSize();
 
-    // convert to CSR
-    std::cout << "check 3" << std::endl;
-    Tensor<double> A({m, n}, Format({Dense, Dense}));
-    for (auto &value : iterate<double>(_A)) {
-        A.insert({value.first.toVector().at(0), value.first.toVector().at(1)}, value.second);
-    }
-    std::cout << "check 4" << std::endl;
+    // Tensor<double> A({m, n}, Format({Dense, Dense}));
+    // for (auto &value : iterate<double>(_A)) {
+    //     A.insert({value.first.toVector().at(0) - 1, value.first.toVector().at(1) - 1}, value.second);
+    // }
 
-    A.pack();
+    // A.pack();
 
     Tensor<double> y_mkl({m}, Dense);
     y_mkl.pack();
 
     taco::util::TimeResults timevalue;
     double alpha = 1.0;
-    double beta = 1.0;
+    double beta = 0.0;
     int incx = 1;
     int incy = 1;
-    BENCH(dsymv("U", &n, &alpha, (double *)(A.getStorage().getValues().getData()), &n,
+    BENCH(dsymv("U", &n, &alpha, (double *)(_A.getStorage().getValues().getData()), &n,
                 (double *)(_x.getStorage().getValues().getData()), &incx, &beta,
                 (double *)(y_mkl.getStorage().getValues().getData()), &incy);
           ,

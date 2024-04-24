@@ -14,7 +14,6 @@ using namespace taco;
 
 int main(int argc, char **argv){
     auto params = parse(argc, argv);
-    std::cout << params.input << std::endl;
 
     Tensor<double> _A = read(fs::path(params.input) / "A.ttx", Format({Dense, Sparse}), true);
     Tensor<double> _x = read(fs::path(params.input) / "x.ttx", Format({Dense}), true);
