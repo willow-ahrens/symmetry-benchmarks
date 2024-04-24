@@ -9,7 +9,6 @@ function symm_mkl_helper(args, A, B)
         C_path = joinpath(tmpdir, "C.ttx")
         fwrite(A_path, Tensor(Dense(SparseList(Element(0.0))), A))
         fwrite(B_path, Tensor(Dense(Dense(Element(0.0))), B))
-        fwrite(C_path, Tensor(Dense(Dense(Element(0.0))), C))
         run(`mkl_symm -i $tmpdir -o $tmpdir`)
         C = fread(C_path)
         time = JSON.parsefile(joinpath(tmpdir, "measurements.json"))["time"]
@@ -17,7 +16,7 @@ function symm_mkl_helper(args, A, B)
     end
 end
 
-symm_mkl(C, A, B) = symm_mkl_helper("", A, B)
+# symm_mkl(C, A, B) = symm_mkl_helper("", A, B)
 
 
 n = 5

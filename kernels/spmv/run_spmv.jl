@@ -2,6 +2,7 @@ using SparseArrays
 using MatrixDepot
 
 include("spmv_mkl.jl")
+include("symv_mkl.jl")
 include("spmv_finch.jl")
 
 symmetric_oski = [
@@ -31,5 +32,7 @@ for mtx in symmetric_oski
     results = spmv_finch(y, AA, x)
     println(results.time)
     results = spmv_mkl(y, AA, x)
+    println(results.time)
+    results = symv_mkl(y, AA, x)
     println(results.time)
 end

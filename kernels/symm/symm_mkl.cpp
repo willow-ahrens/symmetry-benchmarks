@@ -38,11 +38,11 @@ int main(int argc, char **argv)
     int *ja_CSR;
     getCSRArrays(ACSR, &ia_CSR, &ja_CSR, &a_CSR);
 
-    double *C_mkl = (double *)malloc(sizeof(double) * n * n);
+    Tensor<double> C_mkl({n, n}, Format({Dense, Dense}));
     C_mkl.pack();
 
     sparse_matrix_t A;
-    mkl_sparse_d_create_csr(&A, SPARSE_INDEX_BASE_ZERO, m, n, ia_CSR, ia_CSR + 1, ja_CSR, a_CSR);
+    mkl_sparse_d_create_csr(&A, SPARSE_INDEX_BASE_ZERO, n, n, ia_CSR, ia_CSR + 1, ja_CSR, a_CSR);
 
     // Create a descriptor for the matrix
     struct matrix_descr descrA;
@@ -57,7 +57,7 @@ int main(int argc, char **argv)
     taco::util::TimeResults timevalue;
     BENCH(mkl_sparse_d_mm(SPARSE_OPERATION_NON_TRANSPOSE, 1.0, A, descrA, SPARSE_LAYOUT_ROW_MAJOR,
                             (double *)(_B.getStorage().getValues().getData()), n, n, 0.0,
-                            (double *)(y_mkl.getStorage().getValues().getData()), n);,
+                            (double *)(C_mkl.getStorage().getValues().getData()), n);,
           "\nMKL", 1, timevalue, true)
 
     write(fs::path(params.input) / "C.ttx", C_mkl);
@@ -68,8 +68,6 @@ int main(int argc, char **argv)
     std::ofstream measurements_file(fs::path(params.output) / "measurements.json");
     measurements_file << measurements;
     measurements_file.close();
-
-    free(C_mkl)
 
     return 0;
 }
