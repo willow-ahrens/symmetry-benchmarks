@@ -1,0 +1,102 @@
+[
+    {
+        "time": 0.002758963,
+        "method": "ssymv_opt",
+        "matrix": "Boeing/ct20stif"
+    },
+    {
+        "time": 0.003178798,
+        "method": "ssymv_ref",
+        "matrix": "Boeing/ct20stif"
+    },
+    {
+        "time": 0.00096212,
+        "method": "ssymv_opt",
+        "matrix": "Simon/olafu"
+    },
+    {
+        "time": 0.001180973,
+        "method": "ssymv_ref",
+        "matrix": "Simon/olafu"
+    },
+    {
+        "time": 0.001445837,
+        "method": "ssymv_opt",
+        "matrix": "Boeing/bcsstk35"
+    },
+    {
+        "time": 0.001669184,
+        "method": "ssymv_ref",
+        "matrix": "Boeing/bcsstk35"
+    },
+    {
+        "time": 0.000879741,
+        "method": "ssymv_opt",
+        "matrix": "Boeing/crystk02"
+    },
+    {
+        "time": 0.001219314,
+        "method": "ssymv_ref",
+        "matrix": "Boeing/crystk02"
+    },
+    {
+        "time": 0.001657701,
+        "method": "ssymv_opt",
+        "matrix": "Boeing/crystk03"
+    },
+    {
+        "time": 0.002275596,
+        "method": "ssymv_ref",
+        "matrix": "Boeing/crystk03"
+    },
+    {
+        "time": 0.002654783,
+        "method": "ssymv_opt",
+        "matrix": "Nasa/nasasrb"
+    },
+    {
+        "time": 0.003105415,
+        "method": "ssymv_ref",
+        "matrix": "Nasa/nasasrb"
+    },
+    {
+        "time": 0.001292638,
+        "method": "ssymv_opt",
+        "matrix": "Simon/raefsky4"
+    },
+    {
+        "time": 0.001701275,
+        "method": "ssymv_ref",
+        "matrix": "Simon/raefsky4"
+    },
+    {
+        "time": 0.000882124,
+        "method": "ssymv_opt",
+        "matrix": "Mulvey/finan512"
+    },
+    {
+        "time": 0.000708496,
+        "method": "ssymv_ref",
+        "matrix": "Mulvey/finan512"
+    },
+    {
+        "time": 0.000295622,
+        "method": "ssymv_opt",
+        "matrix": "Cote/vibrobox"
+    },
+    {
+        "time": 0.000317535,
+        "method": "ssymv_ref",
+        "matrix": "Cote/vibrobox"
+    },
+    {
+        "time": 3.708e-5,
+        "method": "ssymv_opt",
+        "matrix": "HB/saylr4"
+    },
+    {
+        "time": 2.8466e-5,
+        "method": "ssymv_ref",
+        "matrix": "HB/saylr4"
+    }
+]
