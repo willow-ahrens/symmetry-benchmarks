@@ -1,7 +1,67 @@
-[
-    {
-        "time": 28.953771008,
+[{
+        "time": 11.640497488,
         "method": "ssymm_opt",
         "matrix": "Simon/olafu"
+    },
+    {
+        "time": 22.784662352,
+        "method": "ssymm_ref",
+        "matrix": "Simon/olafu"
+    },
+    {
+        "time": 37.047326458,
+        "method": "ssymm_opt",
+        "matrix": "Boeing/bcsstk35"
+    },
+    {
+        "time": 69.612815984,
+        "method": "ssymm_ref",
+        "matrix": "Boeing/bcsstk35"
+    },
+    {
+        "time": 10.605098548,
+        "method": "ssymm_opt",
+        "matrix": "Boeing/crystk02"
+    },
+    {
+        "time": 19.09677619,
+        "method": "ssymm_ref",
+        "matrix": "Boeing/crystk02"
+    },
+    {
+        "time": 34.565886704,
+        "method": "ssymm_opt",
+        "matrix": "Boeing/crystk03"
+    },
+    {
+        "time": 71.117543471,
+        "method": "ssymm_ref",
+        "matrix": "Boeing/crystk03"
+    }, 
+    {
+        "time": 19.236969154,
+        "method": "ssymm_opt",
+        "matrix": "Simon/raefsky4"
+    }, {
+        "time": 36.652185916,
+        "method": "ssymm_ref",
+        "matrix": "Simon/raefsky4"
+    },
+    {
+        "time": 3.27021657,
+        "method": "ssymm_opt",
+        "matrix": "Cote/vibrobox"
+    }, {
+        "time": 5.509575171,
+        "method": "ssymm_ref",
+        "matrix": "Cote/vibrobox"
+    }, {
+        "time": 0.066176473,
+        "method": "ssymm_opt",
+        "matrix": "HB/saylr4"
+    }, {
+        "time": 0.151382599,
+        "method": "ssymm_ref",
+        "matrix": "HB/saylr4"
     }
 ]

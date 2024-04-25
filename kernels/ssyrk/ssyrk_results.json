@@ -1,0 +1,77 @@
+[
+    {
+        "time": 1.6973819163292847e-7,
+        "method": "ssyrk_opt",
+        "matrix": "Boeing/ct20stif"
+    },
+    {
+        "time": 1.8999690402476783e-7,
+        "method": "ssyrk_ref",
+        "matrix": "Boeing/ct20stif"
+    },
+    {
+        "time": 1.6961126005361932e-7,
+        "method": "ssyrk_opt",
+        "matrix": "Simon/olafu"
+    },
+    {
+        "time": 1.8940853658536584e-7,
+        "method": "ssyrk_ref",
+        "matrix": "Simon/olafu"
+    },
+    {
+        "time": 1.6980701754385965e-7,
+        "method": "ssyrk_opt",
+        "matrix": "Boeing/bcsstk35"
+    },
+    {
+        "time": 1.8996749226006194e-7,
+        "method": "ssyrk_ref",
+        "matrix": "Boeing/bcsstk35"
+    },
+    {
+        "time": 1.697117962466488e-7,
+        "method": "ssyrk_opt",
+        "matrix": "Boeing/crystk02"
+    },
+    {
+        "time": 1.894451219512195e-7,
+        "method": "ssyrk_ref",
+        "matrix": "Boeing/crystk02"
+    },
+    {
+        "time": 1.6955495978552279e-7,
+        "method": "ssyrk_opt",
+        "matrix": "Boeing/crystk03"
+    },
+    {
+        "time": 1.9037151702786378e-7,
+        "method": "ssyrk_ref",
+        "matrix": "Boeing/crystk03"
+    },
+    {
+        "time": 1.7073684210526315e-7,
+        "method": "ssyrk_opt",
+        "matrix": "Nasa/nasasrb"
+    },
+    {
+        "time": 1.8944393241167435e-7,
+        "method": "ssyrk_ref",
+        "matrix": "Nasa/nasasrb"
+    },
+    {
+        "time": 1.7188331071913162e-7,
+        "method": "ssyrk_opt",
+        "matrix": "Simon/raefsky4"
+    },
+    {
+        "time": 1.8982027649769587e-7,
+        "method": "ssyrk_ref",
+        "matrix": "Simon/raefsky4"
+    },
+    {
+        "time": 1.705344129554656e-7,
+        "method": "ssyrk_opt",
+        "matrix": "Mulvey/finan512"
+    }
+]

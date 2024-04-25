@@ -8,45 +8,38 @@ using Printf
 using LinearAlgebra
 using Finch
 
-include("ssymm_finch.jl")
+include("ssyrk_finch.jl")
 
 symmetric_oski = [
-    # "Boeing/ct20stif", # OOM error 
+    "Boeing/ct20stif",
     "Simon/olafu",
     "Boeing/bcsstk35",
     "Boeing/crystk02",
     "Boeing/crystk03",
-    # "Nasa/nasasrb", # OOM error
+    "Nasa/nasasrb",
     "Simon/raefsky4",
-    # "Mulvey/finan512", # OOM error
+    "Mulvey/finan512",
     "Cote/vibrobox",
     "HB/saylr4",
 ]
 
 methods = Dict(
-    "ssymm_ref" => ssymm_finch_ref,
-    "ssymm_opt" => ssymm_finch_opt,
+    "ssyrk_opt" => ssyrk_finch_opt,
+    "ssyrk_ref" => ssyrk_finch_ref,
 )
 
 results = []
 for mtx in symmetric_oski 
     A = SparseMatrixCSC(matrixdepot(mtx))
     (n, n) = size(A)
-    B = rand(n, n)
     C = zeros(n, n)
     C_ref = nothing
     for (key, method) in methods
         @info "testing" key mtx
-        res = method(C, A, B)
+        res = method(C, A)
         time = res.time
-        C_res = nothing
-        try
-            C_res = res.C.C
-        catch
-            C_res = res.C
-        end
-        C_ref = something(C_ref, C_res)
-        norm(C_res - C_ref)/norm(C_ref) < 0.1 || @warn("incorrect result via norm")
+        C_ref = something(C_ref, res.C.C)
+        norm(res.C.C - C_ref)/norm(C_ref) < 0.1 || @warn("incorrect result via norm")
 
         @info "results" time
         push!(results, OrderedDict(
@@ -54,6 +47,6 @@ for mtx in symmetric_oski
             "method" => key,
             "matrix" => mtx,
         ))
-        write("ssymm_results.json", JSON.json(results, 4))
+        write("ssyrk_results.json", JSON.json(results, 4))
     end
 end
