@@ -1,101 +1,101 @@
 [
     {
-        "time": 0.002758963,
+        "time": 0.003770237,
         "method": "ssymv_opt",
         "matrix": "Boeing/ct20stif"
     },
     {
-        "time": 0.003178798,
+        "time": 0.003988199,
         "method": "ssymv_ref",
         "matrix": "Boeing/ct20stif"
     },
     {
-        "time": 0.00096212,
+        "time": 0.000916558,
         "method": "ssymv_opt",
         "matrix": "Simon/olafu"
     },
     {
-        "time": 0.001180973,
+        "time": 0.001143298,
         "method": "ssymv_ref",
         "matrix": "Simon/olafu"
     },
     {
-        "time": 0.001445837,
+        "time": 0.00142911,
         "method": "ssymv_opt",
         "matrix": "Boeing/bcsstk35"
     },
     {
-        "time": 0.001669184,
+        "time": 0.001801111,
         "method": "ssymv_ref",
         "matrix": "Boeing/bcsstk35"
     },
     {
-        "time": 0.000879741,
+        "time": 0.000814021,
         "method": "ssymv_opt",
         "matrix": "Boeing/crystk02"
     },
     {
-        "time": 0.001219314,
+        "time": 0.001090288,
         "method": "ssymv_ref",
         "matrix": "Boeing/crystk02"
     },
     {
-        "time": 0.001657701,
+        "time": 0.001676783,
         "method": "ssymv_opt",
         "matrix": "Boeing/crystk03"
     },
     {
-        "time": 0.002275596,
+        "time": 0.002307914,
         "method": "ssymv_ref",
         "matrix": "Boeing/crystk03"
     },
     {
-        "time": 0.002654783,
+        "time": 0.003842652,
         "method": "ssymv_opt",
         "matrix": "Nasa/nasasrb"
     },
     {
-        "time": 0.003105415,
+        "time": 0.004081685,
         "method": "ssymv_ref",
         "matrix": "Nasa/nasasrb"
     },
     {
-        "time": 0.001292638,
+        "time": 0.001220986,
         "method": "ssymv_opt",
         "matrix": "Simon/raefsky4"
     },
     {
-        "time": 0.001701275,
+        "time": 0.001554174,
         "method": "ssymv_ref",
         "matrix": "Simon/raefsky4"
     },
     {
-        "time": 0.000882124,
+        "time": 0.001071847,
         "method": "ssymv_opt",
         "matrix": "Mulvey/finan512"
     },
     {
-        "time": 0.000708496,
+        "time": 0.000819323,
         "method": "ssymv_ref",
         "matrix": "Mulvey/finan512"
     },
     {
-        "time": 0.000295622,
+        "time": 0.00037214,
         "method": "ssymv_opt",
         "matrix": "Cote/vibrobox"
     },
     {
-        "time": 0.000317535,
+        "time": 0.000399382,
         "method": "ssymv_ref",
         "matrix": "Cote/vibrobox"
     },
     {
-        "time": 3.708e-5,
+        "time": 4.8474e-5,
         "method": "ssymv_opt",
         "matrix": "HB/saylr4"
     },
     {
-        "time": 2.8466e-5,
+        "time": 3.5704e-5,
         "method": "ssymv_ref",
         "matrix": "HB/saylr4"
     }
