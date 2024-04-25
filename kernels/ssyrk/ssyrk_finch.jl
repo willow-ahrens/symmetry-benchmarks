@@ -37,5 +37,13 @@ function ssyrk_finch_ref(C, A)
 
     C = Ref{Any}()
     time = @belapsed $C[] = ssyrk_finch_ref_helper($_C, $_A)
+    _C = (C[]).C
+    @finch begin 
+        for j=_, i=_
+            if i > j
+                _C[j, i] = _C[i, j]
+            end
+        end
+    end
     return (;time = time, C = C[])
 end
