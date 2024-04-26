@@ -7,7 +7,7 @@ B_T = Tensor(Dense(Dense(Element(0.0))))
 C = Tensor(Dense(Dense(Element(0.0))))
 C_T = Tensor(Dense(Dense(Element(0.0))))
 
-eval(@finch_kernel mode=fastfinch function ssymm_finch_opt_helper(C_T, A, B_T)
+eval(@finch_kernel mode=:fast function ssymm_finch_opt_helper(C_T, A, B_T)
     C_T .= 0
     for k=_, i=_, j=_
         let A_ik = A[i, k]
@@ -22,7 +22,7 @@ eval(@finch_kernel mode=fastfinch function ssymm_finch_opt_helper(C_T, A, B_T)
     return C_T
 end)
 
-eval(@finch_kernel mode=fastfinch function ssymm_finch_ref_helper(C, A, B)
+eval(@finch_kernel mode=:fast function ssymm_finch_ref_helper(C, A, B)
     C .= 0
     for j=_, k=_, i=_
         C[i, j] += A[i, k] * B[k, j]

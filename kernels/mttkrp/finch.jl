@@ -30,14 +30,14 @@ C = Tensor(Dense(Dense(Element(0))), zeros(Int, n, n))
 C_nondiag = Tensor(Dense(Dense(Element(0))), zeros(Int, n, n))
 C_diag = Tensor(Dense(Dense(Element(0))), zeros(Int, n, n))
 
-eval(@finch_kernel mode=fastfinch function mttkrp_ref(C, A, B)
+eval(@finch_kernel mode=:fast function mttkrp_ref(C, A, B)
     C .= 0
     for l=_, j=_, k=_, i=_
         C[i, j] += A[i, k, l] * B[l, j] * B[k, j]
     end
 end)
 
-eval(@finch_kernel mode=fastfinch function mttkrp_opt_1(C, A_nondiag, B_T)
+eval(@finch_kernel mode=:fast function mttkrp_opt_1(C, A_nondiag, B_T)
     C .= 0
     for l=_, k=_, i=_, j=_
         if i < k && k < l 
@@ -50,7 +50,7 @@ eval(@finch_kernel mode=fastfinch function mttkrp_opt_1(C, A_nondiag, B_T)
     end
 end)
 
-eval(@finch_kernel mode=fastfinch function mttkrp_opt_2(C, A_diag, B_T)
+eval(@finch_kernel mode=:fast function mttkrp_opt_2(C, A_diag, B_T)
     C .= 0
     for l=_, k=_, i=_, j=_
         if i <= k && k <= l

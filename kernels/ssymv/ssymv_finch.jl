@@ -6,7 +6,7 @@ x = Tensor(Dense(Element(0.0)))
 y = Tensor(Dense(Element(0.0)))
 temp = Scalar(0.0)
 
-eval(@finch_kernel mode=fastfinch function ssymv_finch_opt_helper(y, A, x, temp)
+eval(@finch_kernel mode=:fast function ssymv_finch_opt_helper(y, A, x, temp)
     y .= 0
     for j = _
         temp .= 0
@@ -25,7 +25,7 @@ eval(@finch_kernel mode=fastfinch function ssymv_finch_opt_helper(y, A, x, temp)
     return y
 end)
 
-eval(@finch_kernel mode=fastfinch function ssymv_finch_ref_helper(y, A, x)
+eval(@finch_kernel mode=:fast function ssymv_finch_ref_helper(y, A, x)
     y .= 0
     for j = _, i = _
         y[i] += A[i, j] * x[j]

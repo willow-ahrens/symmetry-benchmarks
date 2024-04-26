@@ -4,7 +4,7 @@ using BenchmarkTools
 C = Tensor(Dense(Dense(Element(0.0))))
 A = Tensor(Dense(SparseList(Element(0.0))))
 
-eval(@finch_kernel mode=fastfinch function ssyrk_finch_ref_helper(C, A)
+eval(@finch_kernel mode=:fast function ssyrk_finch_ref_helper(C, A)
     C .= 0
     for k=_, j=_, i=_
         C[i, j] += A[i, k] * A[j, k]
@@ -12,7 +12,7 @@ eval(@finch_kernel mode=fastfinch function ssyrk_finch_ref_helper(C, A)
     return C
 end)
 
-eval(@finch_kernel mode=fastfinch function ssyrk_finch_opt_helper(C, A)
+eval(@finch_kernel mode=:fast function ssyrk_finch_opt_helper(C, A)
     C .= 0
     for k=_, j=_, i=_
         if i <= j
