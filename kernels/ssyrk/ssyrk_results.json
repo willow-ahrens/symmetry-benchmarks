@@ -1,7 +1,92 @@
 [
     {
-        "time": 1.6982707774798927e-7,
+        "time": 6.649079754601228e-8,
         "method": "ssyrk_opt",
-        "matrix": "Boeing/ct20stif"
+        "matrix": "Simon/olafu"
+    },
+    {
+        "time": 7.174537987679672e-8,
+        "method": "ssyrk_ref",
+        "matrix": "Simon/olafu"
+    },
+    {
+        "time": 6.637730061349693e-8,
+        "method": "ssyrk_opt",
+        "matrix": "Boeing/bcsstk35"
+    },
+    {
+        "time": 6.804610655737705e-8,
+        "method": "ssyrk_ref",
+        "matrix": "Boeing/bcsstk35"
+    },
+    {
+        "time": 6.662167689161554e-8,
+        "method": "ssyrk_opt",
+        "matrix": "Boeing/crystk02"
+    },
+    {
+        "time": 6.843018480492813e-8,
+        "method": "ssyrk_ref",
+        "matrix": "Boeing/crystk02"
+    },
+    {
+        "time": 6.635071574642127e-8,
+        "method": "ssyrk_opt",
+        "matrix": "Boeing/crystk03"
+    },
+    {
+        "time": 6.798258196721313e-8,
+        "method": "ssyrk_ref",
+        "matrix": "Boeing/crystk03"
+    },
+    {
+        "time": 6.666462167689162e-8,
+        "method": "ssyrk_opt",
+        "matrix": "Nasa/nasasrb"
+    },
+    {
+        "time": 6.800307377049181e-8,
+        "method": "ssyrk_ref",
+        "matrix": "Nasa/nasasrb"
+    },
+    {
+        "time": 6.640020470829068e-8,
+        "method": "ssyrk_opt",
+        "matrix": "Simon/raefsky4"
+    },
+    {
+        "time": 6.787397540983606e-8,
+        "method": "ssyrk_ref",
+        "matrix": "Simon/raefsky4"
+    },
+    {
+        "time": 6.667860798362334e-8,
+        "method": "ssyrk_opt",
+        "matrix": "Mulvey/finan512"
+    },
+    {
+        "time": 6.797338792221085e-8,
+        "method": "ssyrk_ref",
+        "matrix": "Mulvey/finan512"
+    },
+    {
+        "time": 6.646523517382413e-8,
+        "method": "ssyrk_opt",
+        "matrix": "Cote/vibrobox"
+    },
+    {
+        "time": 6.841188524590164e-8,
+        "method": "ssyrk_ref",
+        "matrix": "Cote/vibrobox"
+    },
+    {
+        "time": 6.662026612077788e-8,
+        "method": "ssyrk_opt",
+        "matrix": "HB/saylr4"
+    },
+    {
+        "time": 6.784953940634595e-8,
+        "method": "ssyrk_ref",
+        "matrix": "HB/saylr4"
     }
 ]
