@@ -16,10 +16,10 @@ symmetric_oski = [
     "Boeing/bcsstk35",
     "Boeing/crystk02",
     "Boeing/crystk03",
-    "Nasa/nasasrb",
+    # "Nasa/nasasrb", # OOM error
     "Rothberg/3dtube",
     "Simon/raefsky4",
-    "Mulvey/finan512",
+    # "Mulvey/finan512", # OOM error
     "Pothen/pwt",
     "Cote/vibrobox",
     "HB/saylr4",
@@ -29,7 +29,7 @@ symmetric_oski = [
 
 unsymmetric_oski = [
     "Simon/raefsky3",
-    "Simon/venkat01",
+    # "Simon/venkat01", # OOM error
     "FIDAP/ex11",
     "Zitney/rdist1",
     "HB/orani678",
@@ -46,7 +46,7 @@ unsymmetric_oski = [
     "HB/lnsp3937",
     "HB/sherman5",
     "HB/sherman3",
-    "Shyy/shyy161",
+    # "Shyy/shyy161", # OOM error
     "Wang/wang3",
 ]
 

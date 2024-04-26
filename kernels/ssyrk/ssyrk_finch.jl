@@ -6,17 +6,17 @@ A = Tensor(Dense(SparseList(Element(0.0))))
 
 eval(@finch_kernel mode=fastfinch function ssyrk_finch_ref_helper(C, A)
     C .= 0
-    for j=_, k=_, i=_
-        C[i, j] += A[i, k] * A[k, j]
+    for k=_, j=_, i=_
+        C[i, j] += A[i, k] * A[j, k]
     end
     return C
 end)
 
 eval(@finch_kernel mode=fastfinch function ssyrk_finch_opt_helper(C, A)
     C .= 0
-    for j=_, k=_, i=_
+    for k=_, j=_, i=_
         if i <= j
-            C[i, j] += A[i, k] * A[k, j]
+            C[i, j] += A[i, k] * A[j, k]
         end
     end
     return C
