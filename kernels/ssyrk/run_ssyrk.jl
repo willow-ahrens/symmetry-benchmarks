@@ -17,10 +17,37 @@ symmetric_oski = [
     "Boeing/crystk02",
     "Boeing/crystk03",
     "Nasa/nasasrb",
+    "Rothberg/3dtube",
     "Simon/raefsky4",
     "Mulvey/finan512",
+    "Pothen/pwt",
     "Cote/vibrobox",
     "HB/saylr4",
+    "Gupta/gupta1"
+]
+
+
+unsymmetric_oski = [
+    "Simon/raefsky3",
+    "Simon/venkat01",
+    "FIDAP/ex11",
+    "Zitney/rdist1",
+    "HB/orani678",
+    "Goodwin/rim",
+    "Hamm/memplus",
+    "HB/gemat11",
+    "Mallya/lhr10",
+    "Goodwin/goodwin",
+    "Grund/bayer02",
+    "Grund/bayer10",
+    "Brethour/coater2",
+    "ATandT/onetone2",
+    "Wang/wang4",
+    "HB/lnsp3937",
+    "HB/sherman5",
+    "HB/sherman3",
+    "Shyy/shyy161",
+    "Wang/wang3",
 ]
 
 methods = Dict(

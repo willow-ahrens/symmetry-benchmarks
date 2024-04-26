@@ -35,7 +35,6 @@ function ssyrk_finch_opt(C, A)
             end
         end
     end
-    println(C_full)
     return (;time = time, C = C_full)
 end
 
@@ -45,6 +44,5 @@ function ssyrk_finch_ref(C, A)
 
     C = Ref{Any}()
     time = @belapsed $C[] = ssyrk_finch_ref_helper($_C, $_A)
-    println(C[])
     return (;time = time, C = C[])
 end
