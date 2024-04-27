@@ -57,7 +57,6 @@ function ttm_finch_opt(C, A, B)
 
     time = @belapsed ttm_finch_opt_helper($_C, $_A, $_B_T)
     C_full = Tensor(Dense(Dense(Dense(Element(0.0)))), _C)
-    check = Scalar(true)
     @finch for l=_, j=_, i=_
         if j > l
             C_full[i, j, l] = _C[i, l, j]

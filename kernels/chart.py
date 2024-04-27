@@ -6,7 +6,7 @@ import math
 from collections import defaultdict
 import re
 
-RESULTS_FILE_PATH = "ssymv/ssymv_results.json"
+RESULTS_FILE_PATH = "ssyrk/ssyrk_results.json"
 CHARTS_DIRECTORY = "charts/"
 FORMAT_ORDER = {
     "finch_sym": -1,
@@ -28,7 +28,8 @@ FORMAT_ORDER = {
     "finch_blocked": -17,
 }
 FORMAT_LABELS = {
-    "ssymv_opt": "SSYMV (symmetrized)"
+    "ssymv_opt": "SSYMV (symmetrized)",
+    "ssyrk_opt": "SSYRK (symmetrized)"
 }
 
 def all_formats_chart(ordered_by_format=False):
@@ -129,10 +130,11 @@ def method_to_ref_comparison_chart(method, ref, title=""):
     method_results = get_method_results(method)
     ref_results = get_method_results(ref)
     speedups = get_speedups(method_results, ref_results)
+    speedups = order_speedups(speedups)
 
     x_axis = []
     data = defaultdict(list)
-    for matrix, speedup in speedups.items():
+    for (matrix, speedup) in speedups:
         x_axis.append(matrix)
         data[method].append(speedup)
         data[ref].append(1)
@@ -140,11 +142,14 @@ def method_to_ref_comparison_chart(method, ref, title=""):
     make_grouped_bar_chart([method], x_axis, data, title=title, legend_labels=[FORMAT_LABELS[method]])
 
 def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups = [], title = "", y_label = "", bar_labels_dict={}, legend_labels=None, reference_label = ""):
-    x = np.arange(0, len(data[labels[0]])/2, 0.5)
+    horizontal_scale = 0.5
+    fontfamily = "serif"
+
+    x = np.arange(0, len(data[labels[0]]) * horizontal_scale, horizontal_scale)
     width = 0.3
     max_height = 0
-
-    fig, ax = plt.subplots(figsize=(12, 4))
+    
+    fig, ax = plt.subplots(figsize=(10, 3))
     for label in labels:
         label_data = data[label]
         max_height = max(max_height, max(label_data))
@@ -153,26 +158,27 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
         else:
             rects = ax.bar(x, label_data, width, label=label)
         bar_labels = bar_labels_dict[label] if (label in bar_labels_dict) else [round(float(val), 2) if label in labeled_groups else "" for val in label_data]
-        ax.bar_label(rects, padding=0, labels=bar_labels, fontsize=5, rotation=90)
+        ax.bar_label(rects, padding=0, labels=bar_labels, fontsize=4, rotation=90)
 
     ax.set_ylabel(y_label)
-    ax.set_title(title)
+    ax.set_title(title, fontsize=14, fontfamily=fontfamily)
     ax.set_xticks(x + width * (len(labels) - 1)/2, x_axis)
-    ax.tick_params(axis='x', which='major', labelsize=9, labelrotation=60)
-    if legend_labels:
-        ax.legend(legend_labels, loc='upper left', ncols=2, fontsize='small')
-    else:
-        ax.legend(loc='upper left', ncols=2)
-    ax.set_ylim(0, max_height + 0.5)
+    ax.tick_params(axis='x', which='major', labelsize=7.5, labelrotation=60, labelfontfamily=fontfamily)
+    ax.tick_params(axis='y', labelfontfamily=fontfamily)
+    # if legend_labels:
+    #     ax.legend(legend_labels, loc='upper left', ncols=2, fontsize='small')
+    # else:
+    #     ax.legend(loc='upper left', ncols=2)
+    ax.set_ylim(0, max_height + 0.25)
 
         # Adjusting x-axis limits to make bars go to the edges
-    ax.set_xlim(-0.5, (len(x_axis) - 0.5 + width * len(labels)) / 2)
+    ax.set_xlim(-0.5, (len(x_axis) - 0.5 + width * len(labels)) * horizontal_scale)
 
-    plt.plot([-1, len(x_axis)], [1, 1], linestyle='--', color="tab:red", linewidth=0.75, label=reference_label)
+    plt.plot([-1, len(x_axis)], [1, 1], linestyle='--', color="tab:red", linewidth=1.25, label=reference_label)
 
     fig_file = title.lower().replace(" ", "_") + ".png"
     plt.savefig(CHARTS_DIRECTORY + fig_file, dpi=200, bbox_inches="tight")
     plt.close()
     
 
-method_to_ref_comparison_chart("ssymv_opt", "ssymv_ref", "SSYMV Performance")
+method_to_ref_comparison_chart("ssyrk_opt", "ssyrk_ref", "SSYRK Performance")

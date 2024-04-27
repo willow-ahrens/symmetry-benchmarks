@@ -1,26 +1,113 @@
 [
     {
-        "time": 0.015489203,
+        "time": 0.014205738,
         "method": "ttm_opt",
         "sparsity": 0.5,
         "size": 100
-    },
-    {
-        "time": 0.043442243,
+    }, {
+        "time": 0.048933977,
         "method": "ttm_ref",
         "sparsity": 0.5,
         "size": 100
-    },
-    {
-        "time": 0.002811915,
+    }, {
+        "time": 0.002893591,
         "method": "ttm_opt",
         "sparsity": 0.1,
         "size": 100
-    },
-    {
-        "time": 0.007165426,
+    }, {
+        "time": 0.00907947,
         "method": "ttm_ref",
         "sparsity": 0.1,
         "size": 100
+    }, {
+        "time": 38.609821623,
+        "method": "ttm_opt",
+        "sparsity": 0.1,
+        "size": 1000
+    }, {
+        "time": 801.6170214,
+        "method": "ttm_ref",
+        "sparsity": 0.1,
+        "size": 1000
+    }, {
+        "time": 4.936078964,
+        "method": "ttm_opt",
+        "sparsity": 0.01,
+        "size": 1000
+    }, {
+        "time": 86.899588408,
+        "method": "ttm_ref",
+        "sparsity": 0.01,
+        "size": 1000
+    }, {
+        "time": 2.205721309,
+        "method": "ttm_opt",
+        "sparsity": 0.001,
+        "size": 1000
+    }, {
+        "time": 9.040202478,
+        "method": "ttm_ref",
+        "sparsity": 0.001,
+        "size": 1000
+    }, {
+        "time": 2.196313534,
+        "method": "ttm_opt",
+        "sparsity": 0.1,
+        "size": 500
+    }, {
+        "time": 12.257652594,
+        "method": "ttm_ref",
+        "sparsity": 0.1,
+        "size": 500
+    }, {
+        "time": 0.367486904,
+        "method": "ttm_opt",
+        "sparsity": 0.01,
+        "size": 500
+    }, {
+        "time": 1.651498026,
+        "method": "ttm_ref",
+        "sparsity": 0.01,
+        "size": 500
+    }, {
+        "time": 0.153868604,
+        "method": "ttm_opt",
+        "sparsity": 0.001,
+        "size": 500
+    }, {
+        "time": 0.33516036,
+        "method": "ttm_ref",
+        "sparsity": 0.001,
+        "size": 500
+    }, {
+        "time": 0.264456202,
+        "method": "ttm_opt",
+        "sparsity": 0.5,
+        "size": 200
+    }, {
+        "time": 1.032818238,
+        "method": "ttm_ref",
+        "sparsity": 0.5,
+        "size": 200
+    }, {
+        "time": 0.049712085,
+        "method": "ttm_opt",
+        "sparsity": 0.1,
+        "size": 200
+    }, {
+        "time": 0.223241824,
+        "method": "ttm_ref",
+        "sparsity": 0.1,
+        "size": 200
+    }, {
+        "time": 0.029749321,
+        "method": "ttm_opt",
+        "sparsity": 0.05,
+        "size": 200
+    }, {
+        "time": 0.127303754,
+        "method": "ttm_ref",
+        "sparsity": 0.05,
+        "size": 200
     }
 ]
