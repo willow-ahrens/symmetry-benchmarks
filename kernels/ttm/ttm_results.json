@@ -1,0 +1,26 @@
+[
+    {
+        "time": 0.015489203,
+        "method": "ttm_opt",
+        "sparsity": 0.5,
+        "size": 100
+    },
+    {
+        "time": 0.043442243,
+        "method": "ttm_ref",
+        "sparsity": 0.5,
+        "size": 100
+    },
+    {
+        "time": 0.002811915,
+        "method": "ttm_opt",
+        "sparsity": 0.1,
+        "size": 100
+    },
+    {
+        "time": 0.007165426,
+        "method": "ttm_ref",
+        "sparsity": 0.1,
+        "size": 100
+    }
+]
