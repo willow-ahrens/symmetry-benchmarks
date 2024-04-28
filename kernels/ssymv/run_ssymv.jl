@@ -57,7 +57,7 @@ results = []
 for (symmetric, dataset) in [(true, symmetric_oski), (false, unsymmetric_oski)]
     for mtx in dataset 
         A = SparseMatrixCSC(matrixdepot(mtx))
-        if not symmetric
+        if !symmetric
             A += transpose(A)
         end
         (n, n) = size(A)
@@ -80,3 +80,4 @@ for (symmetric, dataset) in [(true, symmetric_oski), (false, unsymmetric_oski)]
             write("ssymv_results.json", JSON.json(results, 4))
         end
     end
+end

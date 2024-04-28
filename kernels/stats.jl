@@ -1,7 +1,7 @@
 using JSON
 
 function calc_speedup(slow_method, fast_method)
-    spmv_results_text = read("ssyrk/ssyrk.json", String)
+    spmv_results_text = read("ssymv/ssymv_results.json", String)
     spmv_results = JSON.parse(spmv_results_text)
 
     kernel_times = Dict()
@@ -19,10 +19,10 @@ function calc_speedup(slow_method, fast_method)
     speedup = 0
     for (kernel, times) in kernel_times
         try
-            if times[slow_method] > times[fast_method]
+            # if times[slow_method] > times[fast_method]
                 speedup += times[slow_method] / times[fast_method]
                 count += 1
-            end
+            # end
         catch e
             println("Insufficient results for ", kernel)
         end

@@ -6,7 +6,8 @@ import math
 from collections import defaultdict
 import re
 
-RESULTS_FILE_PATH = "ssyrk/ssyrk_results.json"
+# RESULTS_FILE_PATH = "ssymv/ssymv_results.json"
+RESULTS_FILE_PATH = "ttm/ttm_results.json"
 CHARTS_DIRECTORY = "charts/"
 FORMAT_ORDER = {
     "finch_sym": -1,
@@ -29,7 +30,8 @@ FORMAT_ORDER = {
 }
 FORMAT_LABELS = {
     "ssymv_opt": "SSYMV (symmetrized)",
-    "ssyrk_opt": "SSYRK (symmetrized)"
+    "ssyrk_opt": "SSYRK (symmetrized)",
+    "ttm_opt": "TTM (symmetrized)"
 }
 
 def all_formats_chart(ordered_by_format=False):
@@ -108,6 +110,12 @@ def get_method_results(method, mtxs=[]):
     results = json.load(open(RESULTS_FILE_PATH, 'r'))
     mtx_times = {}
     for result in results:
+        if "sparsity" in result and "size" in result and result["method"] == method:
+            n = result["size"]
+            s = result["sparsity"] 
+            mtx_name = f"{n}, {s}"
+            mtx_times[mtx_name] = result["time"]
+            continue
         if result["method"] == method and (mtxs == [] or result["matrix"] in mtxs):
             mtx_times[result["matrix"]] = result["time"]
     return mtx_times
@@ -181,4 +189,5 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
     plt.close()
     
 
-method_to_ref_comparison_chart("ssyrk_opt", "ssyrk_ref", "SSYRK Performance")
+# method_to_ref_comparison_chart("ssymv_opt", "ssymv_ref", "SSYMV Performance")
+method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "TTM Performance")
