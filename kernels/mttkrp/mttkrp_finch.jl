@@ -64,22 +64,22 @@ function mttkrp_finch_ref(C, A, B)
 end
 
 function mttkrp_finch_opt(C, A, B)
+    (n, n, n) = size(A)
     _C_nondiag = Tensor(Dense(Dense(Element(0.0))), C)
     _C_diag = Tensor(Dense(Dense(Element(0.0))), C)
-    _A_nondiag =  Tensor(Dense(SparseList(SparseList(Element(0.0)))), A)
-    _A_diag = Tensor(Dense(SparseList(SparseList(Element(0.0)))), A)
-    @finch mode=:fast begin
-        _A_nondiag .= 0
-        _A_diag .= 0
-        for k=_, j=_, i=_
-            if i != j && j != k && i != k
-                _A_nondiag[i, j, k] = A[i, j, k]
-            end
-            if i == j || j == k || i == k
-                _A_diag[i, j, k] = A[i, j, k]
-            end
+
+    nondiagA = zeros(n, n, n)
+    diagA = zeros(n, n, n)
+    for k=1:n, j=1:n, i=1:n
+        if i != j && j != k && i != k
+            nondiagA[i, j, k] = A[i, j, k]
+        end
+        if i == j || j == k || i == k
+            diagA[i, j, k] = A[i, j, k]
         end
     end
+    _A_nondiag = Tensor(Dense(SparseList(SparseList(Element(0.0)))), nondiagA)
+    _A_diag = Tensor(Dense(SparseList(SparseList(Element(0.0)))), diagA)
 
     _B = Tensor(Dense(Dense(Element(0.0))), B)    
     _B_T = Tensor(Dense(Dense(Element(0.0))), B) 
@@ -92,7 +92,6 @@ function mttkrp_finch_opt(C, A, B)
 
     time_1 = @belapsed mttkrp_finch_opt_1_helper($_C_nondiag, $_A_nondiag, $_B_T)
     time_2 = @belapsed mttkrp_finch_opt_2_helper($_C_diag, $_A_diag, $_B_T)
-
     C_full = Tensor(Dense(Dense(Element(0.0))), C)
     @finch mode=:fast for i=_, j=_
         C_full[i, j] = _C_nondiag[i, j] + _C_diag[i, j]

@@ -1,24 +1,12 @@
 [
     {
-        "time": 0.056573191,
-        "method": "mttkrp_ref",
-        "sparsity": 0.5,
-        "size": 100
-    },
-    {
-        "time": 0.025635861,
-        "method": "mttkrp_opt",
-        "sparsity": 0.5,
-        "size": 100
-    },
-    {
-        "time": 0.010620338,
+        "time": 0.011311776,
         "method": "mttkrp_ref",
         "sparsity": 0.1,
         "size": 100
     },
     {
-        "time": 0.02650512,
+        "time": 0.0026444880000000004,
         "method": "mttkrp_opt",
         "sparsity": 0.1,
         "size": 100
