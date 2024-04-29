@@ -22,7 +22,6 @@ methods = Dict(
 
 results = []
 for (n, sp) in size_sparsities
-    # triA = fsprand(n, n, n, sp)
     triA = fsprand(n, n, n, sp)
     A = [triA[sort([i, j, k])...] for i = 1:n, j = 1:n, k = 1:n]
     B = rand(n, n)   

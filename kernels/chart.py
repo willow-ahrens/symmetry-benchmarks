@@ -7,7 +7,9 @@ from collections import defaultdict
 import re
 
 # RESULTS_FILE_PATH = "ssymv/ssymv_results.json"
-RESULTS_FILE_PATH = "ttm/ttm_results.json"
+# RESULTS_FILE_PATH = "ttm/ttm_results.json"
+RESULTS_FILE_PATH = "mttkrp/mttkrp_results.json"
+
 CHARTS_DIRECTORY = "charts/"
 FORMAT_ORDER = {
     "finch_sym": -1,
@@ -31,7 +33,8 @@ FORMAT_ORDER = {
 FORMAT_LABELS = {
     "ssymv_opt": "SSYMV (symmetrized)",
     "ssyrk_opt": "SSYRK (symmetrized)",
-    "ttm_opt": "TTM (symmetrized)"
+    "ttm_opt": "TTM (symmetrized)",
+    "mttkrp_opt": "MTTKRP (symmetrized)"
 }
 
 def all_formats_chart(ordered_by_format=False):
@@ -190,4 +193,5 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
     
 
 # method_to_ref_comparison_chart("ssymv_opt", "ssymv_ref", "SSYMV Performance")
-method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "TTM Performance")
+# method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "TTM Performance")
+method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "MTTKRP Performance")

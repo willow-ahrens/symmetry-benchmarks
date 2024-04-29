@@ -1,14 +1,50 @@
 [
     {
-        "time": 0.011311776,
+        "time": 0.057399324,
+        "method": "mttkrp_ref",
+        "sparsity": 0.5,
+        "size": 100
+    },
+    {
+        "time": 0.01641019,
+        "method": "mttkrp_opt",
+        "sparsity": 0.5,
+        "size": 100
+    },
+    {
+        "time": 0.011115276,
         "method": "mttkrp_ref",
         "sparsity": 0.1,
         "size": 100
     },
     {
-        "time": 0.0026444880000000004,
+        "time": 0.002543025,
         "method": "mttkrp_opt",
         "sparsity": 0.1,
         "size": 100
+    },
+    {
+        "time": 0.964224166,
+        "method": "mttkrp_ref",
+        "sparsity": 0.5,
+        "size": 200
+    },
+    {
+        "time": 0.26206541499999997,
+        "method": "mttkrp_opt",
+        "sparsity": 0.5,
+        "size": 200
+    },
+    {
+        "time": 0.193147502,
+        "method": "mttkrp_ref",
+        "sparsity": 0.1,
+        "size": 200
+    },
+    {
+        "time": 0.039351481,
+        "method": "mttkrp_opt",
+        "sparsity": 0.1,
+        "size": 200
     }
 ]
