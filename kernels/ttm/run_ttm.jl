@@ -50,4 +50,3 @@ for (n, sp) in size_sparsities
         write("ttm_results.json", JSON.json(results, 4))
     end
 end
-# test for both sparse and dense

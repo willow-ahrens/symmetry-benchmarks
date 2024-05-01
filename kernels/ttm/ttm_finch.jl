@@ -2,14 +2,13 @@ using Finch
 using BenchmarkTools
 
 A = Tensor(Dense(SparseList(SparseList(Element(0.0)))))
-B = Tensor(Dense(Dense(Element(0.0))))    
 B_T = Tensor(Dense(Dense(Element(0.0)))) 
 C = Tensor(Dense(Dense(Dense(Element(0.0)))))
 
-eval(@finch_kernel mode=:fast function ttm_finch_ref_helper(C, A, B)
+eval(@finch_kernel mode=:fast function ttm_finch_ref_helper(C, A, B_T)
     C .= 0
     for l=_, j=_, k=_, i=_
-        C[i, j, l] += A[k, j, l] * B[k, i]
+        C[i, j, l] += A[k, j, l] * B_T[i, k]
     end
     return C
 end)
@@ -37,10 +36,16 @@ end)
 function ttm_finch_ref(C, A, B)
     _C = Tensor(Dense(Dense(Dense(Element(0.0)))), C)
     _A = Tensor(Dense(SparseList(SparseList(Element(0.0)))), A)
-    _B = Tensor(Dense(Dense(Element(0.0))), B)    
+    _B_T = Tensor(Dense(Dense(Element(0.0))))
+    @finch begin 
+        _B_T .= 0
+        for j=_, i=_ 
+            _B_T[j, i] = B[i, j] 
+        end 
+    end 
 
     C = Ref{Any}()
-    time = @belapsed $C[] = ttm_finch_ref_helper($_C, $_A, $_B)
+    time = @belapsed $C[] = ttm_finch_ref_helper($_C, $_A, $_B_T)
     return (;time = time, C = C[])
 end
 

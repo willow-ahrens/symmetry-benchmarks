@@ -7,8 +7,9 @@ from collections import defaultdict
 import re
 
 # RESULTS_FILE_PATH = "ssymv/ssymv_results.json"
-# RESULTS_FILE_PATH = "ttm/ttm_results.json"
-RESULTS_FILE_PATH = "mttkrp/mttkrp_results.json"
+RESULTS_FILE_PATH = "ttm/ttm_results.json"
+# RESULTS_FILE_PATH = "mttkrp/mttkrp_results.json"
+# RESULTS_FILE_PATH = "ssymm/ssymm_results.json"
 
 CHARTS_DIRECTORY = "charts/"
 FORMAT_ORDER = {
@@ -34,7 +35,8 @@ FORMAT_LABELS = {
     "ssymv_opt": "SSYMV (symmetrized)",
     "ssyrk_opt": "SSYRK (symmetrized)",
     "ttm_opt": "TTM (symmetrized)",
-    "mttkrp_opt": "MTTKRP (symmetrized)"
+    "mttkrp_opt": "MTTKRP (symmetrized)",
+    "ssymm_opt": "SSYMM (symmetrized)",
 }
 
 def all_formats_chart(ordered_by_format=False):
@@ -115,8 +117,9 @@ def get_method_results(method, mtxs=[]):
     for result in results:
         if "sparsity" in result and "size" in result and result["method"] == method:
             n = result["size"]
-            s = result["sparsity"] 
-            mtx_name = f"{n}, {s}"
+            s = result["sparsity"]
+            nnz = n * n * n * s 
+            mtx_name = f"{n}, {s} / {nnz}"
             mtx_times[mtx_name] = result["time"]
             continue
         if result["method"] == method and (mtxs == [] or result["matrix"] in mtxs):
@@ -193,5 +196,6 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
     
 
 # method_to_ref_comparison_chart("ssymv_opt", "ssymv_ref", "SSYMV Performance")
-# method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "TTM Performance")
-method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "MTTKRP Performance")
+method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "TTM Performance")
+# method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "MTTKRP Performance")
+# method_to_ref_comparison_chart("ssymm_opt", "ssymm_ref", "SSYMM Performance")
