@@ -1,0 +1,14 @@
+[
+    {
+        "time": 0.01475345,
+        "method": "mttkrp_ref",
+        "sparsity": 0.5,
+        "size": 100
+    },
+    {
+        "time": 0.016288643,
+        "method": "mttkrp_opt",
+        "sparsity": 0.5,
+        "size": 100
+    }
+]

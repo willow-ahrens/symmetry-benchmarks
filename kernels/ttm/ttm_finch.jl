@@ -37,7 +37,7 @@ function ttm_finch_ref(C, A, B)
     _C = Tensor(Dense(Dense(Dense(Element(0.0)))), C)
     _A = Tensor(Dense(SparseList(SparseList(Element(0.0)))), A)
     _B_T = Tensor(Dense(Dense(Element(0.0))))
-    @finch begin 
+    @finch mode=:fast begin 
         _B_T .= 0
         for j=_, i=_ 
             _B_T[j, i] = B[i, j] 
@@ -53,7 +53,7 @@ function ttm_finch_opt(C, A, B)
     _C = Tensor(Dense(Dense(Dense(Element(0.0)))), C)
     _A = Tensor(Dense(SparseList(SparseList(Element(0.0)))), A)
     _B_T = Tensor(Dense(Dense(Element(0.0))))
-    @finch begin 
+    @finch mode=:fast begin 
         _B_T .= 0
         for j=_, i=_ 
             _B_T[j, i] = B[i, j] 
@@ -62,7 +62,7 @@ function ttm_finch_opt(C, A, B)
 
     time = @belapsed ttm_finch_opt_helper($_C, $_A, $_B_T)
     C_full = Tensor(Dense(Dense(Dense(Element(0.0)))), _C)
-    @finch for l=_, j=_, i=_
+    @finch mode=:fast for l=_, j=_, i=_
         if j > l
             C_full[i, j, l] = _C[i, l, j]
         end
