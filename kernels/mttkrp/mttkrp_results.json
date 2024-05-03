@@ -1,44 +1,506 @@
 [
     {
-        "time": 0.122758325,
+        "time": 0.212676464,
         "method": "mttkrp_ref",
         "sparsity": 0.1,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.041418148,
+        "time": 0.078786577,
         "method": "mttkrp_opt",
         "sparsity": 0.1,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.0941437,
+        "time": 0.160697648,
         "method": "mttkrp_ref",
         "sparsity": 0.075,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.030895491,
+        "time": 0.060702397,
         "method": "mttkrp_opt",
         "sparsity": 0.075,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.059801123,
+        "time": 0.108502189,
         "method": "mttkrp_ref",
         "sparsity": 0.05,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.021070984,
+        "time": 0.04000939,
         "method": "mttkrp_opt",
         "sparsity": 0.05,
         "size": 500,
         "rank": 10
+    },
+    {
+        "time": 0.056345245,
+        "method": "mttkrp_ref",
+        "sparsity": 0.025,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.020474736,
+        "method": "mttkrp_opt",
+        "sparsity": 0.025,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.024825452,
+        "method": "mttkrp_ref",
+        "sparsity": 0.01,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.009261551000000002,
+        "method": "mttkrp_opt",
+        "sparsity": 0.01,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.019443796,
+        "method": "mttkrp_ref",
+        "sparsity": 0.0075,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.007376086,
+        "method": "mttkrp_opt",
+        "sparsity": 0.0075,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.014015663,
+        "method": "mttkrp_ref",
+        "sparsity": 0.005,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.005391829,
+        "method": "mttkrp_opt",
+        "sparsity": 0.005,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.007784649,
+        "method": "mttkrp_ref",
+        "sparsity": 0.0025,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.003027839,
+        "method": "mttkrp_opt",
+        "sparsity": 0.0025,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.000298144,
+        "method": "mttkrp_ref",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.00015565375,
+        "method": "mttkrp_opt",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 1.047540245,
+        "method": "mttkrp_ref",
+        "sparsity": 0.1,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.359100245,
+        "method": "mttkrp_opt",
+        "sparsity": 0.1,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.816414399,
+        "method": "mttkrp_ref",
+        "sparsity": 0.075,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.272045804,
+        "method": "mttkrp_opt",
+        "sparsity": 0.075,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.542824738,
+        "method": "mttkrp_ref",
+        "sparsity": 0.05,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.190986094,
+        "method": "mttkrp_opt",
+        "sparsity": 0.05,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.263270919,
+        "method": "mttkrp_ref",
+        "sparsity": 0.025,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.091520654,
+        "method": "mttkrp_opt",
+        "sparsity": 0.025,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.115401614,
+        "method": "mttkrp_ref",
+        "sparsity": 0.01,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.039530083,
+        "method": "mttkrp_opt",
+        "sparsity": 0.01,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.085233756,
+        "method": "mttkrp_ref",
+        "sparsity": 0.0075,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.030258299,
+        "method": "mttkrp_opt",
+        "sparsity": 0.0075,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.061734466,
+        "method": "mttkrp_ref",
+        "sparsity": 0.005,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.021270247,
+        "method": "mttkrp_opt",
+        "sparsity": 0.005,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.033052048,
+        "method": "mttkrp_ref",
+        "sparsity": 0.0025,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.011347967,
+        "method": "mttkrp_opt",
+        "sparsity": 0.0025,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.001552991,
+        "method": "mttkrp_ref",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.000580767,
+        "method": "mttkrp_opt",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 2.577564731,
+        "method": "mttkrp_ref",
+        "sparsity": 0.1,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.851446438,
+        "method": "mttkrp_opt",
+        "sparsity": 0.1,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 1.934140974,
+        "method": "mttkrp_ref",
+        "sparsity": 0.075,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.625076319,
+        "method": "mttkrp_opt",
+        "sparsity": 0.075,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 1.344851419,
+        "method": "mttkrp_ref",
+        "sparsity": 0.05,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.422585746,
+        "method": "mttkrp_opt",
+        "sparsity": 0.05,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.67918791,
+        "method": "mttkrp_ref",
+        "sparsity": 0.025,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.22736782800000002,
+        "method": "mttkrp_opt",
+        "sparsity": 0.025,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.279025531,
+        "method": "mttkrp_ref",
+        "sparsity": 0.01,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.091470228,
+        "method": "mttkrp_opt",
+        "sparsity": 0.01,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.216123991,
+        "method": "mttkrp_ref",
+        "sparsity": 0.0075,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.071831244,
+        "method": "mttkrp_opt",
+        "sparsity": 0.0075,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.147455873,
+        "method": "mttkrp_ref",
+        "sparsity": 0.005,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.049870633,
+        "method": "mttkrp_opt",
+        "sparsity": 0.005,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.079166416,
+        "method": "mttkrp_ref",
+        "sparsity": 0.0025,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.026667504,
+        "method": "mttkrp_opt",
+        "sparsity": 0.0025,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.003674084,
+        "method": "mttkrp_ref",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.001311875,
+        "method": "mttkrp_opt",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 5.277254112,
+        "method": "mttkrp_ref",
+        "sparsity": 0.1,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 1.576170265,
+        "method": "mttkrp_opt",
+        "sparsity": 0.1,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 3.939364847,
+        "method": "mttkrp_ref",
+        "sparsity": 0.075,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 1.236322909,
+        "method": "mttkrp_opt",
+        "sparsity": 0.075,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 2.641201952,
+        "method": "mttkrp_ref",
+        "sparsity": 0.05,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 0.8340844089999999,
+        "method": "mttkrp_opt",
+        "sparsity": 0.05,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 1.336635174,
+        "method": "mttkrp_ref",
+        "sparsity": 0.025,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 0.42914526500000005,
+        "method": "mttkrp_opt",
+        "sparsity": 0.025,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 0.556081825,
+        "method": "mttkrp_ref",
+        "sparsity": 0.01,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 0.184178854,
+        "method": "mttkrp_opt",
+        "sparsity": 0.01,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 0.420872738,
+        "method": "mttkrp_ref",
+        "sparsity": 0.0075,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 0.141512702,
+        "method": "mttkrp_opt",
+        "sparsity": 0.0075,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 0.293640398,
+        "method": "mttkrp_ref",
+        "sparsity": 0.005,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 0.09832953700000001,
+        "method": "mttkrp_opt",
+        "sparsity": 0.005,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 0.155722156,
+        "method": "mttkrp_ref",
+        "sparsity": 0.0025,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 0.051791103,
+        "method": "mttkrp_opt",
+        "sparsity": 0.0025,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 0.007283174,
+        "method": "mttkrp_ref",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 500
+    },
+    {
+        "time": 0.002638905,
+        "method": "mttkrp_opt",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 500
     }
 ]

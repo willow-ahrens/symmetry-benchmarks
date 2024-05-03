@@ -118,10 +118,10 @@ def get_method_results(method, mtxs=[]):
         if "sparsity" in result and "size" in result and result["method"] == method:
             n = result["size"]
             s = result["sparsity"]
-            # r = result["rank"]
+            r = result["rank"]
             nnz = n * n * n * s 
-            mtx_name = f"n = {n}, sp = {s} / {nnz}"
-            # mtx_name = f"n = {n}, sp = {s}, rank = {r} / {nnz}"
+            # mtx_name = f"n = {n}, sp = {s} / {nnz}"
+            mtx_name = f"sp = {s}, rank = {r} / {nnz}"
             mtx_times[mtx_name] = result["time"]
             continue
         if result["method"] == method and (mtxs == [] or result["matrix"] in mtxs):
