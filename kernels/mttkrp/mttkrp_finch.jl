@@ -53,7 +53,8 @@ eval(@finch_kernel mode=:fast function mttkrp_finch_opt_2_helper(C_T, A_diag, B_
 end)
 
 function mttkrp_finch_ref(C, A, B)
-    _C_T = Tensor(Dense(Dense(Element(0.0))), C)
+    (r, n) = size(C)
+    _C_T = Tensor(Dense(Dense(Element(0.0))), zeros(n, r))
     _A = Tensor(Dense(SparseList(SparseList(Element(0.0)))), A)  
     _B_T = Tensor(Dense(Dense(Element(0.0))), B) 
     @finch mode=:fast begin 
@@ -77,8 +78,9 @@ end
 
 function mttkrp_finch_opt(C, A, B)
     (n, n, n) = size(A)
-    _C_T_nondiag = Tensor(Dense(Dense(Element(0.0))), C)
-    _C_T_diag = Tensor(Dense(Dense(Element(0.0))), C)
+    (r, n) = size(C)
+    _C_T_nondiag = Tensor(Dense(Dense(Element(0.0))), zeros(n, r))
+    _C_T_diag = Tensor(Dense(Dense(Element(0.0))), zeros(n, r))
 
     nondiagA = zeros(n, n, n)
     diagA = zeros(n, n, n)

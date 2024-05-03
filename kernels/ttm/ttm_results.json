@@ -1,205 +1,380 @@
 [
     {
-        "time": 0.101175158,
+        "time": 0.107371892,
         "method": "ttm_opt",
         "sparsity": 0.1,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.107646631,
+        "time": 0.182555216,
         "method": "ttm_ref",
         "sparsity": 0.1,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.064211256,
+        "time": 0.087805368,
         "method": "ttm_opt",
         "sparsity": 0.075,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.075304363,
+        "time": 0.138688908,
         "method": "ttm_ref",
         "sparsity": 0.075,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.04694087,
+        "time": 0.067447866,
         "method": "ttm_opt",
         "sparsity": 0.05,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.053727868,
+        "time": 0.094853718,
         "method": "ttm_ref",
         "sparsity": 0.05,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.023529014,
+        "time": 0.039626658,
         "method": "ttm_opt",
         "sparsity": 0.025,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.027110439,
+        "time": 0.050595347,
         "method": "ttm_ref",
         "sparsity": 0.025,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.011043516,
+        "time": 0.017853175,
         "method": "ttm_opt",
         "sparsity": 0.01,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.012771922,
+        "time": 0.024191763,
         "method": "ttm_ref",
         "sparsity": 0.01,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.008974464,
+        "time": 0.01429411,
         "method": "ttm_opt",
         "sparsity": 0.0075,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.010564469,
+        "time": 0.019735332,
         "method": "ttm_ref",
         "sparsity": 0.0075,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.006915639,
+        "time": 0.010494129,
         "method": "ttm_opt",
         "sparsity": 0.005,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.008244402,
+        "time": 0.015016557,
         "method": "ttm_ref",
         "sparsity": 0.005,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.004431271,
+        "time": 0.006447166,
         "method": "ttm_opt",
         "sparsity": 0.0025,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.005384708,
+        "time": 0.009203226,
         "method": "ttm_ref",
         "sparsity": 0.0025,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.001075364,
+        "time": 0.001772027,
         "method": "ttm_opt",
         "sparsity": 0.0001,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.001282828,
+        "time": 0.001870457,
         "method": "ttm_ref",
         "sparsity": 0.0001,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.559784555,
+        "time": 0.723699886,
         "method": "ttm_opt",
         "sparsity": 0.1,
         "size": 500,
         "rank": 100
     },
     {
-        "time": 0.378327392,
+        "time": 0.919519342,
         "method": "ttm_ref",
         "sparsity": 0.1,
         "size": 500,
         "rank": 100
     },
     {
-        "time": 0.524791807,
+        "time": 0.574768925,
         "method": "ttm_opt",
         "sparsity": 0.075,
         "size": 500,
         "rank": 100
     },
     {
-        "time": 0.291389033,
+        "time": 0.702193094,
         "method": "ttm_ref",
         "sparsity": 0.075,
         "size": 500,
         "rank": 100
     },
     {
-        "time": 0.330487499,
+        "time": 0.390223821,
         "method": "ttm_opt",
         "sparsity": 0.05,
         "size": 500,
         "rank": 100
     },
     {
-        "time": 0.205242149,
+        "time": 0.473500915,
         "method": "ttm_ref",
         "sparsity": 0.05,
         "size": 500,
         "rank": 100
     },
     {
-        "time": 0.190196668,
+        "time": 0.229330848,
         "method": "ttm_opt",
         "sparsity": 0.025,
         "size": 500,
         "rank": 100
     },
     {
-        "time": 0.109471285,
+        "time": 0.254421062,
         "method": "ttm_ref",
         "sparsity": 0.025,
         "size": 500,
         "rank": 100
     },
     {
-        "time": 0.078567049,
+        "time": 0.113073704,
         "method": "ttm_opt",
         "sparsity": 0.01,
         "size": 500,
         "rank": 100
     },
     {
-        "time": 0.060839984,
+        "time": 0.126386436,
         "method": "ttm_ref",
         "sparsity": 0.01,
         "size": 500,
         "rank": 100
     },
     {
-        "time": 0.073154,
+        "time": 0.094512629,
         "method": "ttm_opt",
         "sparsity": 0.0075,
         "size": 500,
         "rank": 100
+    },
+    {
+        "time": 0.104554962,
+        "method": "ttm_ref",
+        "sparsity": 0.0075,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.074748162,
+        "method": "ttm_opt",
+        "sparsity": 0.005,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.085958024,
+        "method": "ttm_ref",
+        "sparsity": 0.005,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.055529816,
+        "method": "ttm_opt",
+        "sparsity": 0.0025,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.065508082,
+        "method": "ttm_ref",
+        "sparsity": 0.0025,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.029451266,
+        "method": "ttm_opt",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 0.031255525,
+        "method": "ttm_ref",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 100
+    },
+    {
+        "time": 1.466044199,
+        "method": "ttm_opt",
+        "sparsity": 0.1,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 2.003900209,
+        "method": "ttm_ref",
+        "sparsity": 0.1,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 1.123970712,
+        "method": "ttm_opt",
+        "sparsity": 0.075,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 1.535958981,
+        "method": "ttm_ref",
+        "sparsity": 0.075,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.783998862,
+        "method": "ttm_opt",
+        "sparsity": 0.05,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 1.060548023,
+        "method": "ttm_ref",
+        "sparsity": 0.05,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.443055118,
+        "method": "ttm_opt",
+        "sparsity": 0.025,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.577935987,
+        "method": "ttm_ref",
+        "sparsity": 0.025,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.236047626,
+        "method": "ttm_opt",
+        "sparsity": 0.01,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.297612947,
+        "method": "ttm_ref",
+        "sparsity": 0.01,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.200211016,
+        "method": "ttm_opt",
+        "sparsity": 0.0075,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.25415005,
+        "method": "ttm_ref",
+        "sparsity": 0.0075,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.161290247,
+        "method": "ttm_opt",
+        "sparsity": 0.005,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.208381891,
+        "method": "ttm_ref",
+        "sparsity": 0.005,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.122677658,
+        "method": "ttm_opt",
+        "sparsity": 0.0025,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.157525883,
+        "method": "ttm_ref",
+        "sparsity": 0.0025,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.072055924,
+        "method": "ttm_opt",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 250
+    },
+    {
+        "time": 0.075359926,
+        "method": "ttm_ref",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 250
     }
 ]
