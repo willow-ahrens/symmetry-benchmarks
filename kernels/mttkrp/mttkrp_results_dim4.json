@@ -1,0 +1,9 @@
+[
+    {
+        "time": 0.016579668,
+        "method": "mttkrp_opt",
+        "sparsity": 0.1,
+        "size": 100,
+        "rank": 10
+    }
+]

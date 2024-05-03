@@ -22,14 +22,10 @@ eval(@finch_kernel mode=:fast function mttkrp_finch_opt_1_dim4_helper(C_T, A_non
     for m=_, l=_, k=_, i=_, j=_
         if i < k && k < l && l < m
             let A_iklm = A_nondiag[i, k, l, m], B_T_jl = B_T[j, l], B_T_jk = B_T[j, k], B_T_ji = B_T[j, i], B_T_jm = B_T[j, m]
-                C_T[j, m] <<+>>= *(2, *(B_T_jl, B_T_jk, B_T_ji, A_iklm))
-                C_T[j, l] <<+>>= *(2, *(B_T_jk, B_T_ji, A_iklm, B_T_jm))
-                C_T[j, k] <<+>>= *(2, *(B_T_jl, B_T_ji, A_iklm, B_T_jm))
-                C_T[j, m] <<+>>= *(2, *(2, *(B_T_jl, B_T_jk, B_T_ji, A_iklm)))
-                C_T[j, i] <<+>>= *(2, *(B_T_jl, B_T_jk, A_iklm, B_T_jm))
-                C_T[j, k] <<+>>= *(2, *(2, *(B_T_jl, B_T_ji, A_iklm, B_T_jm)))
-                C_T[j, i] <<+>>= *(2, *(2, *(B_T_jl, B_T_jk, A_iklm, B_T_jm)))
-                C_T[j, l] <<+>>= *(2, *(2, *(B_T_jk, B_T_ji, A_iklm, B_T_jm)))
+                C_T[j, m] += 6 * B_T_jl * B_T_jk * B_T_ji * A_iklm
+                C_T[j, l] += 6 * B_T_jk * B_T_ji * A_iklm * B_T_jm
+                C_T[j, k] += 6 * B_T_jl * B_T_ji * A_iklm * B_T_jm
+                C_T[j, i] += 6 * B_T_jl * B_T_jk * A_iklm * B_T_jm 
             end
         end
     end
@@ -38,74 +34,29 @@ end)
 
 eval(@finch_kernel mode=:fast function mttkrp_finch_opt_2_dim4_helper(C_T, A_diag, B_T)
     C_T .= 0
-    for l=_, k=_, i=_, j=_
-        if identity(i) <= identity(k) && identity(k) <= identity(l) 
+    for m=_, l=_, k=_, i=_, j=_
+        if identity(i) <= identity(k) && identity(k) <= identity(l) && identity(l) <= identity(m)
             let ik_eq = (i == k), kl_eq = (k == l), lm_eq = (l == m)
-                let A_iklm = A_nondiag[i, k, l, m], B_T_jl = B_T[j, l], B_T_jk = B_T[j, k], B_T_ji = B_T[j, i], B_T_jm = B_T[j, m]
-                    if (ik_eq && !kl_eq) || (!ik_eq && kl_eq)
-                        C_T[j, i] += B_kj * B_lj * A_ikl
-                        C_T[j, i] += B_lj * B_ij * A_ikl
-                        C_T[j, i] += B_kj * B_ij * A_ikl
+                let A_iklm = A_diag[i, k, l, m], B_T_jl = B_T[j, l], B_T_jk = B_T[j, k], B_T_ji = B_T[j, i], B_T_jm = B_T[j, m]
+                    if (ik_eq && !kl_eq && !lm_eq) || (!ik_eq && kl_eq && !lm_eq) || (!ik_eq && !kl_eq && lm_eq)
+                        C_T[j, m] += 3 * B_T_jl * B_T_jk * B_T_ji * A_iklm
+                        C_T[j, l] += 3 * B_T_jk * B_T_ji * A_iklm * B_T_jm
+                        C_T[j, k] += 3 * B_T_jl * B_T_ji * A_iklm * B_T_jm
+                        C_T[j, i] += 3 * B_T_jl * B_T_jk * A_iklm * B_T_jm 
                     end
-                    if ik_eq && kl_eq 
-                        C_T[j, i] += B_kj * B_lj * A_ikl
+                    if (ik_eq && !kl_eq && lm_eq)
+                        C_T[j, m] += 3 * B_T_jl * B_T_jk * B_T_ji * A_iklm
+                        C_T[j, k] += 3 * B_T_jl * B_T_ji * A_iklm * B_T_jm
                     end
-                    if ik_eq && !kl_eq && !lm_eq
-                        C[k, j] += B_T_jl * B_T_ji * A_iklm * B_T_jm
-                            C[m, j] += B_T_jl * B_T_jk * B_T_ji * A_iklm
-                            C[l, j] += B_T_jk * B_T_ji * A_iklm * B_T_jm
-                            C[m, j] += B_T_jl * B_T_jk * B_T_ji * A_iklm
-                            C[k, j] += B_T_jl * B_T_ji * A_iklm * B_T_jm
-                            C[l, j] += B_T_jk * B_T_ji * A_iklm * B_T_jm
-                        end
-                        end
-                        if and(!=(ik_eq), kl_eq, !=(lm_eq))
-                        begin
-                            C[l, j] <<+>>= *(2, *(B_T_jk, B_T_ji, A_iklm, B_T_jm))
-                            C[m, j] <<+>>= *(B_T_jl, B_T_jk, B_T_ji, A_iklm)
-                            C[i, j] <<+>>= *(B_T_jl, B_T_jk, A_iklm, B_T_jm)
-                            C[l, j] <<+>>= *(2, *(2, *(B_T_jk, B_T_ji, A_iklm, B_T_jm)))
-                            C[i, j] <<+>>= *(2, *(B_T_jl, B_T_jk, A_iklm, B_T_jm))
-                            C[m, j] <<+>>= *(2, *(B_T_jl, B_T_jk, B_T_ji, A_iklm))
-                        end
-                        end
-                        if and(ik_eq, kl_eq, !=(lm_eq))
-                        begin
-                            C[l, j] <<+>>= *(B_T_jk, B_T_ji, A_iklm, B_T_jm)
-                            C[l, j] <<+>>= *(2, *(B_T_jk, B_T_ji, A_iklm, B_T_jm))
-                            C[m, j] <<+>>= *(B_T_jl, B_T_jk, B_T_ji, A_iklm)
-                        end
-                        end
-                        if and(!=(ik_eq), !=(kl_eq), lm_eq)
-                        begin
-                            C[m, j] <<+>>= *(2, *(B_T_jl, B_T_jk, B_T_ji, A_iklm))
-                            C[i, j] <<+>>= *(B_T_jl, B_T_jk, A_iklm, B_T_jm)
-                            C[i, j] <<+>>= *(2, *(B_T_jl, B_T_jk, A_iklm, B_T_jm))
-                            C[k, j] <<+>>= *(B_T_jl, B_T_ji, A_iklm, B_T_jm)
-                            C[m, j] <<+>>= *(2, *(2, *(B_T_jl, B_T_jk, B_T_ji, A_iklm)))
-                            C[k, j] <<+>>= *(2, *(B_T_jl, B_T_ji, A_iklm, B_T_jm))
-                        end
-                        end
-                        if and(ik_eq, !=(kl_eq), lm_eq)
-                        begin
-                            C[m, j] <<+>>= *(B_T_jl, B_T_jk, B_T_ji, A_iklm)
-                            C[k, j] <<+>>= *(B_T_jl, B_T_ji, A_iklm, B_T_jm)
-                            C[k, j] <<+>>= *(2, *(B_T_jl, B_T_ji, A_iklm, B_T_jm))
-                            C[m, j] <<+>>= *(2, *(B_T_jl, B_T_jk, B_T_ji, A_iklm))
-                        end
-                        end
-                        if and(!=(ik_eq), kl_eq, lm_eq)
-                        begin
-                            C[m, j] <<+>>= *(B_T_jl, B_T_jk, B_T_ji, A_iklm)
-                            C[m, j] <<+>>= *(2, *(B_T_jl, B_T_jk, B_T_ji, A_iklm))
-                            C[i, j] <<+>>= *(B_T_jl, B_T_jk, A_iklm, B_T_jm)
-                        end
-                        end
-                        if and(ik_eq, kl_eq, lm_eq)
-                        begin
-                            C[m, j] <<+>>= *(B_T_jl, B_T_jk, B_T_ji, A_iklm)
-                        end
-                        end
+                    if (ik_eq && kl_eq && !lm_eq) || (!ik_eq && kl_eq && lm_eq)
+                        C_T[j, m] += B_T_jl * B_T_jk * B_T_ji * A_iklm
+                        C_T[j, l] += B_T_jk * B_T_ji * A_iklm * B_T_jm
+                        C_T[j, k] += B_T_jl * B_T_ji * A_iklm * B_T_jm
+                        C_T[j, i] += B_T_jl * B_T_jk * A_iklm * B_T_jm 
+                    end
+                    if ik_eq && kl_eq && lm_eq
+                        C_T[j, m] += B_T_jl * B_T_jk * B_T_ji * A_iklm
+                    end
                 end
             end
         end
@@ -114,8 +65,9 @@ eval(@finch_kernel mode=:fast function mttkrp_finch_opt_2_dim4_helper(C_T, A_dia
 end)
 
 function mttkrp_finch_ref_dim4(C, A, B)
-    _C_T = Tensor(Dense(Dense(Element(0.0))), C)
-    _A = Tensor(Dense(SparseList(SparseList(Element(0.0)))), A)  
+    (r, n) = size(C)
+    _C_T = Tensor(Dense(Dense(Element(0.0))), zeros(n, r))
+    _A = Tensor(Dense(SparseList(SparseList(SparseList(Element(0.0))))), A)  
     _B_T = Tensor(Dense(Dense(Element(0.0))), B) 
     @finch mode=:fast begin 
         _B_T .= 0
@@ -138,21 +90,22 @@ end
 
 function mttkrp_finch_opt_dim4(C, A, B)
     (n, n, n) = size(A)
-    _C_T_nondiag = Tensor(Dense(Dense(Element(0.0))), C)
-    _C_T_diag = Tensor(Dense(Dense(Element(0.0))), C)
+    (r, n) = size(C)
+    _C_T_nondiag = Tensor(Dense(Dense(Element(0.0))), zeros(n, r))
+    _C_T_diag = Tensor(Dense(Dense(Element(0.0))), zeros(n, r))
 
-    nondiagA = zeros(n, n, n)
-    diagA = zeros(n, n, n)
-    for k=1:n, j=1:n, i=1:n
-        if i != j && j != k && i != k
-            nondiagA[i, j, k] = A[i, j, k]
+    nondiagA = zeros(n, n, n, n)
+    diagA = zeros(n, n, n, n)
+    for l=1:n, k=1:n, j=1:n, i=1:n
+        if i != j && j != k && k != l && i != k && i != l && j != l
+            nondiagA[i, j, k, l] = A[i, j, k, l]
         end
-        if i == j || j == k || i == k
-            diagA[i, j, k] = A[i, j, k]
+        if i == j || j == k || k == l || i == k || i == l || j == l
+            diagA[i, j, k, l] = A[i, j, k, l]
         end
     end
-    _A_nondiag = Tensor(Dense(SparseList(SparseList(Element(0.0)))), nondiagA)
-    _A_diag = Tensor(Dense(SparseList(SparseList(Element(0.0)))), diagA)
+    _A_nondiag = Tensor(Dense(SparseList(SparseList(SparseList(Element(0.0))))), nondiagA)
+    _A_diag = Tensor(Dense(SparseList(SparseList(SparseList(Element(0.0))))), diagA)
 
     _B_T = Tensor(Dense(Dense(Element(0.0))), B) 
     @finch mode=:fast begin 
