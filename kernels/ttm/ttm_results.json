@@ -376,5 +376,18 @@
         "sparsity": 0.0001,
         "size": 500,
         "rank": 250
+    }, 
+    {
+        "time": 0.27202149,
+        "method": "ttm_opt",
+        "sparsity": 1.0,
+        "size": 500,
+        "rank": 1
+    }, {
+        "time": 0.618074168,
+        "method": "ttm_ref",
+        "sparsity": 1.0,
+        "size": 500,
+        "rank": 1
     }
 ]

@@ -7,8 +7,9 @@ from collections import defaultdict
 import re
 
 # RESULTS_FILE_PATH = "ssymv/ssymv_results.json"
-# RESULTS_FILE_PATH = "ttm/ttm_results.json"
-RESULTS_FILE_PATH = "mttkrp/mttkrp_results.json"
+RESULTS_FILE_PATH = "ttm/ttm_final_ranks.json"
+# RESULTS_FILE_PATH = "mttkrp/mttkrp_results.json"
+# RESULTS_FILE_PATH = "mttkrp/mttkrp_results_dim4.json"
 # RESULTS_FILE_PATH = "ssymm/ssymm_results.json"
 
 CHARTS_DIRECTORY = "charts/"
@@ -121,7 +122,7 @@ def get_method_results(method, mtxs=[]):
             r = result["rank"]
             nnz = n * n * n * s 
             # mtx_name = f"n = {n}, sp = {s} / {nnz}"
-            mtx_name = f"sp = {s}, rank = {r} / {nnz}"
+            mtx_name = f"{r}"
             mtx_times[mtx_name] = result["time"]
             continue
         if result["method"] == method and (mtxs == [] or result["matrix"] in mtxs):
@@ -165,7 +166,7 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
     width = 0.3
     max_height = 0
     
-    fig, ax = plt.subplots(figsize=(10, 3))
+    fig, ax = plt.subplots(figsize=(5, 3))
     for label in labels:
         label_data = data[label]
         max_height = max(max_height, max(label_data))
@@ -176,8 +177,9 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
         bar_labels = bar_labels_dict[label] if (label in bar_labels_dict) else [round(float(val), 2) if label in labeled_groups else "" for val in label_data]
         ax.bar_label(rects, padding=0, labels=bar_labels, fontsize=4, rotation=90)
 
-    ax.set_ylabel(y_label)
-    ax.set_title(title, fontsize=14, fontfamily=fontfamily)
+    ax.set_ylabel("Speedup Relative to Naive Kernel")
+    ax.set_title(title, fontsize=12, fontfamily=fontfamily)
+    ax.set_xlabel("Numerical Rank")
     ax.set_xticks(x + width * (len(labels) - 1)/2, x_axis)
     ax.tick_params(axis='x', which='major', labelsize=7.5, labelrotation=60, labelfontfamily=fontfamily)
     ax.tick_params(axis='y', labelfontfamily=fontfamily)
@@ -198,6 +200,7 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
     
 
 # method_to_ref_comparison_chart("ssymv_opt", "ssymv_ref", "SSYMV Performance")
-# method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "TTM Performance")
-method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "MTTKRP Performance")
+method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "Optimized vs. Naive TTM Performance Varying Rank")
+# method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "MTTKRP Performance")
+# method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "4D MTTKRP Performance")
 # method_to_ref_comparison_chart("ssymm_opt", "ssymm_ref", "SSYMM Performance")

@@ -2,7 +2,7 @@ using Finch
 using HDF5
 
 n = 100
-sparsities = [0.1, 0.075, 0.05, 0.025, 0.01, 0.0075, 0.005, 0.0025, 0.0001]
+sparsities = [0.1, 0.075, 0.05, 0.025, 0.01, 0.0075, 0.005, 0.0025, 0.001]
 
 for sp in sparsities
     triA = fsprand(n, n, n, n, sp)
