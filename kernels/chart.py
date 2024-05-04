@@ -7,7 +7,7 @@ from collections import defaultdict
 import re
 
 # RESULTS_FILE_PATH = "ssymv/ssymv_results.json"
-RESULTS_FILE_PATH = "ttm/ttm_final_ranks.json"
+RESULTS_FILE_PATH = "ttm/ttm_results.json"
 # RESULTS_FILE_PATH = "mttkrp/mttkrp_results.json"
 # RESULTS_FILE_PATH = "mttkrp/mttkrp_results_dim4.json"
 # RESULTS_FILE_PATH = "ssymm/ssymm_results.json"
@@ -122,7 +122,7 @@ def get_method_results(method, mtxs=[]):
             r = result["rank"]
             nnz = n * n * n * s 
             # mtx_name = f"n = {n}, sp = {s} / {nnz}"
-            mtx_name = f"{r}"
+            mtx_name = f"{s}"
             mtx_times[mtx_name] = result["time"]
             continue
         if result["method"] == method and (mtxs == [] or result["matrix"] in mtxs):
@@ -200,7 +200,7 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
     
 
 # method_to_ref_comparison_chart("ssymv_opt", "ssymv_ref", "SSYMV Performance")
-method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "Optimized vs. Naive TTM Performance Varying Rank")
+method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "Testing Graph")
 # method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "MTTKRP Performance")
 # method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "4D MTTKRP Performance")
 # method_to_ref_comparison_chart("ssymm_opt", "ssymm_ref", "SSYMM Performance")

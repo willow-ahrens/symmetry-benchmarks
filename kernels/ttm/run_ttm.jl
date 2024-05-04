@@ -12,8 +12,8 @@ using HDF5
 include("ttm_finch.jl")
 
 n = 500
-rank = [10, 100, 250, 500]
-sparsities = [0.1, 0.075, 0.05, 0.025, 0.01, 0.0075, 0.005, 0.0025, 0.0001]
+rank = [10]
+sparsities = [0.1, 0.01, 0.001, 0.0001]
 methods = Dict(
     "ttm_ref" => ttm_finch_ref,
     "ttm_opt" => ttm_finch_opt,
@@ -23,7 +23,8 @@ results = []
 for r in rank
     for sp in sparsities
         triA = fsprand(n, n, n, sp)
-        A = bspread("../../data/symmetric_n$(n)_sp$(sp).bsp.h5")
+        A = [triA[sort([i, j, k])...] for i = 1:n, j = 1:n, k = 1:n]
+        # A = bspread("../../data/symmetric_n$(n)_sp$(sp).bsp.h5")
         B = rand(n, r)   
         C = zeros(r, n, n)
         C_ref = nothing
@@ -32,6 +33,15 @@ for r in rank
             res = method(C, A, B)
             time = res.time
             C_res = nothing
+            nondiag_time = nothing
+            diag_time = nothing
+            try
+                nondiag_time = res.nondiag_time
+                diag_time = res.diag_time
+            catch
+                nondiag_time = nothing
+                diag_time = nothing
+            end
             try
                 C_res = res.C.C
             catch
@@ -43,6 +53,8 @@ for r in rank
             @info "results" time
             push!(results, OrderedDict(
                 "time" => time,
+                "nondiag_time" => nondiag_time,
+                "diag_time" => diag_time,
                 "method" => key,
                 "sparsity" => sp,
                 "size" => n,
