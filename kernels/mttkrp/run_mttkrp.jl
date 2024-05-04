@@ -22,7 +22,8 @@ results = []
 for r in rank
     for sp in sparsities
         triA = fsprand(n, n, n, sp)
-        A = bspread("../../data/symmetric_n$(n)_sp$(sp).bsp.h5")
+        A = [triA[sort([i, j, k])...] for i = 1:n, j = 1:n, k = 1:n]
+        # A = bspread("../../data/symmetric_n$(n)_sp$(sp).bsp.h5")
         B = rand(n, r)   
         C = zeros(r, n)
         C_ref = nothing
