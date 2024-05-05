@@ -225,7 +225,7 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
     width = 0.3
     max_height = 0
     
-    fig, ax = plt.subplots(figsize=(5, 3))
+    fig, ax = plt.subplots(figsize=(12, 3))
     for label in labels:
         label_data = data[label]
         max_height = max(max_height, max(label_data))
@@ -238,9 +238,9 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
 
     ax.set_ylabel("Speedup Relative to Naive Kernel")
     ax.set_title(title, fontsize=11, fontfamily=fontfamily)
-    ax.set_xlabel("Rank")
+    ax.set_xlabel("Matrix")
     ax.set_xticks(x + width * (len(labels) - 1)/2, x_axis)
-    ax.tick_params(axis='x', which='major', labelsize=7.5, labelrotation=60, labelfontfamily=fontfamily)
+    ax.tick_params(axis='x', which='major', labelsize=7, labelrotation=75, labelfontfamily=fontfamily)
     ax.tick_params(axis='y', labelfontfamily=fontfamily)
     # if legend_labels:
     #     ax.legend(legend_labels, loc='upper left', ncols=2, fontsize='small')
@@ -262,13 +262,16 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
 # RESULTS_FILE_PATH = "ssymv/ssymv_results.json"
 # RESULTS_FILE_PATH = "ttm/ttm_finch_separate_diagonals_sparsities.json"
 # RESULTS_FILE_PATH = "mttkrp/mttkrp_dim4_final_sparsity.json"
-RESULTS_FILE_PATH = "mttkrp/mttkrp_dim4_final_rank.json"
+# RESULTS_FILE_PATH = "mttkrp/mttkrp_dim4_final_rank.json"
 # RESULTS_FILE_PATH = "mttkrp/mttkrp_final_rank.json"
 # RESULTS_FILE_PATH = "ssymm/ssymm_results.json"
+RESULTS_FILE_PATH = "ssyrk/ssyrk_results.json"
 
-# method_to_ref_comparison_chart("ssymv_opt", "ssymv_ref", "SSYMV Performance")
+
+# method_to_ref_comparison_chart("ssymv_opt", "ssymv_ref", "Optimized vs. Naive SSYMV Performance")
 # method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "Optimized vs. Naive TTM Performance")
-method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "Optimized vs. Naive 4D MTTKRP Performance Varying Rank")
+# method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "Optimized vs. Naive 4D MTTKRP Performance Varying Rank")
 # method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "4D MTTKRP Performance")
-# method_to_ref_comparison_chart("ssymm_opt", "ssymm_ref", "SSYMM Performance")
-time_percentage_chart("mttkrp_opt", "Optimized 4D MTTKRP Time Distribution Varying Rank")
+# method_to_ref_comparison_chart("ssymm_opt", "ssymm_ref", "Optimized vs. Naive SSYMM Performance")
+method_to_ref_comparison_chart("ssyrk_opt", "ssyrk_ref", "Optimized vs. Naive SSYRK Performance")
+# time_percentage_chart("mttkrp_opt", "Optimized 4D MTTKRP Time Distribution Varying Rank")

@@ -1,0 +1,57 @@
+[
+    {
+        "time": 0.003568168,
+        "method": "syprd_ref",
+        "matrix": "Boeing/ct20stif"
+    },
+    {
+        "time": 0.003039336,
+        "method": "syprd_opt",
+        "matrix": "Boeing/ct20stif"
+    },
+    {
+        "time": 0.001356265,
+        "method": "syprd_ref",
+        "matrix": "Simon/olafu"
+    },
+    {
+        "time": 0.001047901,
+        "method": "syprd_opt",
+        "matrix": "Simon/olafu"
+    },
+    {
+        "time": 0.001941942,
+        "method": "syprd_ref",
+        "matrix": "Boeing/bcsstk35"
+    },
+    {
+        "time": 0.001613595,
+        "method": "syprd_opt",
+        "matrix": "Boeing/bcsstk35"
+    },
+    {
+        "time": 0.001357796,
+        "method": "syprd_ref",
+        "matrix": "Boeing/crystk02"
+    },
+    {
+        "time": 0.001016966,
+        "method": "syprd_opt",
+        "matrix": "Boeing/crystk02"
+    },
+    {
+        "time": 0.002515945,
+        "method": "syprd_ref",
+        "matrix": "Boeing/crystk03"
+    },
+    {
+        "time": 0.001864617,
+        "method": "syprd_opt",
+        "matrix": "Boeing/crystk03"
+    },
+    {
+        "time": 0.003599135,
+        "method": "syprd_ref",
+        "matrix": "Nasa/nasasrb"
+    }
+]
