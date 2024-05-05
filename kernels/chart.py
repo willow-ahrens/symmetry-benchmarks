@@ -6,12 +6,6 @@ import math
 from collections import defaultdict
 import re
 
-# RESULTS_FILE_PATH = "ssymv/ssymv_results.json"
-RESULTS_FILE_PATH = "ttm/ttm_results.json"
-# RESULTS_FILE_PATH = "mttkrp/mttkrp_results.json"
-# RESULTS_FILE_PATH = "mttkrp/mttkrp_results_dim4.json"
-# RESULTS_FILE_PATH = "ssymm/ssymm_results.json"
-
 CHARTS_DIRECTORY = "charts/"
 FORMAT_ORDER = {
     "finch_sym": -1,
@@ -122,7 +116,7 @@ def get_method_results(method, mtxs=[]):
             r = result["rank"]
             nnz = n * n * n * s 
             # mtx_name = f"n = {n}, sp = {s} / {nnz}"
-            mtx_name = f"{s}"
+            mtx_name = f"{r}"
             mtx_times[mtx_name] = result["time"]
             continue
         if result["method"] == method and (mtxs == [] or result["matrix"] in mtxs):
@@ -158,7 +152,72 @@ def method_to_ref_comparison_chart(method, ref, title=""):
 
     make_grouped_bar_chart([method], x_axis, data, title=title, legend_labels=[FORMAT_LABELS[method]])
 
-def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups = [], title = "", y_label = "", bar_labels_dict={}, legend_labels=None, reference_label = ""):
+def time_percentage_chart(method, title=""):
+    results = json.load(open(RESULTS_FILE_PATH, 'r'))
+    mtxs = []
+    diag_percentages = []
+    nondiag_percentages = []
+    for result in results:
+        if not result["diag_time"]: 
+            continue
+        else:
+            r = result["rank"]
+            s = result["sparsity"]
+            mtx_name = f"{r}"
+            mtxs.append(mtx_name)
+            percentage = result["diag_time"] / result["time"]
+            diag_percentages.append(percentage)
+            percentage = result["nondiag_time"] / result["time"]
+            nondiag_percentages.append(percentage)
+
+    make_grouped_bar_chart_2(["Non-Diagonals", "Diagonals"], mtxs, {"Non-Diagonals": nondiag_percentages, "Diagonals": diag_percentages}, title=title, ref_line = False, colors = {"Non-Diagonals": "green", "Diagonals": "orange"})
+
+def make_grouped_bar_chart_2(labels, x_axis, data, colors = None, labeled_groups = [], title = "", y_label = "", bar_labels_dict={}, legend_labels=None, reference_label = "", ref_line = True):
+    horizontal_scale = 1
+    fontfamily = "serif"
+
+    x = np.arange(0, len(data[labels[0]]) * horizontal_scale, horizontal_scale)
+    width = 0.3
+    max_height = 0
+    multiplier = 0
+    
+    fig, ax = plt.subplots(figsize=(4, 3))
+    for label in labels:
+        label_data = data[label]
+        max_height = max(max_height, max(label_data))
+        offset = width * multiplier
+        if colors:
+            rects = ax.bar(x + offset, label_data, width, label=label, color=colors[label])
+        else:
+            rects = ax.bar(x + offset, label_data, width, label=label, color="green")
+        bar_labels = bar_labels_dict[label] if (label in bar_labels_dict) else [round(float(val), 2) if label in labeled_groups else "" for val in label_data]
+        ax.bar_label(rects, padding=0, labels=bar_labels, fontsize=4, rotation=90)
+        multiplier += 1
+
+    ax.set_ylabel("Proportion of Execution Time")
+    ax.set_title(title, fontsize=12, fontfamily=fontfamily)
+    ax.set_xlabel("Rank")
+    ax.set_xticks(x + width * (len(labels) - 1)/2, x_axis)
+    ax.tick_params(axis='x', which='major', labelsize=7.5, labelrotation=60, labelfontfamily=fontfamily)
+    ax.tick_params(axis='y', labelfontfamily=fontfamily)
+    if legend_labels:
+        ax.legend(legend_labels, loc='upper right', ncols=1, fontsize='small')
+    else:
+        ax.legend(loc='upper right', ncols=1)
+    ax.set_ylim(0, 1.0)
+
+        # Adjusting x-axis limits to make bars go to the edges
+    ax.set_xlim(-0.5, (len(x_axis) - 0.5 + width * len(labels)) * horizontal_scale)
+
+    if ref_line:
+        plt.plot([-1, len(x_axis)], [1, 1], linestyle='--', color="tab:red", linewidth=1.25, label=reference_label)
+
+    fig_file = title.lower().replace(" ", "_") + ".png"
+    plt.savefig(CHARTS_DIRECTORY + fig_file, dpi=200, bbox_inches="tight")
+    plt.close()
+
+
+def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups = [], title = "", y_label = "", bar_labels_dict={}, legend_labels=None, reference_label = "", ref_line = True):
     horizontal_scale = 0.5
     fontfamily = "serif"
 
@@ -178,8 +237,8 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
         ax.bar_label(rects, padding=0, labels=bar_labels, fontsize=4, rotation=90)
 
     ax.set_ylabel("Speedup Relative to Naive Kernel")
-    ax.set_title(title, fontsize=12, fontfamily=fontfamily)
-    ax.set_xlabel("Numerical Rank")
+    ax.set_title(title, fontsize=11, fontfamily=fontfamily)
+    ax.set_xlabel("Rank")
     ax.set_xticks(x + width * (len(labels) - 1)/2, x_axis)
     ax.tick_params(axis='x', which='major', labelsize=7.5, labelrotation=60, labelfontfamily=fontfamily)
     ax.tick_params(axis='y', labelfontfamily=fontfamily)
@@ -192,15 +251,24 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
         # Adjusting x-axis limits to make bars go to the edges
     ax.set_xlim(-0.5, (len(x_axis) - 0.5 + width * len(labels)) * horizontal_scale)
 
-    plt.plot([-1, len(x_axis)], [1, 1], linestyle='--', color="tab:red", linewidth=1.25, label=reference_label)
+    if ref_line:
+        plt.plot([-1, len(x_axis)], [1, 1], linestyle='--', color="tab:red", linewidth=1.25, label=reference_label)
 
     fig_file = title.lower().replace(" ", "_") + ".png"
     plt.savefig(CHARTS_DIRECTORY + fig_file, dpi=200, bbox_inches="tight")
     plt.close()
     
 
+# RESULTS_FILE_PATH = "ssymv/ssymv_results.json"
+# RESULTS_FILE_PATH = "ttm/ttm_finch_separate_diagonals_sparsities.json"
+# RESULTS_FILE_PATH = "mttkrp/mttkrp_dim4_final_sparsity.json"
+RESULTS_FILE_PATH = "mttkrp/mttkrp_dim4_final_rank.json"
+# RESULTS_FILE_PATH = "mttkrp/mttkrp_final_rank.json"
+# RESULTS_FILE_PATH = "ssymm/ssymm_results.json"
+
 # method_to_ref_comparison_chart("ssymv_opt", "ssymv_ref", "SSYMV Performance")
-method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "Testing Graph")
-# method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "MTTKRP Performance")
+# method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "Optimized vs. Naive TTM Performance")
+method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "Optimized vs. Naive 4D MTTKRP Performance Varying Rank")
 # method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "4D MTTKRP Performance")
 # method_to_ref_comparison_chart("ssymm_opt", "ssymm_ref", "SSYMM Performance")
+time_percentage_chart("mttkrp_opt", "Optimized 4D MTTKRP Time Distribution Varying Rank")

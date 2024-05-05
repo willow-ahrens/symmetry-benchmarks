@@ -1,0 +1,72 @@
+[{
+        "time": 0.214739337,
+        "nondiag_time": null,
+        "diag_time": null,
+        "method": "mttkrp_ref",
+        "sparsity": 0.1,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.07975581799999999,
+        "nondiag_time": 0.078408096,
+        "diag_time": 0.001347722,
+        "method": "mttkrp_opt",
+        "sparsity": 0.1,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.024816644,
+        "nondiag_time": null,
+        "diag_time": null,
+        "method": "mttkrp_ref",
+        "sparsity": 0.01,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.009365821,
+        "nondiag_time": 0.009205215,
+        "diag_time": 0.000160606,
+        "method": "mttkrp_opt",
+        "sparsity": 0.01,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.003075845,
+        "nondiag_time": null,
+        "diag_time": null,
+        "method": "mttkrp_ref",
+        "sparsity": 0.001,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.001339379,
+        "nondiag_time": 0.001317571,
+        "diag_time": 2.1808e-5,
+        "method": "mttkrp_opt",
+        "sparsity": 0.001,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.000294226,
+        "nondiag_time": null,
+        "diag_time": null,
+        "method": "mttkrp_ref",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 10
+    }, {
+        "time": 0.0001538664,
+        "nondiag_time": 0.00014699,
+        "diag_time": 6.8764e-6,
+        "method": "mttkrp_opt",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 10
+    }
+]
