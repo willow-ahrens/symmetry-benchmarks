@@ -121,5 +121,5 @@ function mttkrp_finch_opt_dim4(C, A, B)
     @finch mode=:fast for i=_, j=_
         C_full[i, j] = _C_T_nondiag[j, i] + _C_T_diag[j, i]
     end
-    return (;time = time_1 + time_2, C = C_full)
+    return (;time = time_1 + time_2, C = C_full, nondiag_time = time_1, diag_time = time_2)
 end
