@@ -51,8 +51,8 @@ end)
 eval(@finch_kernel mode=:fast function ttm_finch_opt_2_helper(C, A_diag, B_T)
     C .= 0
     for l=_, k=_, j=_, i=_
-        if j <= k && k <= l
-            let jk_eq = (identity(j) == identity(k)), kl_eq = (identity(k) == identity(l))
+        if identity(j) <= identity(k) && identity(k) <= identity(l)
+            let jk_eq = (j == k), kl_eq = (k == l)
                 let A_jkl = A_diag[j, k, l], B_ik = B_T[i, k], B_il = B_T[i, l], B_ij = B_T[i, j]
                     if (jk_eq && !kl_eq ) || (!jk_eq  && kl_eq)
                         C[i, j, k] += B_il * A_jkl

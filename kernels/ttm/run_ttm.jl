@@ -9,7 +9,7 @@ using LinearAlgebra
 using Finch
 using HDF5
 
-include("ttm_finch.jl")
+include("ttm_finch_separate_diagonals.jl")
 
 n = 500
 rank = [10]
