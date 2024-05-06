@@ -22,12 +22,12 @@ eval(@finch_kernel mode=:fast function ssymm_finch_opt_helper(C_T, A, B_T)
     return C_T
 end)
 
-eval(@finch_kernel mode=:fast function ssymm_finch_ref_helper(C, A, B)
-    C .= 0
-    for j=_, k=_, i=_
-        C[i, j] += A[i, k] * B[k, j]
+eval(@finch_kernel mode=:fast function ssymm_finch_ref_helper(C_T, A, B_T)
+    C_T .= 0
+    for k=_, i=_, j=_
+        C_T[j, i] += A[i, k] * B_T[j, k]
     end
-    return C
+    return C_T
 end)
 
 function ssymm_finch_opt(C, A, B)
@@ -53,12 +53,23 @@ function ssymm_finch_opt(C, A, B)
 end
 
 function ssymm_finch_ref(C, A, B)
-    _C = Tensor(Dense(Dense(Element(0.0))), C)
+    _C_T = Tensor(Dense(Dense(Element(0.0))), C)
     _A = Tensor(Dense(SparseList(Element(0.0))), A)
-    _B = Tensor(Dense(Dense(Element(0.0))), B)
-    temp = Scalar(0.0)
+    _B_T = Tensor(Dense(Dense(Element(0.0))))
+    @finch begin 
+        _B_T .= 0
+        for j=_, i=_ 
+            _B_T[j, i] = B[i, j] 
+        end 
+    end
 
-    C = Ref{Any}()
-    time = @belapsed $C[] = ssymm_finch_ref_helper($_C, $_A, $_B)
-    return (;time = time, C = C[])
+    time = @belapsed ssymm_finch_ref_helper($_C_T, $_A, $_B_T)
+    _C = Tensor(Dense(Dense(Element(0.0))), C)
+    @finch begin 
+        _C .= 0
+        for j=_, i=_ 
+            _C[j, i] = _C_T[i, j] 
+        end
+    end
+    return (;time = time, C = _C)
 end

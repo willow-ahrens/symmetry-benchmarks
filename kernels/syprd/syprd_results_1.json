@@ -1,301 +1,301 @@
 [
     {
-        "time": 0.003598541,
+        "time": 0.005058021,
         "method": "syprd_ref",
         "matrix": "Boeing/ct20stif"
     },
     {
-        "time": 0.003076042,
+        "time": 0.005582073,
         "method": "syprd_opt",
         "matrix": "Boeing/ct20stif"
     },
     {
-        "time": 0.001373527,
+        "time": 0.001434704,
         "method": "syprd_ref",
         "matrix": "Simon/olafu"
     },
     {
-        "time": 0.001068599,
+        "time": 0.00150585,
         "method": "syprd_opt",
         "matrix": "Simon/olafu"
     },
     {
-        "time": 0.001957786,
+        "time": 0.002198773,
         "method": "syprd_ref",
         "matrix": "Boeing/bcsstk35"
     },
     {
-        "time": 0.001636861,
+        "time": 0.002501371,
         "method": "syprd_opt",
         "matrix": "Boeing/bcsstk35"
     },
     {
-        "time": 0.001365852,
+        "time": 0.001359066,
         "method": "syprd_ref",
         "matrix": "Boeing/crystk02"
     },
     {
-        "time": 0.001023421,
+        "time": 0.001364252,
         "method": "syprd_opt",
         "matrix": "Boeing/crystk02"
     },
     {
-        "time": 0.002525214,
+        "time": 0.002728215,
         "method": "syprd_ref",
         "matrix": "Boeing/crystk03"
     },
     {
-        "time": 0.001881198,
+        "time": 0.002758179,
         "method": "syprd_opt",
         "matrix": "Boeing/crystk03"
     },
     {
-        "time": 0.00361904,
+        "time": 0.00514871,
         "method": "syprd_ref",
         "matrix": "Nasa/nasasrb"
     },
     {
-        "time": 0.003009962,
+        "time": 0.005692723,
         "method": "syprd_opt",
         "matrix": "Nasa/nasasrb"
     },
     {
-        "time": 0.001851153,
+        "time": 0.001898595,
         "method": "syprd_ref",
         "matrix": "Simon/raefsky4"
     },
     {
-        "time": 0.001444433,
+        "time": 0.001898958,
         "method": "syprd_opt",
         "matrix": "Simon/raefsky4"
     },
     {
-        "time": 0.000838113,
+        "time": 0.001038858,
         "method": "syprd_ref",
         "matrix": "Mulvey/finan512"
     },
     {
-        "time": 0.001165689,
+        "time": 0.002983683,
         "method": "syprd_opt",
         "matrix": "Mulvey/finan512"
     },
     {
-        "time": 0.000373417,
+        "time": 0.000470664,
         "method": "syprd_ref",
         "matrix": "Cote/vibrobox"
     },
     {
-        "time": 0.000306206,
+        "time": 0.000684148,
         "method": "syprd_opt",
         "matrix": "Cote/vibrobox"
     },
     {
-        "time": 3.0937e-5,
+        "time": 4.7829e-5,
         "method": "syprd_ref",
         "matrix": "HB/saylr4"
     },
     {
-        "time": 6.5402e-5,
+        "time": 0.000155516,
         "method": "syprd_opt",
         "matrix": "HB/saylr4"
     },
     {
-        "time": 0.002059863,
+        "time": 0.002170457,
         "method": "syprd_ref",
         "matrix": "Simon/raefsky3"
     },
     {
-        "time": 0.001539118,
+        "time": 0.002128294,
         "method": "syprd_opt",
         "matrix": "Simon/raefsky3"
     },
     {
-        "time": 0.002200671,
+        "time": 0.002657848,
         "method": "syprd_ref",
         "matrix": "Simon/venkat01"
     },
     {
-        "time": 0.002108767,
+        "time": 0.003918905,
         "method": "syprd_opt",
         "matrix": "Simon/venkat01"
     },
     {
-        "time": 0.001573707,
+        "time": 0.001561402,
         "method": "syprd_ref",
         "matrix": "FIDAP/ex11"
     },
     {
-        "time": 0.001190066,
+        "time": 0.001599795,
         "method": "syprd_opt",
         "matrix": "FIDAP/ex11"
     },
     {
-        "time": 0.000209945,
+        "time": 0.00026091,
         "method": "syprd_ref",
         "matrix": "Zitney/rdist1"
     },
     {
-        "time": 0.000118287,
+        "time": 0.000278374,
         "method": "syprd_opt",
         "matrix": "Zitney/rdist1"
     },
     {
-        "time": 0.000198516,
+        "time": 0.000245085,
         "method": "syprd_ref",
         "matrix": "HB/orani678"
     },
     {
-        "time": 0.000115679,
+        "time": 0.000220645,
         "method": "syprd_opt",
         "matrix": "HB/orani678"
     },
     {
-        "time": 0.001815073,
+        "time": 0.001873915,
         "method": "syprd_ref",
         "matrix": "Goodwin/rim"
     },
     {
-        "time": 0.00142227,
+        "time": 0.002020454,
         "method": "syprd_opt",
         "matrix": "Goodwin/rim"
     },
     {
-        "time": 0.000154097,
+        "time": 0.00023927,
         "method": "syprd_ref",
         "matrix": "Hamm/memplus"
     },
     {
-        "time": 0.0002907,
+        "time": 0.000719376,
         "method": "syprd_opt",
         "matrix": "Hamm/memplus"
     },
     {
-        "time": 9.2014e-5,
+        "time": 0.000142451,
         "method": "syprd_ref",
         "matrix": "HB/gemat11"
     },
     {
-        "time": 9.5056e-5,
+        "time": 0.00024141,
         "method": "syprd_opt",
         "matrix": "HB/gemat11"
     },
     {
-        "time": 0.000601348,
+        "time": 0.000667244,
         "method": "syprd_ref",
         "matrix": "Mallya/lhr10"
     },
     {
-        "time": 0.000399138,
+        "time": 0.000717669,
         "method": "syprd_opt",
         "matrix": "Mallya/lhr10"
     },
     {
-        "time": 0.000518354,
+        "time": 0.000573232,
         "method": "syprd_ref",
         "matrix": "Goodwin/goodwin"
     },
     {
-        "time": 0.000382118,
+        "time": 0.000622693,
         "method": "syprd_opt",
         "matrix": "Goodwin/goodwin"
     },
     {
-        "time": 0.000183976,
+        "time": 0.000276258,
         "method": "syprd_ref",
         "matrix": "Grund/bayer02"
     },
     {
-        "time": 0.00019595,
+        "time": 0.000558702,
         "method": "syprd_opt",
         "matrix": "Grund/bayer02"
     },
     {
-        "time": 0.000207933,
+        "time": 0.000311014,
         "method": "syprd_ref",
         "matrix": "Grund/bayer10"
     },
     {
-        "time": 0.000200758,
+        "time": 0.000560435,
         "method": "syprd_opt",
         "matrix": "Grund/bayer10"
     },
     {
-        "time": 0.000354826,
+        "time": 0.000464709,
         "method": "syprd_ref",
         "matrix": "Brethour/coater2"
     },
     {
-        "time": 0.000290384,
+        "time": 0.000627031,
         "method": "syprd_opt",
         "matrix": "Brethour/coater2"
     },
     {
-        "time": 0.000545719,
+        "time": 0.000715208,
         "method": "syprd_ref",
         "matrix": "ATandT/onetone2"
     },
     {
-        "time": 0.000597189,
+        "time": 0.001559744,
         "method": "syprd_opt",
         "matrix": "ATandT/onetone2"
     },
     {
-        "time": 0.000231576,
+        "time": 0.000323602,
         "method": "syprd_ref",
         "matrix": "Wang/wang4"
     },
     {
-        "time": 0.000484555,
+        "time": 0.001128358,
         "method": "syprd_opt",
         "matrix": "Wang/wang4"
     },
     {
-        "time": 3.5705e-5,
+        "time": 4.9073e-5,
         "method": "syprd_ref",
         "matrix": "HB/lnsp3937"
     },
     {
-        "time": 5.0324e-5,
+        "time": 0.000147612,
         "method": "syprd_opt",
         "matrix": "HB/lnsp3937"
     },
     {
-        "time": 3.4686e-5,
+        "time": 4.5319e-5,
         "method": "syprd_ref",
         "matrix": "HB/sherman5"
     },
     {
-        "time": 5.1022e-5,
+        "time": 0.000139731,
         "method": "syprd_opt",
         "matrix": "HB/sherman5"
     },
     {
-        "time": 3.3732e-5,
+        "time": 5.1222e-5,
         "method": "syprd_ref",
         "matrix": "HB/sherman3"
     },
     {
-        "time": 7.3731e-5,
+        "time": 0.000199396,
         "method": "syprd_opt",
         "matrix": "HB/sherman3"
     },
     {
-        "time": 0.000600157,
+        "time": 0.000822527,
         "method": "syprd_ref",
         "matrix": "Shyy/shyy161"
     },
     {
-        "time": 0.001328152,
+        "time": 0.00312002,
         "method": "syprd_opt",
         "matrix": "Shyy/shyy161"
     },
     {
-        "time": 0.000233673,
+        "time": 0.000323195,
         "method": "syprd_ref",
         "matrix": "Wang/wang3"
     },
     {
-        "time": 0.000483358,
+        "time": 0.001128359,
         "method": "syprd_opt",
         "matrix": "Wang/wang3"
     }
