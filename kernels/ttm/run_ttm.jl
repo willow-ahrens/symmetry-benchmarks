@@ -9,14 +9,16 @@ using LinearAlgebra
 using Finch
 using HDF5
 
-include("ttm_finch_separate_diagonals.jl")
+include("ttm_finch.jl")
+include("ttm_taco.jl")
 
-n = 500
+n = 100
 rank = [10]
 sparsities = [0.1, 0.01, 0.001, 0.0001]
 methods = Dict(
-    "ttm_ref" => ttm_finch_ref,
-    "ttm_opt" => ttm_finch_opt,
+    "ttm_finch_ref" => ttm_finch_ref,
+    "ttm_finch_opt" => ttm_finch_opt,
+    "ttm_taco" => ttm_taco
 )
 
 results = []

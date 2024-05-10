@@ -11,8 +11,9 @@ export NPROC_VAL := $(shell lscpu -p | egrep -v '^\#' | wc -l)
 endif
 
 SSYMV = kernels/ssymv/ssymv_taco
+TTM = kernels/ttm/ttm_taco
 
-all: $(SSYMV)
+all: $(SSYMV) $(TTM)
 
 SPARSE_BENCH_DIR = deps/SparseRooflineBenchmark
 SPARSE_BENCH_CLONE = $(SPARSE_BENCH_DIR)/.git
@@ -42,8 +43,11 @@ $(TACO): $(TACO_CLONE)
 	make taco -j$(NPROC_VAL)
 
 clean:
-	rm -f $(SSYMV) $(SPGEMM)
+	rm -f $(SSYMV) $(TTM)
 	rm -rf *.o *.dSYM *.trace
 
 kernels/ssymv/ssymv_taco: $(SPARSE_BENCH) $(TACO) kernels/ssymv/ssymv_taco.cpp
 	$(CXX) $(TACO_CXXFLAGS) -o $@ kernels/ssymv/ssymv_taco.cpp $(TACO_LDLIBS)
+
+kernels/ttm/ttm_taco: $(SPARSE_BENCH) $(TACO) kernels/ttm/ttm_taco.cpp
+	$(CXX) $(TACO_CXXFLAGS) -o $@ kernels/ttm/ttm_taco.cpp $(TACO_LDLIBS)
