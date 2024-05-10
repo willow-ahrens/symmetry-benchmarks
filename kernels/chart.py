@@ -164,12 +164,12 @@ def time_percentage_chart(method, title=""):
         else:
             r = result["rank"]
             s = result["sparsity"]
-            mtx_name = f"{r}"
+            mtx_name = f"{s}"
             mtxs.append(mtx_name)
             percentage = result["diag_time"] / result["time"]
             diag_percentages.append(percentage)
-            percentage = result["nondiag_time"] / result["time"]
-            nondiag_percentages.append(percentage)
+            # percentage = result["nondiag_time"] / result["time"]
+            nondiag_percentages.append(1.0)
 
     make_grouped_bar_chart_2(["Non-Diagonals", "Diagonals"], mtxs, {"Non-Diagonals": nondiag_percentages, "Diagonals": diag_percentages}, title=title, ref_line = False, colors = {"Non-Diagonals": "green", "Diagonals": "orange"})
 
@@ -178,7 +178,7 @@ def make_grouped_bar_chart_2(labels, x_axis, data, colors = None, labeled_groups
     fontfamily = "serif"
 
     x = np.arange(0, len(data[labels[0]]) * horizontal_scale, horizontal_scale)
-    width = 0.3
+    width = 0.6
     max_height = 0
     multiplier = 0
     
@@ -188,16 +188,16 @@ def make_grouped_bar_chart_2(labels, x_axis, data, colors = None, labeled_groups
         max_height = max(max_height, max(label_data))
         offset = width * multiplier
         if colors:
-            rects = ax.bar(x + offset, label_data, width, label=label, color=colors[label])
+            rects = ax.bar(x + width/2, label_data, width, label=label, color=colors[label])
         else:
-            rects = ax.bar(x + offset, label_data, width, label=label, color="green")
+            rects = ax.bar(x + width/2, label_data, width, label=label, color="green")
         bar_labels = bar_labels_dict[label] if (label in bar_labels_dict) else [round(float(val), 2) if label in labeled_groups else "" for val in label_data]
         ax.bar_label(rects, padding=0, labels=bar_labels, fontsize=4, rotation=90)
-        multiplier += 1
+        # multiplier += 1
 
     ax.set_ylabel("Proportion of Execution Time")
     ax.set_title(title, fontsize=12, fontfamily=fontfamily)
-    ax.set_xlabel("Rank")
+    ax.set_xlabel(X_LABEL)
     ax.set_xticks(x + width * (len(labels) - 1)/2, x_axis)
     ax.tick_params(axis='x', which='major', labelsize=7.5, labelrotation=60, labelfontfamily=fontfamily)
     ax.tick_params(axis='y', labelfontfamily=fontfamily)
@@ -260,21 +260,25 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
     plt.close()
     
 
+X_LABEL = "Sparsity"
+
 # RESULTS_FILE_PATH = "ssymv/ssymv_results.json"
 # RESULTS_FILE_PATH = "ttm/ttm_finch_separate_diagonals_sparsities.json"
 # RESULTS_FILE_PATH = "mttkrp/mttkrp_dim4_final_sparsity.json"
 # RESULTS_FILE_PATH = "mttkrp/mttkrp_dim4_final_rank.json"
 # RESULTS_FILE_PATH = "mttkrp/mttkrp_final_rank.json"
-# RESULTS_FILE_PATH = "ssymm/ssymm_results.json"
+# RESULTS_FILE_PATH = "mttkrp/mttkrp_final_sparsity.json"
+RESULTS_FILE_PATH = "ssymm/ssymm_results.json"
 # RESULTS_FILE_PATH = "ssyrk/ssyrk_results.json"
-RESULTS_FILE_PATH = "syprd/syprd_results.json"
+# RESULTS_FILE_PATH = "syprd/syprd_results.json"
 
 
 # method_to_ref_comparison_chart("ssymv_opt", "ssymv_ref", "Optimized vs. Naive SSYMV Performance")
 # method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "Optimized vs. Naive TTM Performance")
 # method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "Optimized vs. Naive 4D MTTKRP Performance Varying Rank")
 # method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "4D MTTKRP Performance")
-# method_to_ref_comparison_chart("ssymm_opt", "ssymm_ref", "Optimized vs. Naive SSYMM Performance")
+method_to_ref_comparison_chart("ssymm_opt", "ssymm_ref", "Optimized vs. Naive SSYMM Performance")
 # method_to_ref_comparison_chart("ssyrk_opt", "ssyrk_ref", "Optimized vs. Naive SSYRK Performance")
-# time_percentage_chart("mttkrp_opt", "Optimized 4D MTTKRP Time Distribution Varying Rank")
-method_to_ref_comparison_chart("syprd_opt", "syprd_ref", "Optimized vs. Naive SYPRD Performance")
+# time_percentage_chart("mttkrp_opt", "Optimized MTTKRP Time Distribution Varying Sparsity")
+# time_percentage_chart("mttkrp_opt", "Optimized 4D MTTKRP Time Distribution Varying Sparsity")
+# method_to_ref_comparison_chart("syprd_opt", "syprd_ref", "Optimized vs. Naive SYPRD Performance")

@@ -11,6 +11,7 @@ using Finch
 include("spmv_mkl.jl")
 include("symv_mkl.jl")
 include("ssymv_finch.jl")
+include("ssymv_taco.jl")
 
 symmetric_oski = [
     "Boeing/ct20stif",
@@ -49,8 +50,9 @@ unsymmetric_oski = [
 ]
 
 methods = Dict(
-    "ssymv_ref" => ssymv_finch_ref,
-    "ssymv_opt" => ssymv_finch_opt,
+    "ssymv_finch_ref" => ssymv_finch_ref,
+    "ssymv_finch_opt" => ssymv_finch_opt,
+    "ssymv_taco" => ssymv_taco,
 )
 
 results = []
@@ -68,8 +70,14 @@ for (symmetric, dataset) in [(true, symmetric_oski), (false, unsymmetric_oski)]
             @info "testing" key mtx
             res = method(y, A, x)
             time = res.time
-            y_ref = something(y_ref, res.y.y)
-            norm(res.y.y - y_ref)/norm(y_ref) < 0.1 || @warn("incorrect result via norm")
+            y_res = nothing
+            try
+                y_res = res.y.y
+            catch
+                y_res = res.y
+            end
+            y_ref = something(y_ref, y_res)
+            norm(y_res - y_ref)/norm(y_ref) < 0.1 || @warn("incorrect result via norm")
 
             @info "results" time
             push!(results, OrderedDict(

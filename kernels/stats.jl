@@ -1,7 +1,7 @@
 using JSON
 
 function calc_speedup(slow_method, fast_method)
-    spmv_results_text = read("syprd/syprd_results.json", String)
+    spmv_results_text = read("ssymm/ssymm_results.json", String)
     spmv_results = JSON.parse(spmv_results_text)
 
     kernel_times = Dict()
