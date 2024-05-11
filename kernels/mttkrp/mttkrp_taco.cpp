@@ -19,29 +19,28 @@ int main(int argc, char **argv)
     Tensor<double> B_T = read(fs::path(params.input) / "B_T.ttx", Format({Dense, Dense}), true);
     int n = A.getDimension(0);
     int r = B_T.getDimension(0);
-
-    Tensor<double> C("C", {r, n, n}, Format({Dense, Dense, Dense}));
+    Tensor<double> C_T("C_T", {r, n}, Format({Dense, Dense}));
 
     IndexVar i, j, k, l;
 
-    C(i, j, l) += A(k, j, l) * B_T(i, k);
+    C_T(j, i) += A(i, k, l) * B_T(j, l) * B_T(j, k);
 
-    C.compile();
+    C_T.compile();
 
     // Assemble output indices and numerically compute the result
     auto time = benchmark(
-        [&C]()
+        [&C_T]()
         {
-            C.setNeedsAssemble(true);
-            C.setNeedsCompute(true);
+            C_T.setNeedsAssemble(true);
+            C_T.setNeedsCompute(true);
         },
-        [&C]()
+        [&C_T]()
         {
-            C.assemble();
-            C.compute();
+            C_T.assemble();
+            C_T.compute();
         });
 
-    write(fs::path(params.input) / "C.ttx", C);
+    write(fs::path(params.input) / "C_T.ttx", C_T);
 
     json measurements;
     measurements["time"] = time;

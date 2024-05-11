@@ -12,7 +12,7 @@ using HDF5
 include("ttm_finch.jl")
 include("ttm_taco.jl")
 
-n = 100
+n = 500
 rank = [10]
 sparsities = [0.1, 0.01, 0.001, 0.0001]
 methods = Dict(
