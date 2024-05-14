@@ -65,8 +65,8 @@ eval(@finch_kernel mode=:fast function mttkrp_finch_opt_2_dim4_helper(C_T, A_dia
 end)
 
 function mttkrp_finch_ref_dim4(C, A, B)
-    (r, n) = size(C)
-    _C_T = Tensor(Dense(Dense(Element(0.0))), zeros(n, r))
+    (n, r) = size(C)
+    _C_T = Tensor(Dense(Dense(Element(0.0))), zeros(r, n))
     _A = Tensor(Dense(SparseList(SparseList(SparseList(Element(0.0))))), A)  
     _B_T = Tensor(Dense(Dense(Element(0.0))), B) 
     @finch mode=:fast begin 
@@ -90,9 +90,9 @@ end
 
 function mttkrp_finch_opt_dim4(C, A, B)
     (n, n, n) = size(A)
-    (r, n) = size(C)
-    _C_T_nondiag = Tensor(Dense(Dense(Element(0.0))), zeros(n, r))
-    _C_T_diag = Tensor(Dense(Dense(Element(0.0))), zeros(n, r))
+    (n, r) = size(C)
+    _C_T_nondiag = Tensor(Dense(Dense(Element(0.0))), zeros(r, n))
+    _C_T_diag = Tensor(Dense(Dense(Element(0.0))), zeros(r, n))
 
     nondiagA = zeros(n, n, n, n)
     diagA = zeros(n, n, n, n)

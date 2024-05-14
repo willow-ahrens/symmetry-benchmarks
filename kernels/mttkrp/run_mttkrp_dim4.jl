@@ -9,13 +9,15 @@ using LinearAlgebra
 using Finch
 
 include("mttkrp_finch_dim4.jl")
+include("mttkrp_dim4_taco.jl")
 
-n = 100
+n = 20
 rank = [10, 100, 250, 500]
 sparsities = [0.1, 0.075, 0.05, 0.025, 0.01, 0.0075, 0.005, 0.0025, 0.0001]
 methods = Dict(
-    "mttkrp_ref" => mttkrp_finch_ref_dim4,
-    "mttkrp_opt" => mttkrp_finch_opt_dim4,
+    "mttkrp_finch_ref" => mttkrp_finch_ref_dim4,
+    "mttkrp_finch_opt" => mttkrp_finch_opt_dim4,
+    "mttkrp_taco" => mttkrp_dim4_taco
 )
 
 results = []
@@ -25,7 +27,7 @@ for r in rank
         A = [triA[sort([i, j, k, l])...] for i = 1:n, j = 1:n, k = 1:n, l = 1:n]
         # A = bspread("../../data/symmetric_4dim_n$(n)_sp$(sp).bsp.h5")
         B = rand(n, r)   
-        C = zeros(r, n)
+        C = zeros(n, r)
         C_ref = nothing
         for (key, method) in methods
             @info "testing" key n sp r

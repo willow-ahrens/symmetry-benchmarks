@@ -13,8 +13,9 @@ endif
 SSYMV = kernels/ssymv/ssymv_taco
 TTM = kernels/ttm/ttm_taco
 MTTKRP = kernels/mttkrp/mttkrp_taco
+MTTKRP_DIM4 = kernels/mttkrp/mttkrp_dim4_taco
 
-all: $(SSYMV) $(TTM) $(MTTKRP)
+all: $(SSYMV) $(TTM) $(MTTKRP) $(MTTKRP_DIM4)
 
 SPARSE_BENCH_DIR = deps/SparseRooflineBenchmark
 SPARSE_BENCH_CLONE = $(SPARSE_BENCH_DIR)/.git
@@ -44,7 +45,7 @@ $(TACO): $(TACO_CLONE)
 	make taco -j$(NPROC_VAL)
 
 clean:
-	rm -f $(SSYMV) $(TTM) $(MTTKRP)
+	rm -f $(SSYMV) $(TTM) $(MTTKRP) $(MTTKRP_DIM4)
 	rm -rf *.o *.dSYM *.trace
 
 kernels/ssymv/ssymv_taco: $(SPARSE_BENCH) $(TACO) kernels/ssymv/ssymv_taco.cpp
@@ -55,3 +56,6 @@ kernels/ttm/ttm_taco: $(SPARSE_BENCH) $(TACO) kernels/ttm/ttm_taco.cpp
 
 kernels/mttkrp/mttkrp_taco: $(SPARSE_BENCH) $(TACO) kernels/mttkrp/mttkrp_taco.cpp
 	$(CXX) $(TACO_CXXFLAGS) -o $@ kernels/mttkrp/mttkrp_taco.cpp $(TACO_LDLIBS)
+
+kernels/mttkrp/mttkrp_dim4_taco: $(SPARSE_BENCH) $(TACO) kernels/mttkrp/mttkrp_dim4_taco.cpp
+	$(CXX) $(TACO_CXXFLAGS) -o $@ kernels/mttkrp/mttkrp_dim4_taco.cpp $(TACO_LDLIBS)
