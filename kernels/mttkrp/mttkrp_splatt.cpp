@@ -34,12 +34,13 @@ int main(int argc, char **argv){
 
     Tensor<double> _B = read(fs::path(params.input) / "B.ttx", Format({Dense, Dense}), true);
     int n = _B.getDimension(0);
+    int r = _B.getDimension(1);
     double **factors = new double *[nmodes];
     for (int i = 0; i < nmodes; ++i) {
         factors[i] = (double *)(_B.getStorage().getValues().getData());
     }
 
-    Tensor<double> C_splatt({n, n}, Format({Dense, Dense}));
+    Tensor<double> C_splatt({n, r}, Format({Dense, Dense}));
     C_splatt.pack();
     double *matout = (double *)(C_splatt.getStorage().getValues().getData());
 
