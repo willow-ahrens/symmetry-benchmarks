@@ -27,7 +27,8 @@ FORMAT_ORDER = {
     "finch_blocked": -17,
 }
 FORMAT_LABELS = {
-    "ssymv_opt": "SSYMV (symmetrized)",
+    "ssymv_finch_opt": "SSYMV (symmetrized)",
+    "ssymv_taco": "SSYMV",
     "ssyrk_opt": "SSYRK (symmetrized)",
     "ttm_opt": "TTM (symmetrized)",
     "mttkrp_opt": "MTTKRP (symmetrized)",
@@ -262,22 +263,22 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
 
 X_LABEL = "Sparsity"
 
-# RESULTS_FILE_PATH = "ssymv/ssymv_results.json"
+RESULTS_FILE_PATH = "ssymv/ssymv_results.json"
 # RESULTS_FILE_PATH = "ttm/ttm_finch_separate_diagonals_sparsities.json"
 # RESULTS_FILE_PATH = "mttkrp/mttkrp_dim4_final_sparsity.json"
 # RESULTS_FILE_PATH = "mttkrp/mttkrp_dim4_final_rank.json"
 # RESULTS_FILE_PATH = "mttkrp/mttkrp_final_rank.json"
 # RESULTS_FILE_PATH = "mttkrp/mttkrp_final_sparsity.json"
-RESULTS_FILE_PATH = "ssymm/ssymm_results.json"
+# RESULTS_FILE_PATH = "ssymm/ssymm_results.json"
 # RESULTS_FILE_PATH = "ssyrk/ssyrk_results.json"
 # RESULTS_FILE_PATH = "syprd/syprd_results.json"
 
 
-# method_to_ref_comparison_chart("ssymv_opt", "ssymv_ref", "Optimized vs. Naive SSYMV Performance")
+method_to_ref_comparison_chart("ssymv_finch_opt", "ssymv_taco", "SSYMV Performance")
 # method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "Optimized vs. Naive TTM Performance")
 # method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "Optimized vs. Naive 4D MTTKRP Performance Varying Rank")
 # method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "4D MTTKRP Performance")
-method_to_ref_comparison_chart("ssymm_opt", "ssymm_ref", "Optimized vs. Naive SSYMM Performance")
+# method_to_ref_comparison_chart("ssymm_opt", "ssymm_ref", "Optimized vs. Naive SSYMM Performance")
 # method_to_ref_comparison_chart("ssyrk_opt", "ssyrk_ref", "Optimized vs. Naive SSYRK Performance")
 # time_percentage_chart("mttkrp_opt", "Optimized MTTKRP Time Distribution Varying Sparsity")
 # time_percentage_chart("mttkrp_opt", "Optimized 4D MTTKRP Time Distribution Varying Sparsity")

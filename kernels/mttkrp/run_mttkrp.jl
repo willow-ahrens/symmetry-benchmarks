@@ -10,6 +10,7 @@ using Finch
 
 include("mttkrp_finch.jl")
 include("mttkrp_taco.jl")
+include("mttkrp_splatt.jl")
 
 n = 100
 rank = [10, 100, 250, 500]
@@ -18,6 +19,7 @@ methods = Dict(
     "mttkrp_finch_ref" => mttkrp_finch_ref,
     "mttkrp_finch_opt" => mttkrp_finch_opt,
     "mttkrp_taco" => mttkrp_taco,
+    "mttkrp_splatt" => mttkrp_splatt,
 )
 
 results = []

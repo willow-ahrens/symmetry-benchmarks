@@ -28,7 +28,9 @@ int main(int argc, char **argv){
     int ret;
     splatt_idx_t nmodes;
     splatt_csf *tt;
-    ret = splatt_csf_load("../../data/symmetric_10x10x10.tns", &nmodes, &tt, cpd_opts);
+    fs::path file = fs::path(params.input) / "A.tns";
+    std::string filename = file.string();
+    ret = splatt_csf_load(filename.c_str(), &nmodes, &tt, cpd_opts);
     std::cout << "after loading A" << std::endl;
 
     Tensor<double> _B = read(fs::path(params.input) / "B.ttx", Format({Dense, Dense}), true);

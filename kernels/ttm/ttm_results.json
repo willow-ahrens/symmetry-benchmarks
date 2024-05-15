@@ -1,55 +1,109 @@
 [
     {
-        "time": 0.091735552,
-        "nondiag_time": 0.089275177,
-        "diag_time": 0.002460375,
-        "method": "ttm_opt",
+        "time": 0.466338803,
+        "nondiag_time": null,
+        "diag_time": null,
+        "method": "ttm_taco",
         "sparsity": 0.1,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.107803997,
+        "time": 0.137644263,
         "nondiag_time": null,
         "diag_time": null,
-        "method": "ttm_ref",
+        "method": "ttm_finch_ref",
         "sparsity": 0.1,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.011017753,
-        "nondiag_time": 0.010011096,
-        "diag_time": 0.001006657,
-        "method": "ttm_opt",
+        "time": 0.082166139,
+        "nondiag_time": null,
+        "diag_time": null,
+        "method": "ttm_finch_opt",
+        "sparsity": 0.1,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.048203354000000004,
+        "nondiag_time": null,
+        "diag_time": null,
+        "method": "ttm_taco",
         "sparsity": 0.01,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.013373917,
+        "time": 0.018201662,
         "nondiag_time": null,
         "diag_time": null,
-        "method": "ttm_ref",
+        "method": "ttm_finch_ref",
         "sparsity": 0.01,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.00330078,
-        "nondiag_time": 0.002374863,
-        "diag_time": 0.000925917,
-        "method": "ttm_opt",
+        "time": 0.013784679,
+        "nondiag_time": null,
+        "diag_time": null,
+        "method": "ttm_finch_opt",
+        "sparsity": 0.01,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.008741378000000001,
+        "nondiag_time": null,
+        "diag_time": null,
+        "method": "ttm_taco",
         "sparsity": 0.001,
         "size": 500,
         "rank": 10
     },
     {
-        "time": 0.002854546,
+        "time": 0.003550443,
         "nondiag_time": null,
         "diag_time": null,
-        "method": "ttm_ref",
+        "method": "ttm_finch_ref",
         "sparsity": 0.001,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.002846923,
+        "nondiag_time": null,
+        "diag_time": null,
+        "method": "ttm_finch_opt",
+        "sparsity": 0.001,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.0031871380000000004,
+        "nondiag_time": null,
+        "diag_time": null,
+        "method": "ttm_taco",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.001384932,
+        "nondiag_time": null,
+        "diag_time": null,
+        "method": "ttm_finch_ref",
+        "sparsity": 0.0001,
+        "size": 500,
+        "rank": 10
+    },
+    {
+        "time": 0.001303896,
+        "nondiag_time": null,
+        "diag_time": null,
+        "method": "ttm_finch_opt",
+        "sparsity": 0.0001,
         "size": 500,
         "rank": 10
     }
