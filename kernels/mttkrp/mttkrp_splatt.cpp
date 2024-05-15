@@ -31,7 +31,6 @@ int main(int argc, char **argv){
     fs::path file = fs::path(params.input) / "A.tns";
     std::string filename = file.string();
     ret = splatt_csf_load(filename.c_str(), &nmodes, &tt, cpd_opts);
-    std::cout << "after loading A" << std::endl;
 
     Tensor<double> _B = read(fs::path(params.input) / "B.ttx", Format({Dense, Dense}), true);
     int n = _B.getDimension(0);
@@ -39,7 +38,6 @@ int main(int argc, char **argv){
     for (int i = 0; i < nmodes; ++i) {
         factors[i] = (double *)(_B.getStorage().getValues().getData());
     }
-    std::cout << "after loading B" << std::endl;
 
     Tensor<double> C_splatt({n, n}, Format({Dense, Dense}));
     C_splatt.pack();
@@ -48,24 +46,17 @@ int main(int argc, char **argv){
         /* perform mttkrp */
         const int mode = 0;
     taco::util::TimeResults timevalue;
-    splatt_mttkrp(mode, n, tt, factors, matout, cpd_opts);
-    std::cout << "after performing mttkrp" << std::endl;
+    BENCH(splatt_mttkrp(mode, n, tt, factors, matout, cpd_opts);,
+          "\nSPLATT", 1, timevalue, true);
+    // splatt_mttkrp(mode, n, tt, factors, matout, cpd_opts);
 
     write(fs::path(params.input) / "C.ttx", C_splatt);
-    std::cout << "after writing C" << std::endl;
-    /* display results */
-    // std::cout << "Result vector C:" << std::endl;
-    // for (int i = 0; i < n; ++i) {
-    //     for (int j = 0; j < n; ++j) {
-    //         std::cout << C_splatt(i, j) << " ";
-    //     }
-    // }
-    // std::cout << std::endl;
 
-        // BENCH(splatt_mttkrp(mode, n, tt, factors, (double *)(C_splatt.getStorage().getValues().getData()), cpd_opts);,
-        //         "\nSPLATT", 1, timevalue, true);
-        // printResults("mode-1 mttkrp", results);
-    std::cout << "before returning" << std::endl;
+    json measurements;
+    measurements["time"] = timevalue.median;
+    measurements["memory"] = 0;
+    std::ofstream measurements_file(fs::path(params.output) / "measurements.json");
+    measurements_file << measurements;
+    measurements_file.close();
     return 0;
-    std::cout << "after returning??" << std::endl;
 }
