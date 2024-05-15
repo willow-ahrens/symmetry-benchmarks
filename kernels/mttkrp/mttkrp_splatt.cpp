@@ -9,7 +9,7 @@ using namespace taco;
 
 #define BENCH(CODE, NAME, REPEAT, TIMER, COLD)         \
     {                                                  \
-        TACO_TIME_REPEAT(CODE, REPEAT, TIMER, COLD);   \          \
+        TACO_TIME_REPEAT(CODE, REPEAT, TIMER, COLD);   \
     }
 
 int main(int argc, char **argv){

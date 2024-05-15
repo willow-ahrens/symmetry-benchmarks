@@ -39,10 +39,19 @@ FORMAT_LABELS = {
 def all_formats_chart(ordered_by_format=False):
     results = json.load(open(RESULTS_FILE_PATH, 'r'))
     data = defaultdict(lambda: defaultdict(int))
-    finch_formats = get_best_finch_format()
+    # finch_formats = get_best_finch_format()
 
     for result in results:
-        mtx = result["matrix"]
+        if "sparsity" in result and "size" in result and result["method"]:
+            n = result["size"]
+            s = result["sparsity"]
+            r = result["rank"]
+            nnz = n * n * n * s 
+            # mtx_name = f"n = {n}, sp = {s} / {nnz}"
+            mtx = f"{s, r}"
+        else:
+            mtx = result["matrix"]
+
         method = result["method"]
         time = result["time"]
 
@@ -50,21 +59,14 @@ def all_formats_chart(ordered_by_format=False):
             # finch_baseline_time = data[mtx]["finch_baseline"]
             # data[mtx]["finch_baseline"] = time if finch_baseline_time == 0 else min(time, finch_baseline_time)
             data[mtx]["finch_baseline"] = time
-        if "finch" in method and finch_formats[mtx] != method:
-            continue
-        method = "finch" if "finch" in method else method
         data[mtx][method] = time
 
     for mtx, times in data.items():
-        ref_time = times["taco"]
+        ref_time = times["mttkrp_finch_ref"]
         for method, time in times.items():
             times[method] = ref_time / time
 
-    if ordered_by_format:
-        #ordered_data = sorted(data.items(), key = lambda mtx_results: (mtx_results[1]["finch"] > 1, FORMAT_ORDER[finch_formats[mtx_results[0]]], mtx_results[1]["finch"]), reverse=True)
-        ordered_data = sorted(data.items(), key = lambda mtx_results: (FORMAT_ORDER[finch_formats[mtx_results[0]]], mtx_results[1]["finch"]), reverse=True)
-    else:
-        ordered_data = sorted(data.items(), key = lambda mtx_results: mtx_results[1]["finch"], reverse=True)
+    ordered_data = sorted(data.items(), key = lambda mtx_results: mtx_results[1]["mttkrp_finch_ref"], reverse=True)
 
     all_data = defaultdict(list)
     for i, (mtx, times) in enumerate(ordered_data):
@@ -72,10 +74,9 @@ def all_formats_chart(ordered_by_format=False):
             all_data[method].append(time)
 
     ordered_mtxs = [mtx for mtx, _ in ordered_data]
-    labels = [FORMAT_LABELS[finch_formats[mtx]] for mtx, _ in ordered_data]
-    methods = ["finch", "finch_baseline", "julia_stdlib"]#, "suite_sparse"]
+    methods = ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"]#, "suite_sparse"]
     legend_labels = ["Finch (Best)", "Finch (Baseline)", "Julia Stdlib"]#, "SuiteSparse"]
-    colors = {"finch": "tab:green", "finch_baseline": "tab:gray", "julia_stdlib": "tab:blue"}#, "suite_sparse": "tab:green"}
+    colors = {"mttkrp_finch_opt": "tab:green", "mttkrp_splatt": "tab:gray", "mttkrp_taco": "tab:blue"}#, "suite_sparse": "tab:green"}
     short_mtxs = [mtx.rsplit('/',1)[-1] for mtx in ordered_mtxs]
     new_mtxs = {
         "toeplitz_large_band": "large_band",
@@ -85,9 +86,7 @@ def all_formats_chart(ordered_by_format=False):
     }
     short_mtxs = [new_mtxs.get(mtx, mtx) for mtx in short_mtxs]
 
-    make_grouped_bar_chart(methods, short_mtxs, all_data, colors=colors, labeled_groups=["finch"], bar_labels_dict={"finch": labels[:]}, title="SpMV Performance (Speedup Over Taco) labeled")
-    make_grouped_bar_chart(methods, short_mtxs, all_data, colors=colors, title="SpMV Performance (Speedup Over Taco)")
-
+    make_grouped_bar_chart_3(methods, short_mtxs, all_data, colors=colors, title="MTTKRP Performance")
     # for mtx in mtxs:
         # all_formats_for_matrix_chart(mtx)
 
@@ -259,22 +258,68 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
     fig_file = title.lower().replace(" ", "_") + ".png"
     plt.savefig(CHARTS_DIRECTORY + fig_file, dpi=200, bbox_inches="tight")
     plt.close()
+
+
+def make_grouped_bar_chart_3(labels, x_axis, data, colors = None, labeled_groups = [], title = "", y_label = "", bar_labels_dict={}, legend_labels=None, reference_label = "", ref_line = True):
+    horizontal_scale = 1
+    fontfamily = "serif"
+
+    x = np.arange(0, len(data[labels[0]]) * horizontal_scale, horizontal_scale)
+    width = 0.3
+    max_height = 0
+    multiplier = 0
+    
+    fig, ax = plt.subplots(figsize=(10, 3))
+    for label in labels:
+        label_data = data[label]
+        max_height = max(max_height, max(label_data))
+        offset = width * multiplier
+        if colors:
+            rects = ax.bar(x + width/2 + offset, label_data, width, label=label, color=colors[label])
+        else:
+            rects = ax.bar(x + width/2 + offset, label_data, width, label=label, color="green")
+        bar_labels = bar_labels_dict[label] if (label in bar_labels_dict) else [round(float(val), 2) if label in labeled_groups else "" for val in label_data]
+        ax.bar_label(rects, padding=0, labels=bar_labels, fontsize=4, rotation=90)
+        multiplier += 1
+
+    ax.set_ylabel("Proportion of Execution Time")
+    ax.set_title(title, fontsize=12, fontfamily=fontfamily)
+    ax.set_xlabel(X_LABEL)
+    ax.set_xticks(x + width * (len(labels) - 1)/2, x_axis)
+    ax.tick_params(axis='x', which='major', labelsize=7.5, labelrotation=60, labelfontfamily=fontfamily)
+    ax.tick_params(axis='y', labelfontfamily=fontfamily)
+    if legend_labels:
+        ax.legend(legend_labels, loc='upper right', ncols=1, fontsize='small')
+    else:
+        ax.legend(loc='upper right', ncols=1)
+    ax.set_ylim(0, max_height + 0.25 * max_height)
+
+        # Adjusting x-axis limits to make bars go to the edges
+    ax.set_xlim(-0.5, (len(x_axis) - 0.5 + width * len(labels)) * horizontal_scale)
+
+    if ref_line:
+        plt.plot([-1, len(x_axis)], [1, 1], linestyle='--', color="tab:red", linewidth=1.25, label=reference_label)
+
+    fig_file = title.lower().replace(" ", "_") + ".png"
+    plt.savefig(CHARTS_DIRECTORY + fig_file, dpi=200, bbox_inches="tight")
+    plt.close()
     
 
-X_LABEL = "Sparsity"
+X_LABEL = "(Sparsity, Rank)"
 
-RESULTS_FILE_PATH = "ssymv/ssymv_results.json"
+# RESULTS_FILE_PATH = "ssymv/ssymv_results.json"
 # RESULTS_FILE_PATH = "ttm/ttm_finch_separate_diagonals_sparsities.json"
 # RESULTS_FILE_PATH = "mttkrp/mttkrp_dim4_final_sparsity.json"
 # RESULTS_FILE_PATH = "mttkrp/mttkrp_dim4_final_rank.json"
+RESULTS_FILE_PATH = "mttkrp/mttkrp_results.json"
 # RESULTS_FILE_PATH = "mttkrp/mttkrp_final_rank.json"
 # RESULTS_FILE_PATH = "mttkrp/mttkrp_final_sparsity.json"
 # RESULTS_FILE_PATH = "ssymm/ssymm_results.json"
 # RESULTS_FILE_PATH = "ssyrk/ssyrk_results.json"
 # RESULTS_FILE_PATH = "syprd/syprd_results.json"
 
-
-method_to_ref_comparison_chart("ssymv_finch_opt", "ssymv_taco", "SSYMV Performance")
+all_formats_chart()
+# method_to_ref_comparison_chart("ssymv_finch_opt", "ssymv_taco", "SSYMV Performance")
 # method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "Optimized vs. Naive TTM Performance")
 # method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "Optimized vs. Naive 4D MTTKRP Performance Varying Rank")
 # method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "4D MTTKRP Performance")
