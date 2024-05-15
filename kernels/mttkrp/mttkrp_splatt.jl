@@ -17,7 +17,7 @@ function mttkrp_splatt_helper(args, A, B)
         # run(`mttkrp_splatt -i $tmpdir -o $tmpdir`)
         C = fread(C_path)
         time = JSON.parsefile(joinpath(tmpdir, "measurements.json"))["time"]
-        return (;time=time, C=C)
+        return (;time=time*10^-3, C=C)
     end
 end
 

@@ -12,7 +12,7 @@ include("mttkrp_finch.jl")
 include("mttkrp_taco.jl")
 include("mttkrp_splatt.jl")
 
-n = 100
+n = 500
 rank = [10, 100, 250, 500]
 sparsities = [0.1, 0.075, 0.05, 0.025, 0.01, 0.0075, 0.005, 0.0025, 0.0001]
 methods = Dict(

@@ -9,9 +9,7 @@ using namespace taco;
 
 #define BENCH(CODE, NAME, REPEAT, TIMER, COLD)         \
     {                                                  \
-        TACO_TIME_REPEAT(CODE, REPEAT, TIMER, COLD);   \
-        std::cout << NAME << " time (ms)" << std::endl \
-                  << TIMER << std::endl;               \
+        TACO_TIME_REPEAT(CODE, REPEAT, TIMER, COLD);   \          \
     }
 
 int main(int argc, char **argv){
@@ -47,7 +45,7 @@ int main(int argc, char **argv){
         /* perform mttkrp */
         const int mode = 0;
     taco::util::TimeResults timevalue;
-    BENCH(splatt_mttkrp(mode, n, tt, factors, matout, cpd_opts);,
+    BENCH(splatt_mttkrp(mode, r, tt, factors, matout, cpd_opts);,
           "\nSPLATT", 1, timevalue, true);
     // splatt_mttkrp(mode, n, tt, factors, matout, cpd_opts);
 
