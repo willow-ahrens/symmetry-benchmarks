@@ -10,6 +10,7 @@ using Finch
 
 include("mttkrp_finch_dim4.jl")
 include("mttkrp_dim4_taco.jl")
+include("mttkrp_splatt_dim4.jl")
 
 n = 20
 rank = [10, 100, 250, 500]
@@ -17,7 +18,8 @@ sparsities = [0.1, 0.075, 0.05, 0.025, 0.01, 0.0075, 0.005, 0.0025, 0.0001]
 methods = Dict(
     "mttkrp_finch_ref" => mttkrp_finch_ref_dim4,
     "mttkrp_finch_opt" => mttkrp_finch_opt_dim4,
-    "mttkrp_taco" => mttkrp_dim4_taco
+    "mttkrp_taco" => mttkrp_dim4_taco,
+    "mttkrp_splatt" => mttkrp_splatt_dim4
 )
 
 results = []
@@ -61,7 +63,7 @@ for r in rank
                 "size" => n,
                 "rank" => r,
             ))
-            write("mttkrp_results_dim4.json", JSON.json(results, 4))
+            write("mttkrp_results_with_splatt_dim4.json", JSON.json(results, 4))
         end
     end
 end
