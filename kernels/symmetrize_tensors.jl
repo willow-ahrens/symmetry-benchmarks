@@ -16,29 +16,23 @@ frostt_tensors = [
 ]
 
 for tn in frostt_tensors
-    A = fread("../data/order-3/$(tn).bsp.h5")
+    println("in for loop")
+    _A = fread("../data/order-3/$(tn).bsp.h5")
     println("read tensor")
-    n = maximum(size(A))
+    n_i, n_j, n_k = size(_A)
+    n = maximum([n_i, n_j, n_k])
     println(n)
-    B = Tensor(SparseHash{3}(Element(0.0)), n, n, n)
-    C = Tensor(Dense(SparseList(SparseList(Element(0.0)))), undef, n, n, n);
-
-    @finch begin
-        C .= 0
-        for k = _, j = _, i = _
-            C[i, j, k] = coalesce(A[~i, ~j, ~k], 0)
-        end
-    end
-    println("coalesced tensor")
-
-    for perm in permutations(1:3)
-        D = swizzle(B, perm...)
-        @finch for k=_, j=_, i=_
-            D[i, j, k] += C[i, j, k]
-        end
+    A = Tensor(SparseHash{3}(Element(0.0)), n, n, n)
+    println("initialized A")
+    for k=1:n_k, j=1:n_j, i=1:n_i
+        A[i, j, k] += _A[i, j, k]
+        A[i, k, j] += _A[i, j, k]
+        A[j, i, k] += _A[i, j, k]
+        A[j, k, i] += _A[i, j, k]
+        A[k, i, j] += _A[i, j, k]
+        A[k, j, i] += _A[i, j, k]
     end
     println("symmetrized tensor")
-    
-    bspwrite("../data/order-3/$(tn)_symmetric.bsp.h5", D)
+    bspwrite("../data/order-3/$(tn)_symmetric.bsp.h5", A)
     println("written tensor")
 end
