@@ -10,11 +10,11 @@ using Finch
 
 include("mttkrp_finch_dim5.jl")
 include("mttkrp_dim5_taco.jl")
-include("mttkrp_splatt_dim4.jl")
+include("mttkrp_splatt_dim5.jl")
 
 n = 40
 rank = [10]
-sparsities = [0.1, 0.0001]
+sparsities = [0.1, 0.01, 0.001, 0.0001]
 methods = Dict(
     "mttkrp_finch_ref" => mttkrp_finch_ref_dim5,
     "mttkrp_finch_opt" => mttkrp_finch_opt_dim5,
