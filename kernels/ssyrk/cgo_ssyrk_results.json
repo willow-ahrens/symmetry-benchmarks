@@ -1,0 +1,51 @@
+[{
+        "time": 0.282497772,
+        "method": "ssyrk_opt",
+        "matrix": "Simon/olafu"
+    },
+    {
+        "time": 0.317854373,
+        "method": "ssyrk_ref",
+        "matrix": "Simon/olafu"
+    },
+    {
+        "time": 0.886990156,
+        "method": "ssyrk_opt",
+        "matrix": "Boeing/bcsstk35"
+    },
+    {
+        "time": 0.930720462,
+        "method": "ssyrk_ref",
+        "matrix": "Boeing/bcsstk35"
+    },
+    {
+        "time": 0.227987304,
+        "method": "ssyrk_opt",
+        "matrix": "Boeing/crystk02"
+    },
+    {
+        "time": 0.274615213,
+        "method": "ssyrk_ref",
+        "matrix": "Boeing/crystk02"
+    },
+    {
+        "time": 0.64950029,
+        "method": "ssyrk_opt",
+        "matrix": "Boeing/crystk03"
+    },
+    {
+        "time": 0.732597926,
+        "method": "ssyrk_ref",
+        "matrix": "Boeing/crystk03"
+    },
+    {
+        "time": 2.186138807,
+        "method": "ssyrk_opt",
+        "matrix": "Rothberg/3dtube"
+    },
+    {
+        "time": 2.335157707,
+        "method": "ssyrk_ref",
+        "matrix": "Rothberg/3dtube"
+    }
+]
