@@ -2,7 +2,7 @@ using Finch
 using TensorMarket
 using JSON
 
-function mttkrp_splatt_helper(args, A, B)
+function mttkrp_splatt_dim4_helper(args, A, B)
     mktempdir(prefix="input_") do tmpdir
         A_path = joinpath(tmpdir, "A.tns")
         B_path = joinpath(tmpdir, "B.ttx")
@@ -21,4 +21,4 @@ function mttkrp_splatt_helper(args, A, B)
     end
 end
 
-mttkrp_splatt(C, A, B) = mttkrp_splatt_helper("", A, B)
+mttkrp_splatt_dim4(C, A, B) = mttkrp_splatt_dim4_helper("", A, B)
