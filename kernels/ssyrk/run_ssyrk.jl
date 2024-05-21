@@ -11,7 +11,7 @@ using Finch
 include("ssyrk_finch.jl")
 
 symmetric_oski = [
-    "Boeing/ct20stif",
+    # "Boeing/ct20stif", # OOM error
     "Simon/olafu",
     "Boeing/bcsstk35",
     "Boeing/crystk02",
