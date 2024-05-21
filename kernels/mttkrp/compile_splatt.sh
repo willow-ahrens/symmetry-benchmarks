@@ -18,3 +18,4 @@ g++ -O3 -mtune=corei7-avx -g0 -Wno-deprecated-declarations -DNDEBUG mttkrp_splat
 
 g++ -O3 -mtune=corei7-avx -g0 -Wno-deprecated-declarations -DNDEBUG mttkrp_splatt_dim4.cpp -I../../splatt/include -std=c++17 -I../../splatt/src -L../../splatt/build/Linux-x86_64/lib -lsplatt -fopenmp -I../../deps/taco/include -I../../deps/taco/src -L../../deps/taco/build/lib -ltaco -ldl -o mttkrp_splatt_dim4
 
+g++ -O3 -mtune=corei7-avx -g0 -Wno-deprecated-declarations -DNDEBUG mttkrp_splatt_dim5.cpp -I../../splatt/include -std=c++17 -I../../splatt/src -L../../splatt/build/Linux-x86_64/lib -lsplatt -fopenmp -I../../deps/taco/include -I../../deps/taco/src -L../../deps/taco/build/lib -ltaco -ldl -o mttkrp_splatt_dim5
