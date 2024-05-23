@@ -27,7 +27,7 @@ function ssyrk_finch_opt(C, A)
     _A = Tensor(Dense(SparseList(Element(0.0))), A)
 
     time = @belapsed ssyrk_finch_opt_helper($_C, $_A)
-    C_full = Tensor(Dense(Dense(Element(0.0))), _C)
+    C_full = Tensor(Dense(SparseList(Element(0.0))), _C)
     @finch begin
         for j=_, i=_
             if i > j
