@@ -9,6 +9,7 @@ using LinearAlgebra
 using Finch
 
 include("syprd_finch.jl")
+include("syprd_taco.jl")
 
 symmetric_oski = [
     "Boeing/ct20stif",
@@ -49,6 +50,7 @@ unsymmetric_oski = [
 methods = Dict(
     "syprd_ref" => syprd_finch_ref,
     "syprd_opt" => syprd_finch_opt,
+    "syprd_taco" => syprd_taco
 )
 
 results = []
