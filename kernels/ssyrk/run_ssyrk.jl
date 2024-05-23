@@ -9,6 +9,7 @@ using LinearAlgebra
 using Finch
 
 include("ssyrk_finch.jl")
+include("ssyrk_taco.jl")
 
 symmetric_oski = [
     # "Boeing/ct20stif", # OOM error
@@ -53,6 +54,7 @@ unsymmetric_oski = [
 methods = Dict(
     "ssyrk_opt" => ssyrk_finch_opt,
     "ssyrk_ref" => ssyrk_finch_ref,
+    # "ssyrk_taco" => ssyrk_taco, # skip due to TACO sparse output problem
 )
 
 results = []
