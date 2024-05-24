@@ -24,7 +24,6 @@ symmetric_oski = [
     "Pothen/pwt",
     "Cote/vibrobox",
     "HB/saylr4",
-    "Gupta/gupta1"
 ]
 
 
