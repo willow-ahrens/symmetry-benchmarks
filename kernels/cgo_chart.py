@@ -15,12 +15,9 @@ def use_sparsity(result):
     s = result["sparsity"]
     return f"{s}"
 
-def use_sparsity_rank_name(result):
-    n = result["size"]
+def use_sparsity_rank(result):
     s = result["sparsity"]
     r = result["rank"]
-    nnz = n * n * n * s 
-    # mtx_name = f"n = {n}, sp = {s} / {nnz}"
     return f"{s, r}"
 
 
@@ -110,39 +107,79 @@ all_formats_chart("ssyrk/cgo_ssyrk_results.json", use_suitesparse_name, "ssyrk_r
                 ["Symmetric Finch"])
 
 all_formats_chart("syprd/cgo_syprd_results.json", use_suitesparse_name, "syprd_ref", "syprd_opt",
-                ["syprd_opt"],  
-                {"syprd_opt": "tab:blue"},
+                ["syprd_opt", "syprd_taco"],  
+                {"syprd_opt": "tab:blue", "syprd_taco": "tab:green"},
                 "SYPRD Performance",
                 "Speedup",
                 "Matrix Name",
-                ["Symmetric Finch"])
+                ["Symmetric Finch", "TACO"])
 
-all_formats_chart("mttkrp/cgo_mttkrp_results_sparsity.json", use_sparsity, "mttkrp_finch_ref", "mttkrp_finch_opt",
+all_formats_chart("ttm/cgo_ttm_results.json", use_sparsity_rank, "ttm_finch_ref", "ttm_finch_opt",
+                ["ttm_finch_opt", "ttm_taco"],  
+                {"ttm_finch_opt": "tab:blue", "ttm_taco": "tab:green"},
+                "TTM Performance",
+                "Speedup",
+                "Sparsity, Numerical Rank",
+                ["Symmetric Finch", "TACO"],
+                ordered = False,
+                width = 4)
+
+all_formats_chart("mttkrp/cgo_mttkrp_dim3.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
                 ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
                 {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:green", "mttkrp_splatt": "tab:gray"},
                 "3D MTTKRP Performance",
                 "Speedup",
-                "Sparsity",
+                "Sparsity, Numerical Rank",
                 ["Symmetric Finch", "TACO", "SPLATT"],
                 ordered = False,
                 width = 4)
 
-all_formats_chart("mttkrp/cgo_mttkrp_dim4_results_sparsity.json", use_sparsity, "mttkrp_finch_ref", "mttkrp_finch_opt",
+all_formats_chart("mttkrp/cgo_mttkrp_dim4.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
                 ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
                 {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:green", "mttkrp_splatt": "tab:gray"},
                 "4D MTTKRP Performance",
                 "Speedup",
-                "Sparsity",
+                "Sparsity, Numerical Rank",
                 ["Symmetric Finch", "TACO", "SPLATT"],
                 ordered = False,
                 width = 4)
 
-all_formats_chart("mttkrp/cgo_mttkrp_dim5_results_sparsity.json", use_sparsity, "mttkrp_finch_ref", "mttkrp_finch_opt",
+all_formats_chart("mttkrp/cgo_mttkrp_dim5.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
                 ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
                 {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:green", "mttkrp_splatt": "tab:gray"},
                 "5D MTTKRP Performance",
                 "Speedup",
-                "Sparsity",
+                "Sparsity, Numerical Rank",
                 ["Symmetric Finch", "TACO", "SPLATT"],
                 ordered = False,
                 width = 4)
+
+# all_formats_chart("mttkrp/cgo_mttkrp_results_sparsity.json", use_sparsity, "mttkrp_finch_ref", "mttkrp_finch_opt",
+#                 ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
+#                 {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:green", "mttkrp_splatt": "tab:gray"},
+#                 "3D MTTKRP Performance",
+#                 "Speedup",
+#                 "Sparsity",
+#                 ["Symmetric Finch", "TACO", "SPLATT"],
+#                 ordered = False,
+#                 width = 4)
+
+# all_formats_chart("mttkrp/cgo_mttkrp_dim4_results_sparsity.json", use_sparsity, "mttkrp_finch_ref", "mttkrp_finch_opt",
+#                 ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
+#                 {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:green", "mttkrp_splatt": "tab:gray"},
+#                 "4D MTTKRP Performance",
+#                 "Speedup",
+#                 "Sparsity",
+#                 ["Symmetric Finch", "TACO", "SPLATT"],
+#                 ordered = False,
+#                 width = 4)
+
+# all_formats_chart("mttkrp/cgo_mttkrp_dim5_results_sparsity.json", use_sparsity, "mttkrp_finch_ref", "mttkrp_finch_opt",
+#                 ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
+#                 {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:green", "mttkrp_splatt": "tab:gray"},
+#                 "5D MTTKRP Performance",
+#                 "Speedup",
+#                 "Sparsity",
+#                 ["Symmetric Finch", "TACO", "SPLATT"],
+#                 ordered = False,
+#                 width = 4)
