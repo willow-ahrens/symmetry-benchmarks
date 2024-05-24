@@ -58,9 +58,12 @@ methods = Dict(
 )
 
 results = []
-for dataset in [symmetric_oski, unsymmetric_oski]
+for (symmetric, dataset) in [(true, symmetric_oski), (false, unsymmetric_oski)]
     for mtx in dataset 
         A = SparseMatrixCSC(matrixdepot(mtx)) 
+        if !symmetric
+            A += transpose(A)
+        end
         (n, n) = size(A)
         C = zeros(n, n)
         C_ref = nothing
