@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 {
     auto params = parse(argc, argv);
     Tensor<double> A = read(fs::path(params.input) / "A.ttx", Format({Dense, Sparse, Sparse, Sparse, Sparse}, {4, 3, 2, 1, 0}), true);
-    Tensor<double> B_T = read(fs::path(params.input) / "B_T.ttx", Format({Dense, Dense}, {2, 1}), true);
+    Tensor<double> B_T = read(fs::path(params.input) / "B_T.ttx", Format({Dense, Dense}, {1, 0}), true);
     int n = A.getDimension(0);
     int r = B_T.getDimension(0);
     Tensor<double> C_T("C_T", {r, n}, Format({Dense, Dense}));
