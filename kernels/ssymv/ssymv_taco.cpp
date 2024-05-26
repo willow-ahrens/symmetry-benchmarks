@@ -14,7 +14,7 @@ using namespace taco;
 
 int main(int argc, char **argv){
     auto params = parse(argc, argv);
-    Tensor<double> A = read(fs::path(params.input)/"A.ttx", Format({Dense, Sparse}), true);
+    Tensor<double> A = read(fs::path(params.input)/"A.ttx", Format({Dense, Sparse}, {1, 0}), true);
     Tensor<double> x = read(fs::path(params.input)/"x.ttx", Format({Dense}), true);
     int m = A.getDimension(0);
     int n = A.getDimension(1);
