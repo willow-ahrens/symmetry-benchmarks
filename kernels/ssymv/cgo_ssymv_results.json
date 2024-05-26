@@ -1,0 +1,422 @@
+[
+    {
+        "time": 0.00402746,
+        "method": "ssymv_finch_ref",
+        "matrix": "Boeing/ct20stif"
+    },
+    {
+        "time": 0.002279358,
+        "method": "ssymv_finch_opt",
+        "matrix": "Boeing/ct20stif"
+    },
+    {
+        "time": 0.001151529,
+        "method": "ssymv_finch_ref",
+        "matrix": "Simon/olafu"
+    },
+    {
+        "time": 0.000816081,
+        "method": "ssymv_finch_opt",
+        "matrix": "Simon/olafu"
+    },
+    {
+        "time": 0.001724582,
+        "method": "ssymv_finch_ref",
+        "matrix": "Boeing/bcsstk35"
+    },
+    {
+        "time": 0.001166159,
+        "method": "ssymv_finch_opt",
+        "matrix": "Boeing/bcsstk35"
+    },
+    {
+        "time": 0.001089893,
+        "method": "ssymv_finch_ref",
+        "matrix": "Boeing/crystk02"
+    },
+    {
+        "time": 0.000760613,
+        "method": "ssymv_finch_opt",
+        "matrix": "Boeing/crystk02"
+    },
+    {
+        "time": 0.002250316,
+        "method": "ssymv_finch_ref",
+        "matrix": "Boeing/crystk03"
+    },
+    {
+        "time": 0.001376934,
+        "method": "ssymv_finch_opt",
+        "matrix": "Boeing/crystk03"
+    },
+    {
+        "time": 0.004363468,
+        "method": "ssymv_finch_ref",
+        "matrix": "Nasa/nasasrb"
+    },
+    {
+        "time": 0.00212291,
+        "method": "ssymv_finch_opt",
+        "matrix": "Nasa/nasasrb"
+    },
+    {
+        "time": 0.001534304,
+        "method": "ssymv_finch_ref",
+        "matrix": "Simon/raefsky4"
+    },
+    {
+        "time": 0.001051472,
+        "method": "ssymv_finch_opt",
+        "matrix": "Simon/raefsky4"
+    },
+    {
+        "time": 0.000812093,
+        "method": "ssymv_finch_ref",
+        "matrix": "Mulvey/finan512"
+    },
+    {
+        "time": 0.000689099,
+        "method": "ssymv_finch_opt",
+        "matrix": "Mulvey/finan512"
+    },
+    {
+        "time": 0.000384017,
+        "method": "ssymv_finch_ref",
+        "matrix": "Cote/vibrobox"
+    },
+    {
+        "time": 0.000308009,
+        "method": "ssymv_finch_opt",
+        "matrix": "Cote/vibrobox"
+    },
+    {
+        "time": 3.486e-5,
+        "method": "ssymv_finch_ref",
+        "matrix": "HB/saylr4"
+    },
+    {
+        "time": 3.1508e-5,
+        "method": "ssymv_finch_opt",
+        "matrix": "HB/saylr4"
+    },
+    {
+        "time": 0.001985242,
+        "method": "ssymv_finch_ref",
+        "matrix": "Simon/raefsky3"
+    },
+    {
+        "time": 0.001157045,
+        "method": "ssymv_finch_opt",
+        "matrix": "Simon/raefsky3"
+    },
+    {
+        "time": 0.001972815,
+        "method": "ssymv_finch_ref",
+        "matrix": "Simon/venkat01"
+    },
+    {
+        "time": 0.001419243,
+        "method": "ssymv_finch_opt",
+        "matrix": "Simon/venkat01"
+    },
+    {
+        "time": 0.001287281,
+        "method": "ssymv_finch_ref",
+        "matrix": "FIDAP/ex11"
+    },
+    {
+        "time": 0.000889315,
+        "method": "ssymv_finch_opt",
+        "matrix": "FIDAP/ex11"
+    },
+    {
+        "time": 0.000208137,
+        "method": "ssymv_finch_ref",
+        "matrix": "Zitney/rdist1"
+    },
+    {
+        "time": 0.000142022,
+        "method": "ssymv_finch_opt",
+        "matrix": "Zitney/rdist1"
+    },
+    {
+        "time": 0.000194249,
+        "method": "ssymv_finch_ref",
+        "matrix": "HB/orani678"
+    },
+    {
+        "time": 0.000132483,
+        "method": "ssymv_finch_opt",
+        "matrix": "HB/orani678"
+    },
+    {
+        "time": 0.001517947,
+        "method": "ssymv_finch_ref",
+        "matrix": "Goodwin/rim"
+    },
+    {
+        "time": 0.001072538,
+        "method": "ssymv_finch_opt",
+        "matrix": "Goodwin/rim"
+    },
+    {
+        "time": 0.000167947,
+        "method": "ssymv_finch_ref",
+        "matrix": "Hamm/memplus"
+    },
+    {
+        "time": 0.000143603,
+        "method": "ssymv_finch_opt",
+        "matrix": "Hamm/memplus"
+    },
+    {
+        "time": 0.000112659,
+        "method": "ssymv_finch_ref",
+        "matrix": "HB/gemat11"
+    },
+    {
+        "time": 9.1039e-5,
+        "method": "ssymv_finch_opt",
+        "matrix": "HB/gemat11"
+    },
+    {
+        "time": 0.000537673,
+        "method": "ssymv_finch_ref",
+        "matrix": "Mallya/lhr10"
+    },
+    {
+        "time": 0.000376639,
+        "method": "ssymv_finch_opt",
+        "matrix": "Mallya/lhr10"
+    },
+    {
+        "time": 0.000466145,
+        "method": "ssymv_finch_ref",
+        "matrix": "Goodwin/goodwin"
+    },
+    {
+        "time": 0.00032364,
+        "method": "ssymv_finch_opt",
+        "matrix": "Goodwin/goodwin"
+    },
+    {
+        "time": 0.000211648,
+        "method": "ssymv_finch_ref",
+        "matrix": "Grund/bayer02"
+    },
+    {
+        "time": 0.000163875,
+        "method": "ssymv_finch_opt",
+        "matrix": "Grund/bayer02"
+    },
+    {
+        "time": 0.000240674,
+        "method": "ssymv_finch_ref",
+        "matrix": "Grund/bayer10"
+    },
+    {
+        "time": 0.000180354,
+        "method": "ssymv_finch_opt",
+        "matrix": "Grund/bayer10"
+    },
+    {
+        "time": 0.000383649,
+        "method": "ssymv_finch_ref",
+        "matrix": "Brethour/coater2"
+    },
+    {
+        "time": 0.000292928,
+        "method": "ssymv_finch_opt",
+        "matrix": "Brethour/coater2"
+    },
+    {
+        "time": 0.000574259,
+        "method": "ssymv_finch_ref",
+        "matrix": "ATandT/onetone2"
+    },
+    {
+        "time": 0.000432232,
+        "method": "ssymv_finch_opt",
+        "matrix": "ATandT/onetone2"
+    },
+    {
+        "time": 0.000240869,
+        "method": "ssymv_finch_ref",
+        "matrix": "Wang/wang4"
+    },
+    {
+        "time": 0.000221513,
+        "method": "ssymv_finch_opt",
+        "matrix": "Wang/wang4"
+    },
+    {
+        "time": 3.6208e-5,
+        "method": "ssymv_finch_ref",
+        "matrix": "HB/lnsp3937"
+    },
+    {
+        "time": 3.3514e-5,
+        "method": "ssymv_finch_opt",
+        "matrix": "HB/lnsp3937"
+    },
+    {
+        "time": 3.5463e-5,
+        "method": "ssymv_finch_ref",
+        "matrix": "HB/sherman5"
+    },
+    {
+        "time": 2.8268e-5,
+        "method": "ssymv_finch_opt",
+        "matrix": "HB/sherman5"
+    },
+    {
+        "time": 3.4942e-5,
+        "method": "ssymv_finch_ref",
+        "matrix": "HB/sherman3"
+    },
+    {
+        "time": 3.0976e-5,
+        "method": "ssymv_finch_opt",
+        "matrix": "HB/sherman3"
+    },
+    {
+        "time": 0.000582676,
+        "method": "ssymv_finch_ref",
+        "matrix": "Shyy/shyy161"
+    },
+    {
+        "time": 0.00057119,
+        "method": "ssymv_finch_opt",
+        "matrix": "Shyy/shyy161"
+    },
+    {
+        "time": 0.000240101,
+        "method": "ssymv_finch_ref",
+        "matrix": "Wang/wang3"
+    },
+    {
+        "time": 0.000220796,
+        "method": "ssymv_finch_opt",
+        "matrix": "Wang/wang3"
+    }, {
+        "time": 0.002632437,
+        "method": "ssymv_taco",
+        "matrix": "Boeing/ct20stif"
+    }, {
+        "time": 0.0008504960000000001,
+        "method": "ssymv_taco",
+        "matrix": "Simon/olafu"
+    }, {
+        "time": 0.0012722130000000001,
+        "method": "ssymv_taco",
+        "matrix": "Boeing/bcsstk35"
+    }, {
+        "time": 0.000817966,
+        "method": "ssymv_taco",
+        "matrix": "Boeing/crystk02"
+    }, {
+        "time": 0.001477926,
+        "method": "ssymv_taco",
+        "matrix": "Boeing/crystk03"
+    }, {
+        "time": 0.0027597190000000003,
+        "method": "ssymv_taco",
+        "matrix": "Nasa/nasasrb"
+    }, {
+        "time": 0.0011164060000000001,
+        "method": "ssymv_taco",
+        "matrix": "Simon/raefsky4"
+    }, {
+        "time": 0.0006414280000000001,
+        "method": "ssymv_taco",
+        "matrix": "Mulvey/finan512"
+    }, {
+        "time": 0.00031703600000000003,
+        "method": "ssymv_taco",
+        "matrix": "Cote/vibrobox"
+    }, {
+        "time": 4.7023e-5,
+        "method": "ssymv_taco",
+        "matrix": "HB/saylr4"
+    }, {
+        "time": 0.001231511,
+        "method": "ssymv_taco",
+        "matrix": "Simon/raefsky3"
+    }, {
+        "time": 0.0015084500000000002,
+        "method": "ssymv_taco",
+        "matrix": "Simon/venkat01"
+    }, {
+        "time": 0.0009149410000000001,
+        "method": "ssymv_taco",
+        "matrix": "FIDAP/ex11"
+    }, {
+        "time": 0.000177104,
+        "method": "ssymv_taco",
+        "matrix": "Zitney/rdist1"
+    }, {
+        "time": 0.000158419,
+        "method": "ssymv_taco",
+        "matrix": "HB/orani678"
+    }, {
+        "time": 0.00109136,
+        "method": "ssymv_taco",
+        "matrix": "Goodwin/rim"
+    }, {
+        "time": 0.00014413700000000002,
+        "method": "ssymv_taco",
+        "matrix": "Hamm/memplus"
+    }, {
+        "time": 9.948300000000001e-5,
+        "method": "ssymv_taco",
+        "matrix": "HB/gemat11"
+    }, {
+        "time": 0.00040835000000000003,
+        "method": "ssymv_taco",
+        "matrix": "Mallya/lhr10"
+    }, {
+        "time": 0.000358918,
+        "method": "ssymv_taco",
+        "matrix": "Goodwin/goodwin"
+    }, {
+        "time": 0.00018126900000000002,
+        "method": "ssymv_taco",
+        "matrix": "Grund/bayer02"
+    }, {
+        "time": 0.000193322,
+        "method": "ssymv_taco",
+        "matrix": "Grund/bayer10"
+    }, {
+        "time": 0.000288957,
+        "method": "ssymv_taco",
+        "matrix": "Brethour/coater2"
+    }, {
+        "time": 0.0005173970000000001,
+        "method": "ssymv_taco",
+        "matrix": "ATandT/onetone2"
+    }, {
+        "time": 0.000202449,
+        "method": "ssymv_taco",
+        "matrix": "Wang/wang4"
+    }, {
+        "time": 4.7449000000000006e-5,
+        "method": "ssymv_taco",
+        "matrix": "HB/lnsp3937"
+    }, {
+        "time": 4.7255e-5,
+        "method": "ssymv_taco",
+        "matrix": "HB/sherman5"
+    }, {
+        "time": 4.9544000000000005e-5,
+        "method": "ssymv_taco",
+        "matrix": "HB/sherman3"
+    }, {
+        "time": 0.00043589500000000005,
+        "method": "ssymv_taco",
+        "matrix": "Shyy/shyy161"
+    }, {
+        "time": 0.00020628,
+        "method": "ssymv_taco",
+        "matrix": "Wang/wang3"
+    }
+]
