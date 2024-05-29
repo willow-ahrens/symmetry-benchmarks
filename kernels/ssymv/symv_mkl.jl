@@ -1,19 +1,25 @@
 using Finch
 using TensorMarket
 using JSON
+using MKLSparse
 
 function symv_mkl_helper(args, A, x)
-    mktempdir(prefix="input_") do tmpdir
-        A_path = joinpath(tmpdir, "A.ttx")
-        x_path = joinpath(tmpdir, "x.ttx")
-        y_path = joinpath(tmpdir, "y.ttx")
-        fwrite(A_path, Tensor(Dense(SparseList(Element(0.0))), A))
-        fwrite(x_path, Tensor(Dense(Element(0.0)), x))
-        run(`mkl_symv -i $tmpdir -o $tmpdir`)
-        y = fread(y_path)
-        time = JSON.parsefile(joinpath(tmpdir, "measurements.json"))["time"]
-        return (;time=time*10^-3, y=y)
-    end
+    A = SparseMatrixCSC(A)
+    (m, n) = size(A)
+    y = zeros(m)
+    zcolptr = A.colptr .- 1
+    ia = pointer(zcolptr)
+    zrowval = A.rowval .- 1
+    ja = pointer(zrowval)
+    px = pointer(x)
+    py = pointer(y)
+    pm = Ref(m)
+    uplo = Ref(Cchar('U'))
+    MKLSparse.mkl_dcsrsymv(uplo, pm, a, ia, ja, px, py)
+    time = @belapsed MKLSparse.mkl_dcsrsymv($uplo, $pm, $a, $ia, $ja, $px, $py)
+    fill!(y, 0)
+    MKLSparse.mkl_dcsrsymv(uplo, pm, a, ia, ja, px, py)
+    return (;time=time, y=y)
 end
 
 symv_mkl(y, A, x) = symv_mkl_helper("", A, x)
