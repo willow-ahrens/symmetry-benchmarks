@@ -13,8 +13,8 @@ include("ttm_finch.jl")
 include("ttm_taco.jl")
 
 n = 500
-rank = [10]
-sparsities = [0.1, 0.01, 0.001, 0.0001]
+rank = [10, 100]
+sparsities = [0.1, 0.01, 0.001]
 methods = Dict(
     "ttm_finch_ref" => ttm_finch_ref,
     "ttm_finch_opt" => ttm_finch_opt,
@@ -24,7 +24,7 @@ methods = Dict(
 results = []
 for r in rank
     for sp in sparsities
-        triA = fsprand(n, n, n, sp)
+        triA = copyto!(zeros(n, n, n), fsprand(n, n, n, sp))
         A = [triA[sort([i, j, k])...] for i = 1:n, j = 1:n, k = 1:n]
         # A = bspread("../../data/symmetric_n$(n)_sp$(sp).bsp.h5")
         B = rand(n, r)   
@@ -49,6 +49,7 @@ for r in rank
             catch
                 C_res = res.C
             end
+            C_res = copyto!(zeros(size(C_res)...), C_res)
             C_ref = something(C_ref, C_res)
             norm(C_res - C_ref)/norm(C_ref) < 0.1 || @warn("incorrect result via norm")
 
