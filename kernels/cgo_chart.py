@@ -96,7 +96,7 @@ all_formats_chart("ssymv/cgo_ssymv_results.json", use_suitesparse_name, "ssymv_f
                 "SSYMV Performance",
                 "Speedup",
                 "Matrix Name",
-                ["Symmetric Finch", "TACO"])
+                ["Symmetric Finch", "TACO"], width=8)
 
 all_formats_chart("ssyrk/cgo_ssyrk_results.json", use_suitesparse_name, "ssyrk_ref", "ssyrk_opt",
                 ["ssyrk_opt"],  
@@ -104,7 +104,7 @@ all_formats_chart("ssyrk/cgo_ssyrk_results.json", use_suitesparse_name, "ssyrk_r
                 "SSYRK Performance",
                 "Speedup",
                 "Matrix Name",
-                ["Symmetric Finch"])
+                ["Symmetric Finch"], width=8)
 
 all_formats_chart("syprd/cgo_syprd_results.json", use_suitesparse_name, "syprd_ref", "syprd_opt",
                 ["syprd_opt", "syprd_taco"],  
@@ -112,7 +112,7 @@ all_formats_chart("syprd/cgo_syprd_results.json", use_suitesparse_name, "syprd_r
                 "SYPRD Performance",
                 "Speedup",
                 "Matrix Name",
-                ["Symmetric Finch", "TACO"])
+                ["Symmetric Finch", "TACO"], width=8)
 
 all_formats_chart("ttm/cgo_ttm_results.json", use_sparsity_rank, "ttm_finch_ref", "ttm_finch_opt",
                 ["ttm_finch_opt", "ttm_taco"],  
