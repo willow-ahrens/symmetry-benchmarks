@@ -77,6 +77,7 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
         ax.set_xlabel(x_label, fontsize=14)
     ax.set_xticks(x + width * (len(labels) - 1)/2, x_axis)
     ax.tick_params(axis='x', which='major', labelsize=11, labelrotation=60, labelfontfamily=fontfamily)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation = 45, ha="right")
     ax.tick_params(axis='y', labelfontfamily=fontfamily, labelsize=10)
     if legend_labels:
         ax.legend(legend_labels, loc='upper right', ncols=1, fontsize=12)
@@ -102,7 +103,7 @@ all_formats_chart("ssymv/cgo_ssymv_results.json", use_suitesparse_name, "ssymv_f
                 "Speedup",
                 "Matrix Name",
                 ["SySTeC", "TACO", "MKL"],
-                expected_speedup = 1, width=6)
+                expected_speedup = 1, width=16)
 
 all_formats_chart("ssyrk/cgo_ssyrk_results.json", use_suitesparse_name, "ssyrk_ref", "ssyrk_opt",
                 ["ssyrk_opt"],  
@@ -111,7 +112,7 @@ all_formats_chart("ssyrk/cgo_ssyrk_results.json", use_suitesparse_name, "ssyrk_r
                 "Speedup",
                 "Matrix Name",
                 ["SySTeC"],
-                expected_speedup = 2, width=6)
+                expected_speedup = 2, width=16)
 
 all_formats_chart("syprd/cgo_syprd_results.json", use_suitesparse_name, "syprd_ref", "syprd_opt",
                 ["syprd_opt", "syprd_taco"],  
@@ -120,7 +121,7 @@ all_formats_chart("syprd/cgo_syprd_results.json", use_suitesparse_name, "syprd_r
                 "Speedup",
                 "Matrix Name",
                 ["SySTeC", "TACO"],
-                expected_speedup = 2, width=6)
+                expected_speedup = 2, width=16)
 
 all_formats_chart("ttm/cgo_ttm_results.json", use_sparsity_rank, "ttm_finch_ref", "ttm_finch_opt",
                 ["ttm_finch_opt", "ttm_taco"],  
@@ -130,7 +131,7 @@ all_formats_chart("ttm/cgo_ttm_results.json", use_sparsity_rank, "ttm_finch_ref"
                 "Sparsity, Numerical Rank",
                 ["SySTeC", "TACO"],
                 ordered = False,
-                width = 6,
+                width = 8,
                 expected_speedup = 2)
 
 all_formats_chart("mttkrp/cgo_mttkrp_dim3.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
@@ -141,7 +142,7 @@ all_formats_chart("mttkrp/cgo_mttkrp_dim3.json", use_sparsity_rank, "mttkrp_finc
                 "", #"Sparsity, Numerical Rank",
                 [], # ["SySTeC", "TACO", "SPLATT"], 
                 ordered = False,
-                width = 4,
+                width = 5,
                 expected_speedup = 2)
 
 all_formats_chart("mttkrp/cgo_mttkrp_dim4.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
@@ -152,7 +153,7 @@ all_formats_chart("mttkrp/cgo_mttkrp_dim4.json", use_sparsity_rank, "mttkrp_finc
                 "", #"Sparsity, Numerical Rank",
                 [], # ["SySTeC", "TACO", "SPLATT"],
                 ordered = False,
-                width = 4,
+                width = 5,
                 expected_speedup = 6)
 
 all_formats_chart("mttkrp/cgo_mttkrp_dim5.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
@@ -163,7 +164,7 @@ all_formats_chart("mttkrp/cgo_mttkrp_dim5.json", use_sparsity_rank, "mttkrp_finc
                 "", #"Sparsity, Numerical Rank",
                 ["SySTeC", "TACO", "SPLATT"],
                 ordered = False,
-                width = 4,
+                width = 5,
                 expected_speedup = 24)
 
 # all_formats_chart("mttkrp/cgo_mttkrp_results_sparsity.json", use_sparsity, "mttkrp_finch_ref", "mttkrp_finch_opt",
