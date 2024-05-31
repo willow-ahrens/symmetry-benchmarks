@@ -60,7 +60,7 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
     max_height = 0
     multiplier = 0
     
-    fig, ax = plt.subplots(figsize=(plot_width, 3))
+    fig, ax = plt.subplots(figsize=(plot_width, 3.5))
     for label in labels:
         label_data = data[label]
         max_height = max(max_height, max(label_data))
