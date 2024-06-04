@@ -1,32 +1,219 @@
 [
     {
-        "time": 8.384666666666666e-6,
+        "time": 2.586970224,
         "method": "ssyrk_opt",
         "matrix": "Simon/olafu"
-    },
-    {
-        "time": 1.582e-5,
+    }, {
+        "time": 5.849523908,
         "method": "ssyrk_ref",
         "matrix": "Simon/olafu"
-    },
-    {
-        "time": 8.369333333333335e-6,
+    }, {
+        "time": 3.072616092,
         "method": "ssyrk_opt",
         "matrix": "Boeing/bcsstk35"
-    },
-    {
-        "time": 1.5783e-5,
+    }, {
+        "time": 6.94702469,
         "method": "ssyrk_ref",
         "matrix": "Boeing/bcsstk35"
-    },
-    {
-        "time": 8.45e-6,
+    }, {
+        "time": 2.881243062,
         "method": "ssyrk_opt",
         "matrix": "Boeing/crystk02"
-    },
-    {
-        "time": 1.6232e-5,
+    }, {
+        "time": 6.548444638,
         "method": "ssyrk_ref",
         "matrix": "Boeing/crystk02"
+    }, {
+        "time": 5.982960421,
+        "method": "ssyrk_opt",
+        "matrix": "Boeing/crystk03"
+    }, {
+        "time": 13.325331603,
+        "method": "ssyrk_ref",
+        "matrix": "Boeing/crystk03"
+    }, {
+        "time": 20.681477549,
+        "method": "ssyrk_opt",
+        "matrix": "Rothberg/3dtube"
+    }, {
+        "time": 45.892362839,
+        "method": "ssyrk_ref",
+        "matrix": "Rothberg/3dtube"
+    }, {
+        "time": 3.974372256,
+        "method": "ssyrk_opt",
+        "matrix": "Simon/raefsky4"
+    }, {
+        "time": 9.009432688,
+        "method": "ssyrk_ref",
+        "matrix": "Simon/raefsky4"
+    }, {
+        "time": 0.172915051,
+        "method": "ssyrk_opt",
+        "matrix": "Pothen/pwt"
+    }, {
+        "time": 0.369334512,
+        "method": "ssyrk_ref",
+        "matrix": "Pothen/pwt"
+    }, {
+        "time": 0.643785347,
+        "method": "ssyrk_opt",
+        "matrix": "Cote/vibrobox"
+    }, {
+        "time": 1.52450305,
+        "method": "ssyrk_ref",
+        "matrix": "Cote/vibrobox"
+    }, {
+        "time": 0.008436684,
+        "method": "ssyrk_opt",
+        "matrix": "HB/saylr4"
+    }, {
+        "time": 0.016963369,
+        "method": "ssyrk_ref",
+        "matrix": "HB/saylr4"
+    }, {
+        "time": 4.007644225,
+        "method": "ssyrk_opt",
+        "matrix": "Simon/raefsky3"
+    }, {
+        "time": 9.095987516,
+        "method": "ssyrk_ref",
+        "matrix": "Simon/raefsky3"
+    }, {
+        "time": 3.233711319,
+        "method": "ssyrk_opt",
+        "matrix": "FIDAP/ex11"
+    }, {
+        "time": 7.215962158,
+        "method": "ssyrk_ref",
+        "matrix": "FIDAP/ex11"
+    }, {
+        "time": 0.369197069,
+        "method": "ssyrk_opt",
+        "matrix": "Zitney/rdist1"
+    }, {
+        "time": 0.85205515,
+        "method": "ssyrk_ref",
+        "matrix": "Zitney/rdist1"
+    }, {
+        "time": 2.475541977,
+        "method": "ssyrk_opt",
+        "matrix": "HB/orani678"
+    }, {
+        "time": 6.504456058,
+        "method": "ssyrk_ref",
+        "matrix": "HB/orani678"
+    }, {
+        "time": 4.107116348,
+        "method": "ssyrk_opt",
+        "matrix": "Goodwin/rim"
+    }, {
+        "time": 8.635352656,
+        "method": "ssyrk_ref",
+        "matrix": "Goodwin/rim"
+    }, {
+        "time": 0.475156087,
+        "method": "ssyrk_opt",
+        "matrix": "Hamm/memplus"
+    }, {
+        "time": 1.017297191,
+        "method": "ssyrk_ref",
+        "matrix": "Hamm/memplus"
+    }, {
+        "time": 0.077194703,
+        "method": "ssyrk_opt",
+        "matrix": "HB/gemat11"
+    }, {
+        "time": 0.174746431,
+        "method": "ssyrk_ref",
+        "matrix": "HB/gemat11"
+    }, {
+        "time": 1.55332814,
+        "method": "ssyrk_opt",
+        "matrix": "Mallya/lhr10"
+    }, {
+        "time": 3.386001389,
+        "method": "ssyrk_ref",
+        "matrix": "Mallya/lhr10"
+    }, {
+        "time": 0.980907388,
+        "method": "ssyrk_opt",
+        "matrix": "Goodwin/goodwin"
+    }, {
+        "time": 2.301302659,
+        "method": "ssyrk_ref",
+        "matrix": "Goodwin/goodwin"
+    }, {
+        "time": 0.163750788,
+        "method": "ssyrk_opt",
+        "matrix": "Grund/bayer02"
+    }, {
+        "time": 0.367010986,
+        "method": "ssyrk_ref",
+        "matrix": "Grund/bayer02"
+    }, {
+        "time": 0.197180782,
+        "method": "ssyrk_opt",
+        "matrix": "Grund/bayer10"
+    }, {
+        "time": 0.428913325,
+        "method": "ssyrk_ref",
+        "matrix": "Grund/bayer10"
+    }, {
+        "time": 0.545653269,
+        "method": "ssyrk_opt",
+        "matrix": "Brethour/coater2"
+    }, {
+        "time": 1.250263751,
+        "method": "ssyrk_ref",
+        "matrix": "Brethour/coater2"
+    }, {
+        "time": 0.642944475,
+        "method": "ssyrk_opt",
+        "matrix": "ATandT/onetone2"
+    }, {
+        "time": 1.380357551,
+        "method": "ssyrk_ref",
+        "matrix": "ATandT/onetone2"
+    }, {
+        "time": 0.095004756,
+        "method": "ssyrk_opt",
+        "matrix": "Wang/wang4"
+    }, {
+        "time": 0.200635379,
+        "method": "ssyrk_ref",
+        "matrix": "Wang/wang4"
+    }, {
+        "time": 0.011927293,
+        "method": "ssyrk_opt",
+        "matrix": "HB/lnsp3937"
+    }, {
+        "time": 0.023599744,
+        "method": "ssyrk_ref",
+        "matrix": "HB/lnsp3937"
+    }, {
+        "time": 0.012700674,
+        "method": "ssyrk_opt",
+        "matrix": "HB/sherman5"
+    }, {
+        "time": 0.0251746,
+        "method": "ssyrk_ref",
+        "matrix": "HB/sherman5"
+    }, {
+        "time": 0.007059209,
+        "method": "ssyrk_opt",
+        "matrix": "HB/sherman3"
+    }, {
+        "time": 0.013208404,
+        "method": "ssyrk_ref",
+        "matrix": "HB/sherman3"
+    }, {
+        "time": 0.094752809,
+        "method": "ssyrk_opt",
+        "matrix": "Wang/wang3"
+    }, {
+        "time": 0.200747,
+        "method": "ssyrk_ref",
+        "matrix": "Wang/wang3"
     }
 ]
