@@ -9,7 +9,7 @@ B_T = Tensor(Dense(Dense(Element(0.0))))
 C = Tensor(Dense(Dense(Element(0.0))))
 C_T = Tensor(Dense(Dense(Element(0.0))))
 
-eval(@finch_kernel mode=:fast function mttkrp_finch_ref_helper(C_T, A, B_T)
+eval(@finch_kernel mode=:fast function mttkrp_finch_ref_dim3_helper(C_T, A, B_T)
     C_T .= 0
     for l=_, k=_, i=_, j=_
         C_T[j, i] += A[i, k, l] * B_T[j, l] * B_T[j, k]
@@ -17,7 +17,7 @@ eval(@finch_kernel mode=:fast function mttkrp_finch_ref_helper(C_T, A, B_T)
     return C_T
 end)
 
-eval(@finch_kernel mode=:fast function mttkrp_finch_opt_1_helper(C_T, A_nondiag, B_T)
+eval(@finch_kernel mode=:fast function mttkrp_finch_opt_1_dim3_helper(C_T, A_nondiag, B_T)
     C_T .= 0
     for l=_, k=_, i=_, j=_
         if i < k && k < l 
@@ -31,7 +31,7 @@ eval(@finch_kernel mode=:fast function mttkrp_finch_opt_1_helper(C_T, A_nondiag,
     return C_T
 end)
 
-eval(@finch_kernel mode=:fast function mttkrp_finch_opt_2_helper(C_T, A_diag, B_T)
+eval(@finch_kernel mode=:fast function mttkrp_finch_opt_2_dim3_helper(C_T, A_diag, B_T)
     C_T .= 0
     for l=_, k=_, i=_, j=_
         if identity(i) <= identity(k) && identity(k) <= identity(l) 
@@ -52,7 +52,7 @@ eval(@finch_kernel mode=:fast function mttkrp_finch_opt_2_helper(C_T, A_diag, B_
     return C_T
 end)
 
-function mttkrp_finch_ref(C, A, B)
+function mttkrp_finch_ref_dim3(C, A, B)
     (n, r) = size(C)
     _C_T = Tensor(Dense(Dense(Element(0.0))), zeros(r, n))
     _A = Tensor(Dense(SparseList(SparseList(Element(0.0)))), A)  
@@ -64,7 +64,7 @@ function mttkrp_finch_ref(C, A, B)
         end 
     end  
 
-    time = @belapsed mttkrp_finch_ref_helper($_C_T, $_A, $_B_T)
+    time = @belapsed mttkrp_finch_ref_dim3_helper($_C_T, $_A, $_B_T)
     _C = Tensor(Dense(Dense(Element(0.0))), C)
     @finch begin 
         _C .= 0
@@ -76,7 +76,7 @@ function mttkrp_finch_ref(C, A, B)
     return (;time = time, C = _C)
 end
 
-function mttkrp_finch_opt(C, A, B)
+function mttkrp_finch_opt_dim3(C, A, B)
     (n, n, n) = size(A)
     (n, r) = size(C)
     _C_T_nondiag = Tensor(Dense(Dense(Element(0.0))), zeros(r, n))
@@ -103,8 +103,8 @@ function mttkrp_finch_opt(C, A, B)
         end 
     end
 
-    time_1 = @belapsed mttkrp_finch_opt_1_helper($_C_T_nondiag, $_A_nondiag, $_B_T)
-    time_2 = @belapsed mttkrp_finch_opt_2_helper($_C_T_diag, $_A_diag, $_B_T)
+    time_1 = @belapsed mttkrp_finch_opt_1_dim3_helper($_C_T_nondiag, $_A_nondiag, $_B_T)
+    time_2 = @belapsed mttkrp_finch_opt_2_dim3_helper($_C_T_diag, $_A_diag, $_B_T)
     C_full = Tensor(Dense(Dense(Element(0.0))), C)
     @finch mode=:fast for i=_, j=_
         C_full[i, j] = _C_T_nondiag[j, i] + _C_T_diag[j, i]

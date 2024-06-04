@@ -9,7 +9,7 @@ using LinearAlgebra
 using Finch
 
 include("mttkrp_finch_dim5.jl")
-include("mttkrp_dim5_taco.jl")
+include("mttkrp_taco_dim5.jl")
 include("mttkrp_splatt_dim5.jl")
 
 n = 40

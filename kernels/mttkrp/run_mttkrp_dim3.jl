@@ -8,17 +8,17 @@ using Printf
 using LinearAlgebra
 using Finch
 
-include("mttkrp_finch.jl")
-include("mttkrp_taco.jl")
-include("mttkrp_splatt.jl")
+include("mttkrp_finch_dim3.jl")
+include("mttkrp_taco_dim3.jl")
+include("mttkrp_splatt_dim3.jl")
 
 n = 500
 rank_sparsity = [(10, 0.1), (10, 0.0001), (500, 0.1), (500, 0.0001)]
 methods = Dict(
-    "mttkrp_finch_ref" => mttkrp_finch_ref,
-    "mttkrp_finch_opt" => mttkrp_finch_opt,
-    "mttkrp_taco" => mttkrp_taco,
-    "mttkrp_splatt" => mttkrp_splatt,
+    "mttkrp_finch_ref" => mttkrp_finch_ref_dim3,
+    "mttkrp_finch_opt" => mttkrp_finch_opt_dim3,
+    "mttkrp_taco" => mttkrp_taco_dim3,
+    "mttkrp_splatt" => mttkrp_splatt_dim3,
 )
 
 results = []

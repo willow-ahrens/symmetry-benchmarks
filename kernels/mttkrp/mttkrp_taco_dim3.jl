@@ -2,7 +2,7 @@ using Finch
 using TensorMarket
 using JSON
 
-function mttkrp_taco_helper(args, A, B)
+function mttkrp_taco_dim3_helper(args, A, B)
     mktempdir(prefix="input_") do tmpdir
         (n, r) = size(B)
         _B = Tensor(Dense(Dense(Element(0.0))), B)
@@ -21,7 +21,7 @@ function mttkrp_taco_helper(args, A, B)
         fwrite(B_T_path, Tensor(Dense(Dense(Element(0.0))), B_T))
         taco_path = joinpath(@__DIR__, "../../deps/taco/build/lib")
         withenv("DYLD_FALLBACK_LIBRARY_PATH"=>"$taco_path", "LD_LIBRARY_PATH" => "$taco_path", "TACO_CFLAGS" => "-O3 -ffast-math -std=c99 -march=native -ggdb") do
-            mttkrp_path = joinpath(@__DIR__, "mttkrp_taco")
+            mttkrp_path = joinpath(@__DIR__, "mttkrp_taco_dim3")
             run(`$mttkrp_path -i $tmpdir -o $tmpdir $args`)
         end
 
@@ -39,4 +39,4 @@ function mttkrp_taco_helper(args, A, B)
     end
 end
 
-mttkrp_taco(C, A, B) = mttkrp_taco_helper("", A, B)
+mttkrp_taco_dim3(C, A, B) = mttkrp_taco_dim3_helper("", A, B)
