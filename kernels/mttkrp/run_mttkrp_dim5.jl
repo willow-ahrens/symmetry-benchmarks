@@ -61,6 +61,6 @@ for (r, sp) in rank_sparsity
             "size" => n,
             "rank" => r,
         ))
-        write("mttkrp_results_dim5.json", JSON.json(results, 4))
+        write("mttkrp_dim5_results.json", JSON.json(results, 4))
     end
 end

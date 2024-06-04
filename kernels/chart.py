@@ -6,67 +6,40 @@ import math
 from collections import defaultdict
 import re
 
-CHARTS_DIRECTORY = "charts/"
-FORMAT_ORDER = {
-    "finch_sym": -1,
-    "finch_unsym": -2,
-    "finch_unsym_row_maj": -3,
-    "finch_vbl": -4,
-    "finch_vbl_unsym": -5,
-    "finch_vbl_unsym_row_maj": -6,
-    "finch_band": -7,
-    "finch_band_unsym": -8,
-    "finch_band_unsym_row_maj": -9,
-    "finch_pattern": -10,
-    "finch_pattern_unsym": -11,
-    "finch_pattern_unsym_row_maj": -12,
-    "finch_point": -13,
-    "finch_point_row_maj": -14,
-    "finch_point_pattern": -15,
-    "finch_point_pattern_row_maj": -16,
-    "finch_blocked": -17,
-}
-FORMAT_LABELS = {
-    "ssymv_finch_opt": "SSYMV (symmetrized)",
-    "ssymv_taco": "SSYMV",
-    "ssyrk_opt": "SSYRK (symmetrized)",
-    "ttm_opt": "TTM (symmetrized)",
-    "mttkrp_opt": "MTTKRP (symmetrized)",
-    "ssymm_opt": "SSYMM (symmetrized)",
-    "syprd_opt": "SYPRD (symmetrized)"
-}
+CHARTS_DIRECTORY = "charts/cgo/"
 
-def all_formats_chart(ordered_by_format=False):
-    results = json.load(open(RESULTS_FILE_PATH, 'r'))
+def use_suitesparse_name(result):
+    return result["matrix"]
+
+def use_sparsity(result):
+    s = result["sparsity"]
+    return f"{s}"
+
+def use_sparsity_rank(result):
+    s = result["sparsity"]
+    r = result["rank"]
+    return f"{s, r}"
+
+
+def all_formats_chart(results_filepath, get_matrix_name, reference, optimized, methods, colors, title, y_label, x_label, legend_labels, ordered = True, width=12, expected_speedup=0):
+    results = json.load(open(results_filepath, 'r'))
     data = defaultdict(lambda: defaultdict(int))
-    # finch_formats = get_best_finch_format()
 
     for result in results:
-        if "sparsity" in result and "size" in result and result["method"]:
-            n = result["size"]
-            s = result["sparsity"]
-            r = result["rank"]
-            nnz = n * n * n * s 
-            # mtx_name = f"n = {n}, sp = {s} / {nnz}"
-            mtx = f"{s, r}"
-        else:
-            mtx = result["matrix"]
-
+        mtx = get_matrix_name(result)
         method = result["method"]
         time = result["time"]
-
-        if method == "finch_unsym":
-            # finch_baseline_time = data[mtx]["finch_baseline"]
-            # data[mtx]["finch_baseline"] = time if finch_baseline_time == 0 else min(time, finch_baseline_time)
-            data[mtx]["finch_baseline"] = time
         data[mtx][method] = time
 
     for mtx, times in data.items():
-        ref_time = times["mttkrp_finch_ref"]
+        ref_time = times[reference]
         for method, time in times.items():
             times[method] = ref_time / time
 
-    ordered_data = sorted(data.items(), key = lambda mtx_results: mtx_results[1]["mttkrp_finch_ref"], reverse=True)
+    if ordered:
+        ordered_data = sorted(data.items(), key = lambda mtx_results: mtx_results[1][optimized], reverse=True)
+    else:
+        ordered_data = data.items()
 
     all_data = defaultdict(list)
     for i, (mtx, times) in enumerate(ordered_data):
@@ -74,193 +47,11 @@ def all_formats_chart(ordered_by_format=False):
             all_data[method].append(time)
 
     ordered_mtxs = [mtx for mtx, _ in ordered_data]
-    methods = ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"]#, "suite_sparse"]
-    legend_labels = ["Finch (Best)", "Finch (Baseline)", "Julia Stdlib"]#, "SuiteSparse"]
-    colors = {"mttkrp_finch_opt": "tab:green", "mttkrp_splatt": "tab:gray", "mttkrp_taco": "tab:blue"}#, "suite_sparse": "tab:green"}
     short_mtxs = [mtx.rsplit('/',1)[-1] for mtx in ordered_mtxs]
-    new_mtxs = {
-        "toeplitz_large_band": "large_band",
-        "toeplitz_medium_band": "medium_band",
-        "toeplitz_small_band": "small_band",
-        #"TSOPF_RS_b678_c1": "*RS_b678_c1",
-    }
-    short_mtxs = [new_mtxs.get(mtx, mtx) for mtx in short_mtxs]
-
-    make_grouped_bar_chart_3(methods, short_mtxs, all_data, colors=colors, title="MTTKRP Performance")
-    # for mtx in mtxs:
-        # all_formats_for_matrix_chart(mtx)
+    make_grouped_bar_chart(methods, short_mtxs, all_data, colors=colors, title=title, y_label=y_label, x_label=x_label, legend_labels=legend_labels, plot_width=width, expected_speedup=expected_speedup)
 
 
-def get_best_finch_format():
-    results = json.load(open(RESULTS_FILE_PATH, 'r'))
-    formats = defaultdict(list)
-    for result in results:
-        if "finch" not in result["method"]:
-            continue
-        formats[result["matrix"]].append((result["method"], result["time"]))
-
-    best_formats = defaultdict(list)
-    for matrix, format_times in formats.items():
-        best_format, _ = min(format_times, key=lambda x: x[1])
-        best_formats[matrix] = best_format
-    
-    return best_formats
-
-
-def get_method_results(method, mtxs=[]):
-    results = json.load(open(RESULTS_FILE_PATH, 'r'))
-    mtx_times = {}
-    for result in results:
-        if "sparsity" in result and "size" in result and result["method"] == method:
-            n = result["size"]
-            s = result["sparsity"]
-            r = result["rank"]
-            nnz = n * n * n * s 
-            # mtx_name = f"n = {n}, sp = {s} / {nnz}"
-            mtx_name = f"{r}"
-            mtx_times[mtx_name] = result["time"]
-            continue
-        if result["method"] == method and (mtxs == [] or result["matrix"] in mtxs):
-            mtx_times[result["matrix"]] = result["time"]
-    return mtx_times
-
-
-def get_speedups(faster_results, slower_results):
-    speedups = {}
-    for mtx, slow_time in slower_results.items():
-        if mtx in faster_results:
-            speedups[mtx] = slow_time / faster_results[mtx]
-    return speedups
-
-
-def order_speedups(speedups):
-    ordered = [(mtx, time) for mtx, time in speedups.items()]
-    return sorted(ordered, key=lambda x: x[1], reverse=True)
-
-
-def method_to_ref_comparison_chart(method, ref, title=""):
-    method_results = get_method_results(method)
-    ref_results = get_method_results(ref)
-    speedups = get_speedups(method_results, ref_results)
-    speedups = order_speedups(speedups)
-
-    x_axis = []
-    data = defaultdict(list)
-    for (matrix, speedup) in speedups:
-        x_axis.append(matrix)
-        data[method].append(speedup)
-        data[ref].append(1)
-
-    make_grouped_bar_chart([method], x_axis, data, title=title, legend_labels=[FORMAT_LABELS[method]])
-
-def time_percentage_chart(method, title=""):
-    results = json.load(open(RESULTS_FILE_PATH, 'r'))
-    mtxs = []
-    diag_percentages = []
-    nondiag_percentages = []
-    for result in results:
-        if not result["diag_time"]: 
-            continue
-        else:
-            r = result["rank"]
-            s = result["sparsity"]
-            mtx_name = f"{s}"
-            mtxs.append(mtx_name)
-            percentage = result["diag_time"] / result["time"]
-            diag_percentages.append(percentage)
-            # percentage = result["nondiag_time"] / result["time"]
-            nondiag_percentages.append(1.0)
-
-    make_grouped_bar_chart_2(["Non-Diagonals", "Diagonals"], mtxs, {"Non-Diagonals": nondiag_percentages, "Diagonals": diag_percentages}, title=title, ref_line = False, colors = {"Non-Diagonals": "green", "Diagonals": "orange"})
-
-def make_grouped_bar_chart_2(labels, x_axis, data, colors = None, labeled_groups = [], title = "", y_label = "", bar_labels_dict={}, legend_labels=None, reference_label = "", ref_line = True):
-    horizontal_scale = 1
-    fontfamily = "serif"
-
-    x = np.arange(0, len(data[labels[0]]) * horizontal_scale, horizontal_scale)
-    width = 0.6
-    max_height = 0
-    multiplier = 0
-    
-    fig, ax = plt.subplots(figsize=(4, 3))
-    for label in labels:
-        label_data = data[label]
-        max_height = max(max_height, max(label_data))
-        offset = width * multiplier
-        if colors:
-            rects = ax.bar(x + width/2, label_data, width, label=label, color=colors[label])
-        else:
-            rects = ax.bar(x + width/2, label_data, width, label=label, color="green")
-        bar_labels = bar_labels_dict[label] if (label in bar_labels_dict) else [round(float(val), 2) if label in labeled_groups else "" for val in label_data]
-        ax.bar_label(rects, padding=0, labels=bar_labels, fontsize=4, rotation=90)
-        # multiplier += 1
-
-    ax.set_ylabel("Proportion of Execution Time")
-    ax.set_title(title, fontsize=12, fontfamily=fontfamily)
-    ax.set_xlabel(X_LABEL)
-    ax.set_xticks(x + width * (len(labels) - 1)/2, x_axis)
-    ax.tick_params(axis='x', which='major', labelsize=7.5, labelrotation=60, labelfontfamily=fontfamily)
-    ax.tick_params(axis='y', labelfontfamily=fontfamily)
-    if legend_labels:
-        ax.legend(legend_labels, loc='upper right', ncols=1, fontsize='small')
-    else:
-        ax.legend(loc='upper right', ncols=1)
-    ax.set_ylim(0, 1.0)
-
-        # Adjusting x-axis limits to make bars go to the edges
-    ax.set_xlim(-0.5, (len(x_axis) - 0.5 + width * len(labels)) * horizontal_scale)
-
-    if ref_line:
-        plt.plot([-1, len(x_axis)], [1, 1], linestyle='--', color="tab:red", linewidth=1.25, label=reference_label)
-
-    fig_file = title.lower().replace(" ", "_") + ".png"
-    plt.savefig(CHARTS_DIRECTORY + fig_file, dpi=200, bbox_inches="tight")
-    plt.close()
-
-
-def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups = [], title = "", y_label = "", bar_labels_dict={}, legend_labels=None, reference_label = "", ref_line = True):
-    horizontal_scale = 0.5
-    fontfamily = "serif"
-
-    x = np.arange(0, len(data[labels[0]]) * horizontal_scale, horizontal_scale)
-    width = 0.3
-    max_height = 0
-    
-    fig, ax = plt.subplots(figsize=(12, 3))
-    for label in labels:
-        label_data = data[label]
-        max_height = max(max_height, max(label_data))
-        if colors:
-            rects = ax.bar(x, label_data, width, label=label, color=colors[label])
-        else:
-            rects = ax.bar(x, label_data, width, label=label)
-        bar_labels = bar_labels_dict[label] if (label in bar_labels_dict) else [round(float(val), 2) if label in labeled_groups else "" for val in label_data]
-        ax.bar_label(rects, padding=0, labels=bar_labels, fontsize=4, rotation=90)
-
-    ax.set_ylabel("Speedup Relative to Naive Kernel")
-    ax.set_title(title, fontsize=11, fontfamily=fontfamily)
-    ax.set_xlabel("Matrix")
-    ax.set_xticks(x + width * (len(labels) - 1)/2, x_axis)
-    ax.tick_params(axis='x', which='major', labelsize=7, labelrotation=75, labelfontfamily=fontfamily)
-    ax.tick_params(axis='y', labelfontfamily=fontfamily)
-    # if legend_labels:
-    #     ax.legend(legend_labels, loc='upper left', ncols=2, fontsize='small')
-    # else:
-    #     ax.legend(loc='upper left', ncols=2)
-    ax.set_ylim(0, max_height + 0.25)
-
-        # Adjusting x-axis limits to make bars go to the edges
-    ax.set_xlim(-0.5, (len(x_axis) - 0.5 + width * len(labels)) * horizontal_scale)
-
-    if ref_line:
-        plt.plot([-1, len(x_axis)], [1, 1], linestyle='--', color="tab:red", linewidth=1.25, label=reference_label)
-
-    fig_file = title.lower().replace(" ", "_") + ".png"
-    plt.savefig(CHARTS_DIRECTORY + fig_file, dpi=200, bbox_inches="tight")
-    plt.close()
-
-
-def make_grouped_bar_chart_3(labels, x_axis, data, colors = None, labeled_groups = [], title = "", y_label = "", bar_labels_dict={}, legend_labels=None, reference_label = "", ref_line = True):
+def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups = [], title = "", y_label = "", x_label = "", bar_labels_dict={}, legend_labels=None, reference_label = "", ref_line = True, plot_width = 12, expected_speedup=0):
     horizontal_scale = 1
     fontfamily = "serif"
 
@@ -269,62 +60,139 @@ def make_grouped_bar_chart_3(labels, x_axis, data, colors = None, labeled_groups
     max_height = 0
     multiplier = 0
     
-    fig, ax = plt.subplots(figsize=(10, 3))
+    fig, ax = plt.subplots(figsize=(plot_width, 3.5))
     for label in labels:
         label_data = data[label]
         max_height = max(max_height, max(label_data))
         offset = width * multiplier
-        if colors:
-            rects = ax.bar(x + width/2 + offset, label_data, width, label=label, color=colors[label])
-        else:
-            rects = ax.bar(x + width/2 + offset, label_data, width, label=label, color="green")
+        rects = ax.bar(x + offset, label_data, width, label=label, color=colors[label])
         bar_labels = bar_labels_dict[label] if (label in bar_labels_dict) else [round(float(val), 2) if label in labeled_groups else "" for val in label_data]
         ax.bar_label(rects, padding=0, labels=bar_labels, fontsize=4, rotation=90)
         multiplier += 1
 
-    ax.set_ylabel("Proportion of Execution Time")
-    ax.set_title(title, fontsize=12, fontfamily=fontfamily)
-    ax.set_xlabel(X_LABEL)
+    if y_label:
+        ax.set_ylabel(y_label, fontsize=14)
+    # ax.set_title(title, fontsize=12, fontfamily=fontfamily)
+    if x_label:
+        ax.set_xlabel(x_label, fontsize=14)
     ax.set_xticks(x + width * (len(labels) - 1)/2, x_axis)
-    ax.tick_params(axis='x', which='major', labelsize=7.5, labelrotation=60, labelfontfamily=fontfamily)
-    ax.tick_params(axis='y', labelfontfamily=fontfamily)
+    ax.tick_params(axis='x', which='major', labelsize=11, labelrotation=60, labelfontfamily=fontfamily)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation = 45, ha="right")
+    ax.tick_params(axis='y', labelfontfamily=fontfamily, labelsize=10)
     if legend_labels:
-        ax.legend(legend_labels, loc='upper right', ncols=1, fontsize='small')
-    else:
-        ax.legend(loc='upper right', ncols=1)
-    ax.set_ylim(0, max_height + 0.25 * max_height)
+        ax.legend(legend_labels, loc='upper right', ncols=1, fontsize=12)
+    ax.set_ylim(0, max_height + 0.05 * max_height)
 
         # Adjusting x-axis limits to make bars go to the edges
     ax.set_xlim(-0.5, (len(x_axis) - 0.5 + width * len(labels)) * horizontal_scale)
 
     if ref_line:
-        plt.plot([-1, len(x_axis)], [1, 1], linestyle='--', color="tab:red", linewidth=1.25, label=reference_label)
+        plt.plot([-1, len(x_axis)], [1, 1], linestyle='--', color="tab:red", linewidth=2, label=reference_label)
+    if expected_speedup:
+        plt.plot([-1, len(x_axis)], [expected_speedup, expected_speedup], linestyle='--', color="purple", linewidth=1.25, label=reference_label)
 
     fig_file = title.lower().replace(" ", "_") + ".png"
     plt.savefig(CHARTS_DIRECTORY + fig_file, dpi=200, bbox_inches="tight")
     plt.close()
-    
 
-X_LABEL = "(Sparsity, Rank)"
 
-# RESULTS_FILE_PATH = "ssymv/ssymv_results.json"
-# RESULTS_FILE_PATH = "ttm/ttm_finch_separate_diagonals_sparsities.json"
-# RESULTS_FILE_PATH = "mttkrp/mttkrp_dim4_final_sparsity.json"
-# RESULTS_FILE_PATH = "mttkrp/mttkrp_dim4_final_rank.json"
-RESULTS_FILE_PATH = "mttkrp/mttkrp_results.json"
-# RESULTS_FILE_PATH = "mttkrp/mttkrp_final_rank.json"
-# RESULTS_FILE_PATH = "mttkrp/mttkrp_final_sparsity.json"
-# RESULTS_FILE_PATH = "ssymm/ssymm_results.json"
-# RESULTS_FILE_PATH = "ssyrk/ssyrk_results.json"
-# RESULTS_FILE_PATH = "syprd/syprd_results.json"
+all_formats_chart("ssymv/cgo_ssymv_results.json", use_suitesparse_name, "ssymv_finch_ref", "ssymv_finch_opt",
+                ["ssymv_finch_opt", "ssymv_taco", "ssymv_mkl"],  
+                {"ssymv_finch_opt": "tab:blue", "ssymv_taco": "tab:orange", "ssymv_mkl": "tab:green"},
+                "SSYMV Performance",
+                "Speedup",
+                "Matrix Name",
+                ["SySTeC", "TACO", "MKL"],
+                expected_speedup = 1, width=16)
 
-all_formats_chart()
-# method_to_ref_comparison_chart("ssymv_finch_opt", "ssymv_taco", "SSYMV Performance")
-# method_to_ref_comparison_chart("ttm_opt", "ttm_ref", "Optimized vs. Naive TTM Performance")
-# method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "Optimized vs. Naive 4D MTTKRP Performance Varying Rank")
-# method_to_ref_comparison_chart("mttkrp_opt", "mttkrp_ref", "4D MTTKRP Performance")
-# method_to_ref_comparison_chart("ssymm_opt", "ssymm_ref", "Optimized vs. Naive SSYMM Performance")
-# method_to_ref_comparison_chart("ssyrk_opt", "ssyrk_ref", "Optimized vs. Naive SSYRK Performance")
-# time_percentage_chart("mttkrp_opt", "Optimized MTTKRP Time Distribution Varying Sparsity")
-# time_percentage_chart("mttkrp_opt", "Optimized 4D MTTKRP Time Distribution Varying Sparsity")
-# method_to_ref_comparison_chart("syprd_opt", "syprd_ref", "Optimized vs. Naive SYPRD Performance")
+all_formats_chart("ssyrk/cgo_ssyrk_results.json", use_suitesparse_name, "ssyrk_ref", "ssyrk_opt",
+                ["ssyrk_opt"],  
+                {"ssyrk_opt": "tab:blue"},
+                "SSYRK Performance",
+                "Speedup",
+                "Matrix Name",
+                ["SySTeC"],
+                expected_speedup = 2, width=16)
+
+all_formats_chart("syprd/cgo_syprd_results.json", use_suitesparse_name, "syprd_ref", "syprd_opt",
+                ["syprd_opt", "syprd_taco"],  
+                {"syprd_opt": "tab:blue", "syprd_taco": "tab:orange"},
+                "SYPRD Performance",
+                "Speedup",
+                "Matrix Name",
+                ["SySTeC", "TACO"],
+                expected_speedup = 2, width=16)
+
+all_formats_chart("ttm/cgo_ttm_results.json", use_sparsity_rank, "ttm_finch_ref", "ttm_finch_opt",
+                ["ttm_finch_opt", "ttm_taco"],  
+                {"ttm_finch_opt": "tab:blue", "ttm_taco": "tab:orange"},
+                "TTM Performance",
+                "Speedup",
+                "Sparsity, Numerical Rank",
+                ["SySTeC", "TACO"],
+                ordered = False,
+                width = 8,
+                expected_speedup = 2)
+
+all_formats_chart("mttkrp/mttkrp_dim3_results.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
+                ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
+                {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:orange", "mttkrp_splatt": "tab:green"},
+                "3D MTTKRP Performance",
+                "Speedup",
+                "", #"Sparsity, Numerical Rank",
+                [], # ["SySTeC", "TACO", "SPLATT"], 
+                ordered = False,
+                width = 5,
+                expected_speedup = 2)
+
+all_formats_chart("mttkrp/mttkrp_dim4_results.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
+                ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
+                {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:orange", "mttkrp_splatt": "tab:green"},
+                "4D MTTKRP Performance",
+                "", #"Speedup",
+                "", #"Sparsity, Numerical Rank",
+                [], # ["SySTeC", "TACO", "SPLATT"],
+                ordered = False,
+                width = 5,
+                expected_speedup = 6)
+
+all_formats_chart("mttkrp/mttkrp_dim5_results.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
+                ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
+                {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:orange", "mttkrp_splatt": "tab:green"},
+                "5D MTTKRP Performance",
+                "", #"Speedup",
+                "", #"Sparsity, Numerical Rank",
+                ["SySTeC", "TACO", "SPLATT"],
+                ordered = False,
+                width = 5,
+                expected_speedup = 24)
+
+# all_formats_chart("mttkrp/cgo_mttkrp_results_sparsity.json", use_sparsity, "mttkrp_finch_ref", "mttkrp_finch_opt",
+#                 ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
+#                 {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:green", "mttkrp_splatt": "tab:gray"},
+#                 "3D MTTKRP Performance",
+#                 "Speedup",
+#                 "Sparsity",
+#                 ["SySTeC", "TACO", "SPLATT"],
+#                 ordered = False,
+#                 width = 4)
+
+# all_formats_chart("mttkrp/cgo_mttkrp_dim4_results_sparsity.json", use_sparsity, "mttkrp_finch_ref", "mttkrp_finch_opt",
+#                 ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
+#                 {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:green", "mttkrp_splatt": "tab:gray"},
+#                 "4D MTTKRP Performance",
+#                 "Speedup",
+#                 "Sparsity",
+#                 ["SySTeC", "TACO", "SPLATT"],
+#                 ordered = False,
+#                 width = 4)
+
+# all_formats_chart("mttkrp/cgo_mttkrp_dim5_results_sparsity.json", use_sparsity, "mttkrp_finch_ref", "mttkrp_finch_opt",
+#                 ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
+#                 {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:green", "mttkrp_splatt": "tab:gray"},
+#                 "5D MTTKRP Performance",
+#                 "Speedup",
+#                 "Sparsity",
+#                 ["SySTeC", "TACO", "SPLATT"],
+#                 ordered = False,
+#                 width = 4)

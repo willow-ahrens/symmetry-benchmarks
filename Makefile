@@ -14,9 +14,9 @@ SSYMV = kernels/ssymv/ssymv_taco
 SYPRD = kernels/syprd/syprd_taco
 SSYRK = kernels/ssyrk/ssyrk_taco
 TTM = kernels/ttm/ttm_taco
-MTTKRP = kernels/mttkrp/mttkrp_taco
-MTTKRP_DIM4 = kernels/mttkrp/mttkrp_dim4_taco
-MTTKRP_DIM5 = kernels/mttkrp/mttkrp_dim5_taco
+MTTKRP = kernels/mttkrp/mttkrp_taco_dim3
+MTTKRP_DIM4 = kernels/mttkrp/mttkrp_taco_dim4
+MTTKRP_DIM5 = kernels/mttkrp/mttkrp_taco_dim5
 
 all: $(SSYMV) $(SYPRD) $(SSYRK) $(TTM) $(MTTKRP) $(MTTKRP_DIM4) $(MTTKRP_DIM5)
 
@@ -63,11 +63,11 @@ kernels/ssyrk/ssyrk_taco: $(SPARSE_BENCH) $(TACO) kernels/ssyrk/ssyrk_taco.cpp
 kernels/ttm/ttm_taco: $(SPARSE_BENCH) $(TACO) kernels/ttm/ttm_taco.cpp
 	$(CXX) $(TACO_CXXFLAGS) -o $@ kernels/ttm/ttm_taco.cpp $(TACO_LDLIBS)
 
-kernels/mttkrp/mttkrp_taco: $(SPARSE_BENCH) $(TACO) kernels/mttkrp/mttkrp_taco.cpp
-	$(CXX) $(TACO_CXXFLAGS) -o $@ kernels/mttkrp/mttkrp_taco.cpp $(TACO_LDLIBS)
+kernels/mttkrp/mttkrp_taco_dim3: $(SPARSE_BENCH) $(TACO) kernels/mttkrp/mttkrp_taco_dim3.cpp
+	$(CXX) $(TACO_CXXFLAGS) -o $@ kernels/mttkrp/mttkrp_taco_dim3.cpp $(TACO_LDLIBS)
 
-kernels/mttkrp/mttkrp_dim4_taco: $(SPARSE_BENCH) $(TACO) kernels/mttkrp/mttkrp_dim4_taco.cpp
-	$(CXX) $(TACO_CXXFLAGS) -o $@ kernels/mttkrp/mttkrp_dim4_taco.cpp $(TACO_LDLIBS)
+kernels/mttkrp/mttkrp_taco_dim4: $(SPARSE_BENCH) $(TACO) kernels/mttkrp/mttkrp_taco_dim4.cpp
+	$(CXX) $(TACO_CXXFLAGS) -o $@ kernels/mttkrp/mttkrp_taco_dim4.cpp $(TACO_LDLIBS)
 
-kernels/mttkrp/mttkrp_dim5_taco: $(SPARSE_BENCH) $(TACO) kernels/mttkrp/mttkrp_dim5_taco.cpp
-	$(CXX) $(TACO_CXXFLAGS) -o $@ kernels/mttkrp/mttkrp_dim5_taco.cpp $(TACO_LDLIBS)
+kernels/mttkrp/mttkrp_taco_dim5: $(SPARSE_BENCH) $(TACO) kernels/mttkrp/mttkrp_taco_dim5.cpp
+	$(CXX) $(TACO_CXXFLAGS) -o $@ kernels/mttkrp/mttkrp_taco_dim5.cpp $(TACO_LDLIBS)
