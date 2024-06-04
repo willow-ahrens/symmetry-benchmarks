@@ -6,7 +6,7 @@ import math
 from collections import defaultdict
 import re
 
-CHARTS_DIRECTORY = "charts/cgo/"
+CHARTS_DIRECTORY = "charts/"
 
 def use_suitesparse_name(result):
     return result["matrix"]
@@ -166,33 +166,3 @@ all_formats_chart("mttkrp/mttkrp_dim5_results.json", use_sparsity_rank, "mttkrp_
                 ordered = False,
                 width = 5,
                 expected_speedup = 24)
-
-# all_formats_chart("mttkrp/cgo_mttkrp_results_sparsity.json", use_sparsity, "mttkrp_finch_ref", "mttkrp_finch_opt",
-#                 ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
-#                 {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:green", "mttkrp_splatt": "tab:gray"},
-#                 "3D MTTKRP Performance",
-#                 "Speedup",
-#                 "Sparsity",
-#                 ["SySTeC", "TACO", "SPLATT"],
-#                 ordered = False,
-#                 width = 4)
-
-# all_formats_chart("mttkrp/cgo_mttkrp_dim4_results_sparsity.json", use_sparsity, "mttkrp_finch_ref", "mttkrp_finch_opt",
-#                 ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
-#                 {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:green", "mttkrp_splatt": "tab:gray"},
-#                 "4D MTTKRP Performance",
-#                 "Speedup",
-#                 "Sparsity",
-#                 ["SySTeC", "TACO", "SPLATT"],
-#                 ordered = False,
-#                 width = 4)
-
-# all_formats_chart("mttkrp/cgo_mttkrp_dim5_results_sparsity.json", use_sparsity, "mttkrp_finch_ref", "mttkrp_finch_opt",
-#                 ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
-#                 {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:green", "mttkrp_splatt": "tab:gray"},
-#                 "5D MTTKRP Performance",
-#                 "Speedup",
-#                 "Sparsity",
-#                 ["SySTeC", "TACO", "SPLATT"],
-#                 ordered = False,
-#                 width = 4)
