@@ -50,7 +50,7 @@ for r in rank
                 C_res = res.C
             end
             C_ref = something(C_ref, C_res)
-            norm(C_res - C_ref)/norm(C_ref) < 0.1 || @warn("incorrect result via norm")
+            norm(C_res - C_ref)/norm(C_ref) < 0.1 || throw("Incorrect result via norm")
 
             @info "results" time
             push!(results, OrderedDict(

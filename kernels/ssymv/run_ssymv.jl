@@ -79,7 +79,7 @@ for (symmetric, dataset) in [(true, symmetric_oski), (false, unsymmetric_oski)]
                 y_res = res.y
             end
             y_ref = something(y_ref, y_res)
-            norm(y_res - y_ref)/norm(y_ref) < 0.1 || @warn("incorrect result via norm")
+            norm(y_res - y_ref)/norm(y_ref) < 0.1 || throw("Incorrect result via norm")
 
             @info "results" time
             push!(results, OrderedDict(
