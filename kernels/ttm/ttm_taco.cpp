@@ -20,7 +20,7 @@ int main(int argc, char **argv)
     int n = A.getDimension(0);
     int r = B_T.getDimension(0);
 
-    Tensor<double> C("C", {r, n, n}, Format({Dense, Dense, Dense}));
+    Tensor<double> C("C", {r, n, n}, Format({Dense, Dense, Dense}, {2, 1, 0}));
 
     IndexVar i, j, k, l;
 
@@ -41,7 +41,19 @@ int main(int argc, char **argv)
             C.compute();
         });
 
-    write(fs::path(params.input) / "C.ttx", C);
+    Tensor<double> C_rowmaj("C", {r, n, n}, Format({Dense, Dense, Dense}));
+    for (int i = 0; i < C.getDimension(0); i++)
+    {
+        for (int j = 0; j < C.getDimension(1); j++)
+        {
+            for (int k = 0; k < C.getDimension(2); k++)
+            {
+                C_rowmaj.insert({i, j, k}, static_cast<double>(C(i, j, k)));
+            }
+        }
+    }
+    C_rowmaj.pack();
+    write(fs::path(params.input) / "C.ttx", C_rowmaj);
 
     json measurements;
     measurements["time"] = time;
