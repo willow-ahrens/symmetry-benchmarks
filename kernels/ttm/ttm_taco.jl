@@ -23,8 +23,18 @@ function ttm_taco_helper(args, A, B)
             run(`$ttm_path -i $tmpdir -o $tmpdir $args`)
         end
         C = fread(C_path)
+        (r, n, n) = size(C)
+        C_transposed = Tensor(Dense(Dense(Dense(Element(0.0)))))
+        @finch mode=:fast begin
+            C_transposed .= 0
+            for l=_, j=_, i=_
+                C_transposed[l, j, i] = C[i, j, l]
+            end
+        end
+        C_transposed = resize!(C_transposed, r, n, n)
         time = JSON.parsefile(joinpath(tmpdir, "measurements.json"))["time"]
-        return (;time=time*10^-9, C=C)
+        return (;time=time*10^-9, C=C_transposed)
+        # return (;time=time*10^-9, C=C)
     end
 end
 

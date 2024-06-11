@@ -41,19 +41,19 @@ int main(int argc, char **argv)
             C.compute();
         });
 
-    Tensor<double> C_rowmaj("C", {r, n, n}, Format({Dense, Dense, Dense}));
-    for (int i = 0; i < C.getDimension(0); i++)
-    {
-        for (int j = 0; j < C.getDimension(1); j++)
-        {
-            for (int k = 0; k < C.getDimension(2); k++)
-            {
-                C_rowmaj.insert({i, j, k}, static_cast<double>(C(i, j, k)));
-            }
-        }
-    }
-    C_rowmaj.pack();
-    write(fs::path(params.input) / "C.ttx", C_rowmaj);
+    // Tensor<double> C_rowmaj("C", {r, n, n}, Format({Dense, Dense, Dense}));
+    // for (int i = 0; i < C.getDimension(0); i++)
+    // {
+    //     for (int j = 0; j < C.getDimension(1); j++)
+    //     {
+    //         for (int k = 0; k < C.getDimension(2); k++)
+    //         {
+    //             C_rowmaj.insert({i, j, k}, static_cast<double>(C(i, j, k)));
+    //         }
+    //     }
+    // }
+    // C_rowmaj.pack();
+    write(fs::path(params.input) / "C.ttx", C);
 
     json measurements;
     measurements["time"] = time;
