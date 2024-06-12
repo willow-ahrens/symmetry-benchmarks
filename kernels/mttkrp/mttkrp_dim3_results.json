@@ -1,6 +1,6 @@
 [
     {
-        "time": 0.161165062,
+        "time": 0.143407756,
         "nondiag_time": null,
         "diag_time": null,
         "method": "mttkrp_finch_ref",
@@ -8,7 +8,7 @@
         "size": 500,
         "rank": 10
     }, {
-        "time": 0.154279464,
+        "time": 0.09819261400000001,
         "nondiag_time": null,
         "diag_time": null,
         "method": "mttkrp_taco",
@@ -16,24 +16,23 @@
         "size": 500,
         "rank": 10
     }, {
-        "time": 0.059790416,
-        "nondiag_time": 0.058778994,
-        "diag_time": 0.001011422,
+        "time": 0.046631876999999995,
+        "nondiag_time": 0.0456966,
+        "diag_time": 0.000935277,
         "method": "mttkrp_finch_opt",
         "sparsity": 0.1,
         "size": 500,
         "rank": 10
     }, {
-        "time": 0.08798713200000001,
+        "time": 0.083181899,
         "nondiag_time": null,
         "diag_time": null,
         "method": "mttkrp_splatt",
         "sparsity": 0.1,
         "size": 500,
         "rank": 10
-    },
-    {
-        "time": 0.000216742,
+    }, {
+        "time": 0.000220774,
         "nondiag_time": null,
         "diag_time": null,
         "method": "mttkrp_finch_ref",
@@ -41,7 +40,7 @@
         "size": 500,
         "rank": 10
     }, {
-        "time": 0.00024093400000000002,
+        "time": 0.00021415300000000002,
         "nondiag_time": null,
         "diag_time": null,
         "method": "mttkrp_taco",
@@ -49,24 +48,23 @@
         "size": 500,
         "rank": 10
     }, {
-        "time": 0.00011312566666666667,
-        "nondiag_time": 0.000107816,
-        "diag_time": 5.309666666666667e-6,
+        "time": 9.268616666666666e-5,
+        "nondiag_time": 8.7665e-5,
+        "diag_time": 5.021166666666667e-6,
         "method": "mttkrp_finch_opt",
         "sparsity": 0.0001,
         "size": 500,
         "rank": 10
     }, {
-        "time": 0.000221775,
+        "time": 0.000228736,
         "nondiag_time": null,
         "diag_time": null,
         "method": "mttkrp_splatt",
         "sparsity": 0.0001,
         "size": 500,
         "rank": 10
-    },
-    {
-        "time": 4.008547907,
+    }, {
+        "time": 2.716310244,
         "nondiag_time": null,
         "diag_time": null,
         "method": "mttkrp_finch_ref",
@@ -74,7 +72,7 @@
         "size": 500,
         "rank": 500
     }, {
-        "time": 15.057485751000002,
+        "time": 2.751885546,
         "nondiag_time": null,
         "diag_time": null,
         "method": "mttkrp_taco",
@@ -82,15 +80,15 @@
         "size": 500,
         "rank": 500
     }, {
-        "time": 1.2231461780000001,
-        "nondiag_time": 1.211109817,
-        "diag_time": 0.012036361,
+        "time": 0.8028613229999999,
+        "nondiag_time": 0.793853941,
+        "diag_time": 0.009007382,
         "method": "mttkrp_finch_opt",
         "sparsity": 0.1,
         "size": 500,
         "rank": 500
     }, {
-        "time": 2.640455884,
+        "time": 2.404619147,
         "nondiag_time": null,
         "diag_time": null,
         "method": "mttkrp_splatt",
@@ -98,7 +96,7 @@
         "size": 500,
         "rank": 500
     }, {
-        "time": 0.005147587,
+        "time": 0.0039153,
         "nondiag_time": null,
         "diag_time": null,
         "method": "mttkrp_finch_ref",
@@ -106,7 +104,7 @@
         "size": 500,
         "rank": 500
     }, {
-        "time": 0.019629244,
+        "time": 0.0038686740000000003,
         "nondiag_time": null,
         "diag_time": null,
         "method": "mttkrp_taco",
@@ -114,19 +112,20 @@
         "size": 500,
         "rank": 500
     }, {
-        "time": 0.001873781,
-        "nondiag_time": 0.001757528,
-        "diag_time": 0.000116253,
+        "time": 0.0015173909999999999,
+        "nondiag_time": 0.00140852,
+        "diag_time": 0.000108871,
         "method": "mttkrp_finch_opt",
         "sparsity": 0.0001,
         "size": 500,
         "rank": 500
     }, {
-        "time": 0.00526079,
+        "time": 0.005227399000000001,
         "nondiag_time": null,
         "diag_time": null,
         "method": "mttkrp_splatt",
         "sparsity": 0.0001,
         "size": 500,
         "rank": 500
-    }]
+    }
+]
