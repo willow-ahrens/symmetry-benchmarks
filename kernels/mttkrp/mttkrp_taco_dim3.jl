@@ -25,17 +25,27 @@ function mttkrp_taco_dim3_helper(args, A, B)
             run(`$mttkrp_path -i $tmpdir -o $tmpdir $args`)
         end
 
-        C_T = fread(C_T_path)
-        C = Tensor(Dense(Dense(Element(0.0))))
-        @finch begin 
-            C .= 0
+        C = fread(C_T_path)
+        (r, n) = size(C)
+        _C = Tensor(Dense(Dense(Element(0.0))))
+        @finch mode=:fast begin
+            _C .= 0
             for j=_, i=_
-                C[i, j] = C_T[j, i]
+                _C[j, i] = C[i, j]
+            end
+        end
+        _C = resize!(_C, r, n)
+
+        C_T = Tensor(Dense(Dense(Element(0.0))))
+        @finch begin 
+            C_T .= 0
+            for j=_, i=_
+                C_T[i, j] = _C[j, i]
             end
         end
 
         time = JSON.parsefile(joinpath(tmpdir, "measurements.json"))["time"]
-        return (;time=time*10^-9, C=C)
+        return (;time=time*10^-9, C=C_T)
     end
 end
 
