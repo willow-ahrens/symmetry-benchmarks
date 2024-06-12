@@ -96,7 +96,7 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
     plt.close()
 
 
-all_formats_chart("ssymv/cgo_ssymv_results.json", use_suitesparse_name, "ssymv_finch_ref", "ssymv_finch_opt",
+all_formats_chart("ssymv/ssymv_results.json", use_suitesparse_name, "ssymv_finch_ref", "ssymv_finch_opt",
                 ["ssymv_finch_opt", "ssymv_taco", "ssymv_mkl"],  
                 {"ssymv_finch_opt": "tab:blue", "ssymv_taco": "tab:orange", "ssymv_mkl": "tab:green"},
                 "SSYMV Performance",
@@ -105,7 +105,7 @@ all_formats_chart("ssymv/cgo_ssymv_results.json", use_suitesparse_name, "ssymv_f
                 ["SySTeC", "TACO", "MKL"],
                 expected_speedup = 1, width=16)
 
-all_formats_chart("ssyrk/cgo_ssyrk_results.json", use_suitesparse_name, "ssyrk_ref", "ssyrk_opt",
+all_formats_chart("ssyrk/ssyrk_results.json", use_suitesparse_name, "ssyrk_ref", "ssyrk_opt",
                 ["ssyrk_opt"],  
                 {"ssyrk_opt": "tab:blue"},
                 "SSYRK Performance",
@@ -114,7 +114,7 @@ all_formats_chart("ssyrk/cgo_ssyrk_results.json", use_suitesparse_name, "ssyrk_r
                 ["SySTeC"],
                 expected_speedup = 2, width=16)
 
-all_formats_chart("syprd/cgo_syprd_results.json", use_suitesparse_name, "syprd_ref", "syprd_opt",
+all_formats_chart("syprd/syprd_results.json", use_suitesparse_name, "syprd_ref", "syprd_opt",
                 ["syprd_opt", "syprd_taco"],  
                 {"syprd_opt": "tab:blue", "syprd_taco": "tab:orange"},
                 "SYPRD Performance",
@@ -123,7 +123,7 @@ all_formats_chart("syprd/cgo_syprd_results.json", use_suitesparse_name, "syprd_r
                 ["SySTeC", "TACO"],
                 expected_speedup = 2, width=16)
 
-all_formats_chart("ttm/cgo_ttm_results.json", use_sparsity_rank, "ttm_finch_ref", "ttm_finch_opt",
+all_formats_chart("ttm/ttm_results.json", use_sparsity_rank, "ttm_finch_ref", "ttm_finch_opt",
                 ["ttm_finch_opt", "ttm_taco"],  
                 {"ttm_finch_opt": "tab:blue", "ttm_taco": "tab:orange"},
                 "TTM Performance",
