@@ -7,20 +7,7 @@ B_T = Tensor(Dense(Dense(Element(0.0))))
 C = Tensor(Dense(Dense(Element(0.0))))
 C_T = Tensor(Dense(Dense(Element(0.0))))
 
-eval(@finch_kernel mode=:fast function ssymm_finch_opt_helper(C_T, A, B_T)
-    C_T .= 0
-    for k=_, i=_, j=_
-        let A_ik = A[i, k]
-            if i <= k
-                C_T[j, i] += A_ik * B_T[j, k]
-            end
-            if i < k
-                C_T[j, k] += A_ik * B_T[j, i]
-            end
-        end
-    end
-    return C_T
-end)
+include("../../SySTeC/generated/ssymm.jl")
 
 eval(@finch_kernel mode=:fast function ssymm_finch_ref_helper(C_T, A, B_T)
     C_T .= 0
@@ -34,16 +21,16 @@ function ssymm_finch_opt(C, A, B)
     _C_T = Tensor(Dense(Dense(Element(0.0))), C)
     _A = Tensor(Dense(SparseList(Element(0.0))), A)
     _B_T = Tensor(Dense(Dense(Element(0.0))))
-    @finch begin 
+    @finch mode=:fast begin 
         _B_T .= 0
         for j=_, i=_ 
             _B_T[j, i] = B[i, j] 
         end 
     end
 
-    time = @belapsed ssymm_finch_opt_helper($_C_T, $_A, $_B_T)
+    time = @belapsed ssymm_finch_opt_helper($_A, $_B_T, $_C_T)
     _C = Tensor(Dense(Dense(Element(0.0))), C)
-    @finch begin 
+    @finch mode=:fast begin 
         _C .= 0
         for j=_, i=_ 
             _C[j, i] = _C_T[i, j] 
@@ -56,7 +43,7 @@ function ssymm_finch_ref(C, A, B)
     _C_T = Tensor(Dense(Dense(Element(0.0))), C)
     _A = Tensor(Dense(SparseList(Element(0.0))), A)
     _B_T = Tensor(Dense(Dense(Element(0.0))))
-    @finch begin 
+    @finch mode=:fast begin 
         _B_T .= 0
         for j=_, i=_ 
             _B_T[j, i] = B[i, j] 
@@ -65,7 +52,7 @@ function ssymm_finch_ref(C, A, B)
 
     time = @belapsed ssymm_finch_ref_helper($_C_T, $_A, $_B_T)
     _C = Tensor(Dense(Dense(Element(0.0))), C)
-    @finch begin 
+    @finch mode=:fast begin 
         _C .= 0
         for j=_, i=_ 
             _C[j, i] = _C_T[i, j] 

@@ -4,6 +4,8 @@ using BenchmarkTools
 C = Tensor(SparseHash{2}(Element(0.0)))
 A = Tensor(Dense(SparseList(Element(0.0))))
 
+include("../../SySTeC/generated/ssyrk.jl")
+
 eval(@finch_kernel mode=:fast function ssyrk_finch_ref_helper(C, A)
     C .= 0
     for k=_, j=_, i=_
@@ -12,23 +14,13 @@ eval(@finch_kernel mode=:fast function ssyrk_finch_ref_helper(C, A)
     return C
 end)
 
-eval(@finch_kernel mode=:fast function ssyrk_finch_opt_helper(C, A)
-    C .= 0
-    for k=_, j=_, i=_
-        if i <= j
-            C[i, j] += A[i, k] * A[j, k]
-        end
-    end
-    return C
-end)
-
 function ssyrk_finch_opt(C, A)
     _C = Tensor(SparseHash{2}(Element(0.0)), C)
     _A = Tensor(Dense(SparseList(Element(0.0))), A)
 
-    time = @belapsed ssyrk_finch_opt_helper($_C, $_A)
+    time = @belapsed ssyrk_finch_opt_helper($_A, $_C)
     C_full = Tensor(Dense(Dense(Element(0.0))))
-    @finch begin
+    @finch mode=:fast begin
         C_full .= 0
         for j=_, i=_
             if i > j

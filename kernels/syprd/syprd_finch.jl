@@ -6,23 +6,12 @@ diag = Tensor(Dense(Element(0.0)))
 x = Tensor(Dense(Element(0.0)))
 y = Scalar(0.0)
 
+include("../../SySTeC/generated/syprd.jl")
+
 eval(@finch_kernel mode=:fast function syprd_finch_ref_helper(y, A, x)
     y .= 0
     for j=_, i=_
         y[] += x[i] * A[i, j] * x[j]
-    end
-    return y
-end)
-
-eval(@finch_kernel mode=:fast function syprd_finch_opt_helper(y, A, x, diag)
-    y .= 0
-    for j=_
-        let x_j = x[j]
-            for i=_
-                y[] += 2 * A[i, j] * x[i] * x_j
-            end
-            y[] += diag[j] * x_j * x_j
-        end
     end
     return y
 end)
@@ -57,6 +46,6 @@ function syprd_finch_opt(y, A, x)
     end
 
     y = Ref{Any}()
-    time = @belapsed $y[] = syprd_finch_opt_helper($_y, $_A, $_x, $_d)
+    time = @belapsed $y[] = syprd_finch_opt_helper($_A, $_d, $_x, $_y)
     return (;time = time, y = y[])
 end

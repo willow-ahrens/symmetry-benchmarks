@@ -4,31 +4,14 @@ using BenchmarkTools
 A = Tensor(Dense(SparseList(SparseList(Element(0.0)))))
 B_T = Tensor(Dense(Dense(Element(0.0)))) 
 C = Tensor(Dense(Dense(Dense(Element(0.0)))))
+_C1 = Tensor(Dense(Dense(Dense(Element(0.0)))))
+
+include("../../SySTeC/generated/ttm.jl")
 
 eval(@finch_kernel mode=:fast function ttm_finch_ref_helper(C, A, B_T)
     C .= 0
     for l=_, j=_, k=_, i=_
         C[i, j, l] += A[k, j, l] * B_T[i, k]
-    end
-    return C
-end)
-
-eval(@finch_kernel mode=:fast function ttm_finch_opt_helper(C, A, B_T)
-    C .= 0
-    for l=_, k=_, j=_, i=_
-        let jk_leq = (j <= k), kl_leq = (k <= l)
-            let A_jkl = A[j, k, l]
-                if jk_leq && kl_leq
-                    C[i, j, k] += A_jkl * B_T[i, l]
-                end
-                if j < k && kl_leq
-                    C[i, k, l] += A_jkl * B_T[i, j]
-                end
-                if jk_leq && k < l
-                    C[i, j, l] += A_jkl * B_T[i, k]
-                end
-            end
-        end
     end
     return C
 end)
@@ -60,7 +43,7 @@ function ttm_finch_opt(C, A, B)
         end 
     end
 
-    time = @belapsed ttm_finch_opt_helper($_C, $_A, $_B_T)
+    time = @belapsed ttm_finch_opt_helper($_A, $_B_T, $_C)
     C_full = Tensor(Dense(Dense(Dense(Element(0.0)))), _C)
     @finch mode=:fast for l=_, j=_, i=_
         if j > l
