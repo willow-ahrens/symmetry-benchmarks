@@ -8,7 +8,6 @@ using Printf
 using LinearAlgebra
 using Finch
 
-#include("spmv_mkl.jl")
 include("symv_mkl.jl")
 include("ssymv_finch.jl")
 include("ssymv_taco.jl")
