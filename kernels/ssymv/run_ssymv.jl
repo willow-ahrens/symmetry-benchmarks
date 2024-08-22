@@ -53,7 +53,6 @@ methods = Dict(
     "ssymv_finch_ref" => ssymv_finch_ref,
     "ssymv_mkl" => symv_mkl,
     "ssymv_finch_opt" => ssymv_finch_opt,
-    "ssymv_finch_opt_2" => ssymv_finch_opt_2,
     "ssymv_taco" => ssymv_taco,
 )
 
