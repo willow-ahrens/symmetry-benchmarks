@@ -38,13 +38,13 @@ function generate_code()
     execute(ex, func_name, symmetric_tns, loop_order, filename)
     println("Generated SySTeC SSYRK Kernel")
 
-    ex = @finch_program C[i, j] += A[i, k] * B[k, j]
-    func_name = "ssymm_finch_opt_helper"
-    symmetric_tns = [A]
-    loop_order = [j, i, k]
-    filename = "SySTeC/generated/ssymm.jl"
-    execute(ex, func_name, symmetric_tns, loop_order, filename)
-    println("Generated SySTeC SSYMM Kernel")
+    # ex = @finch_program C[i, j] += A[i, k] * B[k, j]
+    # func_name = "ssymm_finch_opt_helper"
+    # symmetric_tns = [A]
+    # loop_order = [j, i, k]
+    # filename = "SySTeC/generated/ssymm.jl"
+    # execute(ex, func_name, symmetric_tns, loop_order, filename)
+    # println("Generated SySTeC SSYMM Kernel")
 
     ex = @finch_program C[i, j, l] += A[k, j, l] * B[k, i]
     func_name = "ttm_finch_opt_helper"

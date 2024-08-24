@@ -1,4 +1,5 @@
 using Finch
+import Finch.FinchNotation: and, or
 using BenchmarkTools
 
 A = Tensor(Dense(SparseList(SparseList(SparseList(SparseList(Element(0.0)))))))
@@ -8,7 +9,7 @@ B = Tensor(Dense(Dense(Element(0.0))))
 B_T = Tensor(Dense(Dense(Element(0.0)))) 
 C = Tensor(Dense(Dense(Element(0.0))))
 C_T = Tensor(Dense(Dense(Element(0.0))))
-lookup = Tensor(Dense(Element(0.0)))
+lookup = [0.0]
 
 include("../../SySTeC/generated/mttkrp_dim5.jl")
 

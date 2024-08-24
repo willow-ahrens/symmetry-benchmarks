@@ -1,4 +1,5 @@
 using Finch
+import Finch.FinchNotation: and, or
 using BenchmarkTools
 
 A = Tensor(Dense(SparseList(SparseList(SparseList(Element(0.0))))))

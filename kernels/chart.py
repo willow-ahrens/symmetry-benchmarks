@@ -53,7 +53,6 @@ def all_formats_chart(results_filepath, get_matrix_name, reference, optimized, m
 
 def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups = [], title = "", y_label = "", x_label = "", bar_labels_dict={}, legend_labels=None, reference_label = "", ref_line = True, plot_width = 12, expected_speedup=0):
     horizontal_scale = 1
-    fontfamily = "serif"
 
     x = np.arange(0, len(data[labels[0]]) * horizontal_scale, horizontal_scale)
     width = 0.3
@@ -76,9 +75,9 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
     if x_label:
         ax.set_xlabel(x_label, fontsize=14)
     ax.set_xticks(x + width * (len(labels) - 1)/2, x_axis)
-    ax.tick_params(axis='x', which='major', labelsize=11, labelrotation=60, labelfontfamily=fontfamily)
+    ax.tick_params(axis='x', which='major', labelsize=11, labelrotation=60)
     ax.set_xticklabels(ax.get_xticklabels(), rotation = 45, ha="right")
-    ax.tick_params(axis='y', labelfontfamily=fontfamily, labelsize=10)
+    ax.tick_params(axis='y', labelsize=10)
     if legend_labels:
         ax.legend(legend_labels, loc='upper right', ncols=1, fontsize=12)
     ax.set_ylim(0, max_height + 0.05 * max_height)
