@@ -65,7 +65,7 @@ $(SPLATT):
 	make
 	make install
 
-all: deps kernels 
+all: deps kernels
 
 deps: taco splatt
 
