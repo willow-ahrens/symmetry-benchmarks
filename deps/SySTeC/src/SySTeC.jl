@@ -9,6 +9,8 @@ using AbstractTrees
 
 import Finch.FinchNotation: and, or
 
+export compile_symmetric_kernel
+
 #TODO: figure out how to handle having repeats of the same symmetric matrix, but with different indices 
 """
     get_permutable_idxs(rhs, issymmetric)
@@ -1456,7 +1458,7 @@ function format_lookup_table(lookup_table::Vector{T}, chunk_size::Int=15) where 
     return "lookup = [$formatted]"
 end
 
-function execute(ex, func_name, symmetric_tns, loop_order, filename)
+function compile_symmetric_kernel(ex, func_name, symmetric_tns, loop_order, filename)
     ex_base, ex_edge, transposed, replicate, lookup_table = symmetrize(ex, symmetric_tns, loop_order) 
     
     if ex_edge != nothing

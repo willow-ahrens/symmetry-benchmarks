@@ -1,0 +1,17 @@
+name = "SySTeC"
+uuid = "0b50971e-02f9-4c9e-bc3f-38d39a3247e2"
+authors = ["Willow Ahrens <willow@csail.mit.edu>"]
+version = "0.1.0"
+
+[deps]
+AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
+Combinatorics = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
+Finch = "9177782c-1635-4eb9-9bfb-d9dfa25e6bce"
+RewriteTools = "5969e224-3634-4c61-9f66-721b69e98b8a"
+
+[compat]
+julia="1"
+AbstractTrees = "0.4.5"
+Combinatorics = "1.0.2"
+Finch = "0.6.32"
+RewriteTools = "0.2.4"
