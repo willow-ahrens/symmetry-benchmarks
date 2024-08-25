@@ -1,7 +1,9 @@
 FROM julia:1.10.4-bullseye 
 
 RUN apt-get -y update 
-RUN apt-get -y install coreutils cmake gcc g++ python python3 git libblas-dev liblapack-dev
+RUN apt-get -y install coreutils cmake gcc g++ python python3 python3-pip python3-venv git libblas-dev liblapack-dev
+RUN pip install --upgrade pip
+RUN pip install poetry
 
 WORKDIR /symmetry-benchmarks
 
@@ -15,13 +17,14 @@ RUN make deps
 
 COPY ./Project.toml ./Project.toml
 COPY ./setup.jl ./setup.jl
-RUN make project
-
-COPY ./kernels ./kernels
-RUN make all
+COPY ./pyproject.toml ./pyproject.toml
+RUN make envs
 
 COPY ./run_SySTeC.jl ./run_SySTeC.jl
 RUN julia run_SySTeC.jl
+
+COPY ./kernels ./kernels
+RUN make all
 
 # COPY spmv_taco.cpp ./spmv_taco.cpp
 # COPY spmspv_taco.cpp ./spmspv_taco.cpp
