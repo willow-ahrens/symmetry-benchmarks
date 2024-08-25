@@ -7,7 +7,7 @@ y = Tensor(Dense(Element(0.0)))
 diag = Tensor(Dense(Element(0.0)))
 temp = Scalar(0.0)
 
-include("../../SySTeC/generated/ssymv.jl")
+include("../../generated/ssymv.jl")
 
 eval(@finch_kernel mode=:fast function ssymv_finch_ref_helper(y, A, x)
     y .= 0

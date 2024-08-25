@@ -1,3 +1,8 @@
+if abspath(PROGRAM_FILE) == @__FILE__
+    using Pkg
+    Pkg.activate(joinpath(@__DIR__, "../.."))
+    Pkg.instantiate()
+end
 using MatrixDepot
 using BenchmarkTools
 using ArgParse

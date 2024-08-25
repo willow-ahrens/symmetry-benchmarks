@@ -11,7 +11,7 @@ C = Tensor(Dense(Dense(Element(0.0))))
 C_T = Tensor(Dense(Dense(Element(0.0))))
 lookup = [0.0]
 
-include("../../SySTeC/generated/mttkrp_dim5.jl")
+include("../../generated/mttkrp_dim5.jl")
 
 eval(@finch_kernel mode=:fast function mttkrp_finch_ref_dim5_helper(C_T, A, B_T)
     C_T .= 0

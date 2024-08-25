@@ -26,6 +26,8 @@ RUN julia run_SySTeC.jl
 COPY ./kernels ./kernels
 RUN make all
 
+COPY ./run_benchmarks.sh run_benchmarks.sh
+
 # COPY spmv_taco.cpp ./spmv_taco.cpp
 # COPY spmspv_taco.cpp ./spmspv_taco.cpp
 # COPY alpha_taco_rle.cpp ./alpha_taco_rle.cpp
