@@ -4,7 +4,6 @@
  * INCLUDES
  *****************************************************************************/
 #include "thd_info.h"
-#include <omp.h>
 
 
 /******************************************************************************
@@ -23,8 +22,8 @@ static inline void p_reduce_sum(
   idx_t const scratchid,
   idx_t const nelems)
 {
-  int const tid = omp_get_thread_num();
-  int const nthreads = omp_get_num_threads();
+  int const tid = splatt_omp_get_thread_num();
+  int const nthreads = splatt_omp_get_num_threads();
 
   val_t * const myvals = (val_t *) thds[tid].scratch[scratchid];
 
@@ -78,8 +77,8 @@ static inline void p_reduce_max(
   idx_t const scratchid,
   idx_t const nelems)
 {
-  int const tid = omp_get_thread_num();
-  int const nthreads = omp_get_num_threads();
+  int const tid = splatt_omp_get_thread_num();
+  int const nthreads = splatt_omp_get_num_threads();
 
   val_t * const myvals = (val_t *) thds[tid].scratch[scratchid];
 
@@ -131,7 +130,7 @@ void thd_reduce(
   idx_t const nelems,
   splatt_reduce_type const which)
 {
-  if(omp_get_num_threads() == 1) {
+  if(splatt_omp_get_num_threads() == 1) {
     return;
   }
 
@@ -184,9 +183,29 @@ void thd_times(
   idx_t const nthreads)
 {
   for(idx_t t=0; t < nthreads; ++t) {
-    printf("  thd: %"SPLATT_PF_IDX" %0.3fs\n", t, thds[t].ttime.seconds);
+    printf("  thread: %"SPLATT_PF_IDX" %0.3fs\n", t, thds[t].ttime.seconds);
   }
 }
+
+
+void thd_time_stats(
+  thd_info * thds,
+  idx_t const nthreads)
+{
+  double max_time = 0.;
+  double avg_time = 0.;
+  for(idx_t t=0; t < nthreads; ++t) {
+    avg_time += thds[t].ttime.seconds;
+    max_time = SS_MAX(max_time, thds[t].ttime.seconds);
+  }
+  avg_time /= nthreads;
+
+  double const imbal = (max_time - avg_time) / max_time;
+  printf("  avg: %0.3fs max: %0.3fs (%0.1f%% imbalance)\n",
+      avg_time, max_time, 100. * imbal);
+}
+
+
 
 void thd_reset(
   thd_info * thds,

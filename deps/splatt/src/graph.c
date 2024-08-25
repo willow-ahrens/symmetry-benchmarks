@@ -20,6 +20,18 @@
 #include <ashado.h>
 #endif
 
+#ifdef SPLATT_USE_METIS
+/* don't let metis types conflict with splatt */
+#define idx_t metis_idx_t
+#include <metis.h>
+#undef idx_t
+#endif
+
+
+/* use multi-constraint balancing for m-partite graphs */
+#ifndef SPLATT_USE_VTX_WGTS
+#define SPLATT_USE_VTX_WGTS 0
+#endif
 
 
 /******************************************************************************
@@ -172,7 +184,7 @@ static adj_t p_count_adj_size(
 
 /**
 * @brief Compute the offset of a certain CSF tree depth (when all indices are
-*        mapped to vertices). This accounts for csf->dim_perm.
+*        mapped to vertices). This accounts for CSF mode permutation.
 *
 *        For example, with no permutation and depth=2, this returns
 *        csf->dims[0] + csf->dims[1].
@@ -186,7 +198,7 @@ static idx_t p_calc_offset(
     splatt_csf const * const csf,
     idx_t const depth)
 {
-  idx_t const mode = csf->dim_perm[depth];
+  idx_t const mode = csf_depth_to_mode(csf, depth);
   idx_t offset = 0;
   for(idx_t m=0; m < mode; ++m) {
     offset += csf->dims[m];
@@ -297,6 +309,38 @@ static void p_fill_ijk_graph(
 }
 
 
+
+/**
+* @brief Fill the multi-constraint vertex weights with the #nnz that appear in
+*        each index.
+*
+* @param graph The graph to fill.
+* @param tt The tensor we are converting.
+*/
+static void p_fill_graph_vwgts(
+    splatt_graph * const graph,
+    sptensor_t const * const tt)
+{
+  idx_t const nnz = tt->nnz;
+
+  assert(graph->nvwgts == tt->nmodes);
+
+  wgt_t * const vwgts = graph->vwgts;
+  memset(vwgts, 0, graph->nvtxs * graph->nvwgts * sizeof(*vwgts));
+
+  idx_t offset = 0;
+  for(idx_t m=0; m < tt->nmodes; ++m) {
+    idx_t const * const inds = tt->ind[m];
+
+    /* each nnz appearance is 1 weight */
+    for(idx_t x=0; x < nnz; ++x) {
+      idx_t const v = inds[x] + offset;
+      vwgts[m + (v * graph->nvwgts)] += 1;
+    }
+    offset += tt->dims[m];
+  }
+}
+
 /**
 * @brief Takes a list of graphs and returns them stacked on top of each other.
 *        No adjacency lists are altered, only vertices added.
@@ -318,7 +362,8 @@ static splatt_graph * p_merge_graphs(
     ncon += graphs[m]->nedges;
   }
 
-  splatt_graph * ret = graph_alloc(nvtxs, ncon, 0, 1);
+  splatt_graph * ret = graph_alloc(nvtxs, ncon, graphs[0]->nvwgts,
+      graphs[0]->ewgts != NULL);
 
   /* fill in ret */
   vtx_t voffset = 0;
@@ -333,7 +378,9 @@ static splatt_graph * p_merge_graphs(
       ret->eptr[v + voffset] = eptr[v] + eoffset;
       for(adj_t e=eptr[v]; e < eptr[v+1]; ++e) {
         ret->eind[e + eoffset] = eind[e];
-        ret->ewgts[e + eoffset] = ewgts[e];
+        if(ret->ewgts != NULL) {
+          ret->ewgts[e + eoffset] = ewgts[e];
+        }
       }
     }
     voffset += graphs[m]->nvtxs;
@@ -602,7 +649,11 @@ splatt_graph * graph_convert(
     /* count size of adjacency list */
     adj_t const ncon = p_count_adj_size(&csf);
 
+#if SPLATT_USE_VTX_WGTS == 0
     graphs[m] = graph_alloc(tt->dims[m], ncon, 0, 1);
+#else
+    graphs[m] = graph_alloc(tt->dims[m], ncon, tt->nmodes, 1);
+#endif
     p_fill_ijk_graph(&csf, graphs[m]);
 
     csf_free_mode(&csf);
@@ -617,6 +668,11 @@ splatt_graph * graph_convert(
     graph_free(graphs[m]);
   }
 
+  /* handle vertex weights */
+  if(full_graph->nvwgts > 0) {
+    p_fill_graph_vwgts(full_graph, tt);
+  }
+
   return full_graph;
 }
 
@@ -624,7 +680,7 @@ splatt_graph * graph_convert(
 splatt_graph * graph_alloc(
     vtx_t nvtxs,
     adj_t nedges,
-    int use_vtx_wgts,
+    int num_vtx_wgts,
     int use_edge_wgts)
 {
   splatt_graph * ret = splatt_malloc(sizeof(*ret));
@@ -636,8 +692,9 @@ splatt_graph * graph_alloc(
 
   ret->eptr[nvtxs] = nedges;
 
-  if(use_vtx_wgts) {
-    ret->vwgts = splatt_malloc(nvtxs * sizeof(*(ret->vwgts)));
+  ret->nvwgts = num_vtx_wgts;
+  if(num_vtx_wgts) {
+    ret->vwgts = splatt_malloc(nvtxs * ret->nvwgts * sizeof(*(ret->vwgts)));
   } else {
     ret->vwgts = NULL;
   }
@@ -754,4 +811,77 @@ idx_t * ashado_part(
   return part;
 }
 #endif
+
+
+#ifdef SPLATT_USE_METIS
+splatt_idx_t *  metis_part(
+    splatt_graph * graph,
+    splatt_idx_t const num_partitions,
+    splatt_idx_t * edgecut)
+{
+  metis_idx_t nvtxs = graph->nvtxs;
+  metis_idx_t ncon = 1;
+  metis_idx_t nparts = num_partitions;
+  metis_idx_t cut = 0;
+
+  /* copy the adj structure */
+  metis_idx_t * xadj = splatt_malloc((nvtxs+1) * sizeof(*xadj));
+  for(metis_idx_t v=0; v <= nvtxs; ++v) {
+    xadj[v] = graph->eptr[v];
+  }
+  metis_idx_t * adjncy = splatt_malloc(xadj[nvtxs] * sizeof(*adjncy));
+  for(metis_idx_t e=0; e < xadj[nvtxs]; ++e) {
+    adjncy[e] = graph->eind[e];
+  }
+
+  /* weights */
+  metis_idx_t * vwgt = NULL;
+  metis_idx_t * ewgt = NULL;
+  if(graph->vwgts != NULL) {
+    /* graph number of vertex weights */
+    ncon = graph->nvwgts;
+    vwgt = splatt_malloc(nvtxs * ncon * sizeof(*vwgt));
+    for(metis_idx_t v=0; v < nvtxs * ncon; ++v) {
+      vwgt[v] = graph->vwgts[v];
+    }
+  }
+  if(graph->ewgts != NULL) {
+    ewgt = splatt_malloc(xadj[nvtxs] * sizeof(*ewgt));
+    for(metis_idx_t e=0; e < xadj[nvtxs]; ++e) {
+      ewgt[e] = graph->ewgts[e];
+    }
+  }
+
+  /* allocate partitioning info */
+  metis_idx_t * metis_parts = splatt_malloc(nvtxs * sizeof(*metis_parts));
+
+  /* do the partitioning! */
+  int ret = METIS_PartGraphRecursive(&nvtxs, &ncon, xadj, adjncy, vwgt, NULL,
+      ewgt, &nparts, NULL, NULL, NULL /* opts */, &cut, metis_parts);
+  if(ret != METIS_OK) {
+    fprintf(stderr, "METIS_PartGraphRecursive returned %d\n", ret);
+  }
+  *edgecut = cut;
+
+  /* cleanup */
+  splatt_free(xadj);
+  splatt_free(adjncy);
+  if(graph->vwgts != NULL) {
+    splatt_free(vwgt);
+  }
+  if(graph->ewgts != NULL) {
+    splatt_free(ewgt);
+  }
+
+  /* copy into splatt_idx_t */
+  splatt_idx_t * parts = splatt_malloc(nvtxs * sizeof(*parts));
+  for(metis_idx_t v=0; v < nvtxs; ++v) {
+    parts[v] = metis_parts[v];
+  }
+  splatt_free(metis_parts);
+
+  return parts;
+}
+#endif
+
 

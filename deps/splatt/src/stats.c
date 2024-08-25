@@ -200,9 +200,9 @@ void stats_csf(
   for(idx_t m=1; m < ct->nmodes; ++m) {
     printf("x%"SPLATT_PF_IDX"", ct->dims[m]);
   }
-  printf(" (%"SPLATT_PF_IDX"", ct->dim_perm[0]);
+  printf(" (%"SPLATT_PF_IDX"", csf_depth_to_mode(ct, 0));
   for(idx_t m=1; m < ct->nmodes; ++m) {
-    printf("->%"SPLATT_PF_IDX"", ct->dim_perm[m]);
+    printf("->%"SPLATT_PF_IDX"", csf_depth_to_mode(ct, m));
   }
   printf(")\n");
   printf("ntiles: %"SPLATT_PF_IDX" tile dims: %"SPLATT_PF_IDX"", ct->ntiles,
@@ -238,12 +238,15 @@ void cpd_stats(
   /* header */
   printf("Factoring "
          "------------------------------------------------------\n");
-  printf("NFACTORS=%"SPLATT_PF_IDX" MAXITS=%"SPLATT_PF_IDX" TOL=%0.1e ",
-      nfactors,
-      (idx_t) opts[SPLATT_OPTION_NITER],
-      opts[SPLATT_OPTION_TOLERANCE]);
-  printf("THREADS=%"SPLATT_PF_IDX" ", (idx_t) opts[SPLATT_OPTION_NTHREADS]);
+  printf("NFACTORS=%"SPLATT_PF_IDX" MAXITS=%"SPLATT_PF_IDX" TOL=%0.1e "
+         "REG=%0.1e ",
+      nfactors, (idx_t) opts[SPLATT_OPTION_NITER],
+      opts[SPLATT_OPTION_TOLERANCE], opts[SPLATT_OPTION_REGULARIZE]);
 
+
+  printf("SEED=%d ", (int) opts[SPLATT_OPTION_RANDSEED]);
+
+  printf("THREADS=%"SPLATT_PF_IDX" ", (idx_t) opts[SPLATT_OPTION_NTHREADS]);
   printf("\n");
 
   /* CSF allocation */
@@ -270,8 +273,8 @@ void cpd_stats(
     printf("NO");
     break;
   case SPLATT_DENSETILE:
-    printf("DENSE TILE-DEPTH=%"SPLATT_PF_IDX,
-        (idx_t)opts[SPLATT_OPTION_TILEDEPTH]);
+    printf("DENSE TILED-MODES=%"SPLATT_PF_IDX,
+        (idx_t)opts[SPLATT_OPTION_TILELEVEL]);
     break;
   case SPLATT_SYNCTILE:
     printf("SYNC");
@@ -323,10 +326,10 @@ void mpi_cpd_stats(
   /* header */
   printf("Factoring "
          "------------------------------------------------------\n");
-  printf("NFACTORS=%"SPLATT_PF_IDX" MAXITS=%"SPLATT_PF_IDX" TOL=%0.1e ",
-      nfactors,
-      (idx_t) opts[SPLATT_OPTION_NITER],
-      opts[SPLATT_OPTION_TOLERANCE]);
+  printf("NFACTORS=%"SPLATT_PF_IDX" MAXITS=%"SPLATT_PF_IDX" TOL=%0.1e "
+         "REG=%0.1e ",
+      nfactors, (idx_t) opts[SPLATT_OPTION_NITER],
+      opts[SPLATT_OPTION_TOLERANCE], opts[SPLATT_OPTION_REGULARIZE]);
   printf("RANKS=%d THREADS=%"SPLATT_PF_IDX" ", rinfo->npes,
       (idx_t) opts[SPLATT_OPTION_NTHREADS]);
 
@@ -356,8 +359,8 @@ void mpi_cpd_stats(
     printf("NO");
     break;
   case SPLATT_DENSETILE:
-    printf("DENSE TILE-DEPTH=%"SPLATT_PF_IDX,
-        (idx_t)opts[SPLATT_OPTION_TILEDEPTH]);
+    printf("DENSE TILED-MODES=%"SPLATT_PF_IDX,
+        (idx_t)opts[SPLATT_OPTION_TILELEVEL]);
     break;
   case SPLATT_SYNCTILE:
     printf("SYNC");

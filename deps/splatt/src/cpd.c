@@ -12,7 +12,6 @@
 #include "util.h"
 
 #include <math.h>
-#include <omp.h>
 
 
 
@@ -125,22 +124,27 @@ static val_t p_kruskal_norm(
   val_t norm_mats = 0;
 
   /* use aTa[MAX_NMODES] as scratch space */
-  for(idx_t x=0; x < rank*rank; ++x) {
-    av[x] = 1.;
+  for(idx_t i=0; i < rank; ++i) {
+    for(idx_t j=i; j < rank; ++j) {
+      av[j + (i*rank)] = 1.;
+    }
   }
 
   /* aTa[MAX_NMODES] = hada(aTa) */
   for(idx_t m=0; m < nmodes; ++m) {
     val_t const * const restrict atavals = aTa[m]->vals;
-    for(idx_t x=0; x < rank*rank; ++x) {
-      av[x] *= atavals[x];
+    for(idx_t i=0; i < rank; ++i) {
+      for(idx_t j=i; j < rank; ++j) {
+        av[j + (i*rank)] *= atavals[j + (i*rank)];
+      }
     }
   }
 
   /* now compute lambda^T * aTa[MAX_NMODES] * lambda */
   for(idx_t i=0; i < rank; ++i) {
-    for(idx_t j=0; j < rank; ++j) {
-      norm_mats += av[j+(i*rank)] * lambda[i] * lambda[j];
+    norm_mats += av[i+(i*rank)] * lambda[i] * lambda[i];
+    for(idx_t j=i+1; j < rank; ++j) {
+      norm_mats += av[j+(i*rank)] * lambda[i] * lambda[j] * 2;
     }
   }
 
@@ -182,7 +186,7 @@ static val_t p_tt_kruskal_inner(
   val_t myinner = 0;
   #pragma omp parallel reduction(+:myinner)
   {
-    int const tid = omp_get_thread_num();
+    int const tid = splatt_omp_get_thread_num();
     val_t * const restrict accumF = (val_t *) thds[tid].scratch[0];
 
     for(idx_t r=0; r < rank; ++r) {
@@ -204,10 +208,6 @@ static val_t p_tt_kruskal_inner(
 
 #ifdef SPLATT_USE_MPI
   timer_start(&timers[TIMER_MPI_FIT]);
-  timer_start(&timers[TIMER_MPI_IDLE]);
-  MPI_Barrier(rinfo->comm_3d);
-  timer_stop(&timers[TIMER_MPI_IDLE]);
-
   MPI_Allreduce(&myinner, &inner, 1, SPLATT_MPI_VAL, MPI_SUM, rinfo->comm_3d);
   timer_stop(&timers[TIMER_MPI_FIT]);
 #else
@@ -252,7 +252,14 @@ static val_t p_calc_fit(
   /* Compute inner product of tensor with new model */
   val_t const inner = p_tt_kruskal_inner(nmodes, rinfo, thds, lambda, mats,m1);
 
-  val_t const residual = sqrt(ttnormsq + norm_mats - (2 * inner));
+  /*
+   * We actually want sqrt(<X,X> + <Y,Y> - 2<X,Y>), but if the fit is perfect
+   * just make it 0.
+   */
+  val_t residual = ttnormsq + norm_mats - (2 * inner);
+  if(residual > 0.) {
+    residual = sqrt(residual);
+  }
   timer_stop(&timers[TIMER_FIT]);
   return 1 - (residual / sqrt(ttnormsq));
 }
@@ -274,9 +281,9 @@ double cpd_als_iterate(
 
   /* Setup thread structures. + 64 bytes is to avoid false sharing.
    * TODO make this better */
-  omp_set_num_threads(nthreads);
+  splatt_omp_set_num_threads(nthreads);
   thd_info * thds =  thd_init(nthreads, 3,
-    (nfactors * nfactors * sizeof(val_t)) + 64,
+    (nmodes * nfactors * sizeof(val_t)) + 64,
     0,
     (nmodes * nfactors * sizeof(val_t)) + 64);
 
@@ -287,10 +294,14 @@ double cpd_als_iterate(
   matrix_t * aTa[MAX_NMODES+1];
   for(idx_t m=0; m < nmodes; ++m) {
     aTa[m] = mat_alloc(nfactors, nfactors);
+    memset(aTa[m]->vals, 0, nfactors * nfactors * sizeof(val_t));
     mat_aTa(mats[m], aTa[m], rinfo, thds, nthreads);
   }
   /* used as buffer space */
   aTa[MAX_NMODES] = mat_alloc(nfactors, nfactors);
+
+  /* mttkrp workspace */
+  splatt_mttkrp_ws * mttkrp_ws = splatt_mttkrp_alloc_ws(tensors,nfactors,opts);
 
   /* Compute input tensor norm */
   double oldfit = 0;
@@ -313,15 +324,20 @@ double cpd_als_iterate(
 
       /* M1 = X * (C o B) */
       timer_start(&timers[TIMER_MTTKRP]);
-      mttkrp_csf(tensors, mats, m, thds, opts);
+      mttkrp_csf(tensors, mats, m, thds, mttkrp_ws, opts);
       timer_stop(&timers[TIMER_MTTKRP]);
 
+#if 0
       /* M2 = (CtC .* BtB .* ...)^-1 */
       calc_gram_inv(m, nmodes, aTa);
-
       /* A = M1 * M2 */
       memset(mats[m]->vals, 0, mats[m]->I * nfactors * sizeof(val_t));
       mat_matmul(m1, aTa[MAX_NMODES], mats[m]);
+#else
+      par_memcpy(mats[m]->vals, m1->vals, m1->I * nfactors * sizeof(val_t));
+      mat_solve_normals(m, nmodes, aTa, mats[m],
+          opts[SPLATT_OPTION_REGULARIZE]);
+#endif
 
       /* normalize columns and extract lambda */
       if(it == 0) {
@@ -349,7 +365,8 @@ double cpd_als_iterate(
         }
       }
     }
-    if(it > 0 && fabs(fit - oldfit) < opts[SPLATT_OPTION_TOLERANCE]) {
+    if(fit == 1. || 
+        (it > 0 && fabs(fit - oldfit) < opts[SPLATT_OPTION_TOLERANCE])) {
       break;
     }
     oldfit = fit;
@@ -359,6 +376,7 @@ double cpd_als_iterate(
   cpd_post_process(nfactors, nmodes, mats, lambda, thds, nthreads, rinfo);
 
   /* CLEAN UP */
+  splatt_mttkrp_free_ws(mttkrp_ws);
   for(idx_t m=0; m < nmodes; ++m) {
     mat_free(aTa[m]);
   }

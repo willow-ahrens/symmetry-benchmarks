@@ -15,8 +15,10 @@ static char const * csf_keys[] = {
   "nmodes",
   "dims",
   "dim_perm",
+  "dim_iperm",
   "which_tile",
   "ntiles",
+  "ntiled_modes",
   "tile_dims",
   "pt"
 };
@@ -53,8 +55,7 @@ static mxArray * p_pack_csf(
   }
 
   /* create splatt_csf matlab struct */
-  mwSize dim = (mwSize) ntensors;
-  mxArray * csf = mxCreateCellArray(1, &dim);
+  mxArray * csf = mxCreateCellMatrix(1, (mwSize) ntensors);
 
   splatt_idx_t t;
   for(t=0; t < ntensors; ++t) {
@@ -67,17 +68,18 @@ static mxArray * p_pack_csf(
     p_mk_uint64(curr, "nmodes", 1, &(nmodes));
     p_mk_uint64(curr, "dims", nmodes, tt[t].dims);
     p_mk_uint64(curr, "dim_perm", nmodes, tt[t].dim_perm);
+    p_mk_uint64(curr, "dim_iperm", nmodes, tt[t].dim_iperm);
 
 
     /* tiled fields */
     int32_t which = tt[t].which_tile;
     p_mk_int32(curr, "which_tile", 1, &(which));
     p_mk_uint64(curr, "ntiles", 1, &(tt[t].ntiles));
+    p_mk_uint64(curr, "ntiled_modes", 1, &(tt[t].ntiled_modes));
     p_mk_uint64(curr, "tile_dims", 1, tt[t].tile_dims);
 
     /* sparsity pattern for each tile */
-    dim = (mwSize) tt[t].ntiles;
-    mxArray * sparsities = mxCreateCellArray(1, &dim);
+    mxArray * sparsities = mxCreateCellMatrix(1, (mwSize) tt[t].ntiles);
 
     splatt_idx_t tile;
     for(tile=0; tile < tt[t].ntiles; ++tile) {
@@ -97,8 +99,7 @@ static mxArray * p_pack_csf(
       }
 
       /* copy fptrs */
-      dim = (mwSize) nmodes-1;
-      mxArray * mxfptrs = mxCreateCellArray(1, &dim);
+      mxArray * mxfptrs = mxCreateCellMatrix(1, (mwSize) nmodes-1);
       splatt_idx_t m;
       for(m=0; m < nmodes-1; ++m) {
         mxArray * fp = mxCreateNumericMatrix(1, pt->nfibs[m]+1, mxUINT64_CLASS, mxREAL);
@@ -109,8 +110,7 @@ static mxArray * p_pack_csf(
       mxSetField(curr_tile, 0, "fptr", mxfptrs);
 
       /* copy fids */
-      dim = (mwSize) nmodes;
-      mxArray * mxfids = mxCreateCellArray(1, &dim);
+      mxArray * mxfids = mxCreateCellMatrix(1, (mwSize) nmodes);
 
       mxArray * has_fids = mxCreateNumericMatrix(1, nmodes, mxINT32_CLASS,
           mxREAL);

@@ -6,6 +6,7 @@
 #include "../io.h"
 #include "../sptensor.h"
 #include "../stats.h"
+#include "../thd_info.h"
 #include "../cpd.h"
 
 
@@ -16,17 +17,24 @@ static char cpd_args_doc[] = "TENSOR";
 static char cpd_doc[] =
   "splatt-cpd -- Compute the CPD of a sparse tensor.\n";
 
+#define TT_CSF 250
+#define TT_REG 251
+#define TT_SEED 252
 #define TT_NOWRITE 253
 #define TT_TOL 254
 #define TT_TILE 255
 static struct argp_option cpd_options[] = {
   {"iters", 'i', "NITERS", 0, "maximum number of iterations to use (default: 50)"},
   {"tol", TT_TOL, "TOLERANCE", 0, "minimum change for convergence (default: 1e-5)"},
+  {"reg", TT_REG, "REGULARIZATION", 0, "regularization parameter (default: 0)"},
   {"rank", 'r', "RANK", 0, "rank of decomposition to find (default: 10)"},
   {"threads", 't', "NTHREADS", 0, "number of threads to use (default: #cores)"},
+  {"csf", TT_CSF, "#CSF", 0, "how many CSF to use? {one,two,all} default: two"},
   {"tile", TT_TILE, 0, 0, "use tiling during SPLATT"},
   {"nowrite", TT_NOWRITE, 0, 0, "do not write output to file"},
+  {"seed", TT_SEED, "SEED", 0, "random seed (default: system time)"},
   {"verbose", 'v', 0, 0, "turn on verbose output (default: no)"},
+  {"stem", 's', "PATH", 0, "file stem for factorization output files (default: ./)"},
   { 0 }
 };
 
@@ -34,6 +42,7 @@ static struct argp_option cpd_options[] = {
 typedef struct
 {
   char * ifname;   /** file that we read the tensor from */
+  char * stem;   /** file stem */
   int write;       /** do we write output to file? */
   double * opts;   /** splatt_cpd options */
   idx_t nfactors;
@@ -49,11 +58,18 @@ static void default_cpd_opts(
   cpd_cmd_args * args)
 {
   args->opts = splatt_default_opts();
+  args->stem = NULL;
   args->ifname    = NULL;
   args->write     = DEFAULT_WRITE;
   args->nfactors  = DEFAULT_NFACTORS;
 }
 
+
+static void free_cpd_args(
+  cpd_cmd_args * args)
+{
+  splatt_free_opts(args->opts);
+}
 
 
 static error_t parse_cpd_opt(
@@ -77,8 +93,12 @@ static error_t parse_cpd_opt(
   case TT_TOL:
     args->opts[SPLATT_OPTION_TOLERANCE] = atof(arg);
     break;
+  case TT_REG:
+    args->opts[SPLATT_OPTION_REGULARIZE] = atof(arg);
+    break;
   case 't':
     args->opts[SPLATT_OPTION_NTHREADS] = (double) atoi(arg);
+    splatt_omp_set_num_threads((int)args->opts[SPLATT_OPTION_NTHREADS]);
     break;
   case 'v':
     timer_inc_verbose();
@@ -92,6 +112,25 @@ static error_t parse_cpd_opt(
     break;
   case 'r':
     args->nfactors = atoi(arg);
+    break;
+  case 's':
+    args->stem = arg;
+    break;
+  case TT_CSF:
+    if(strcmp("one", arg) == 0) {
+      args->opts[SPLATT_OPTION_CSF_ALLOC] = SPLATT_CSF_ONEMODE;
+    } else if(strcmp("two", arg) == 0) {
+      args->opts[SPLATT_OPTION_CSF_ALLOC] = SPLATT_CSF_TWOMODE;
+    } else if(strcmp("all", arg) == 0) {
+      args->opts[SPLATT_OPTION_CSF_ALLOC] = SPLATT_CSF_ALLMODE;
+    } else {
+      fprintf(stderr, "SPLATT: --csf option '%s' not recognized.\n", arg);
+      argp_usage(state);
+    }
+    break;
+
+  case TT_SEED:
+    args->opts[SPLATT_OPTION_RANDSEED] = atoi(arg);
     break;
 
   case ARGP_KEY_ARG:
@@ -117,7 +156,7 @@ static struct argp cpd_argp =
 /******************************************************************************
  * SPLATT-CPD
  *****************************************************************************/
-void splatt_cpd_cmd(
+int splatt_cpd_cmd(
   int argc,
   char ** argv)
 {
@@ -125,6 +164,7 @@ void splatt_cpd_cmd(
   cpd_cmd_args args;
   default_cpd_opts(&args);
   argp_parse(&cpd_argp, argc, argv, ARGP_IN_ORDER, 0, &args);
+  srand(args.opts[SPLATT_OPTION_RANDSEED]);
 
   sptensor_t * tt = NULL;
 
@@ -132,7 +172,7 @@ void splatt_cpd_cmd(
 
   tt = tt_read(args.ifname);
   if(tt == NULL) {
-    return;
+    return SPLATT_ERROR_BADINPUT;
   }
 
   /* print basic tensor stats? */
@@ -157,18 +197,29 @@ void splatt_cpd_cmd(
   int ret = splatt_cpd_als(csf, args.nfactors, args.opts, &factored);
   if(ret != SPLATT_SUCCESS) {
     fprintf(stderr, "splatt_cpd_als returned %d. Aborting.\n", ret);
-    exit(1);
+    return ret;
   }
 
-  printf("Final fit: %"SPLATT_PF_VAL"\n", factored.fit);
+  printf("Final fit: %0.5"SPLATT_PF_VAL"\n", factored.fit);
 
   /* write output */
   if(args.write == 1) {
-    vec_write(factored.lambda, args.nfactors, "lambda.mat");
+    char * lambda_name = NULL;
+    if(args.stem) {
+      asprintf(&lambda_name, "%s.lambda.mat", args.stem);
+    } else {
+      asprintf(&lambda_name, "lambda.mat");
+    }
+    vec_write(factored.lambda, args.nfactors, lambda_name);
+    free(lambda_name);
 
     for(idx_t m=0; m < nmodes; ++m) {
       char * matfname = NULL;
-      asprintf(&matfname, "mode%"SPLATT_PF_IDX".mat", m+1);
+      if(args.stem) {
+        asprintf(&matfname, "%s.mode%"SPLATT_PF_IDX".mat", args.stem, m+1);
+      } else {
+        asprintf(&matfname, "mode%"SPLATT_PF_IDX".mat", m+1);
+      }
 
       matrix_t tmpmat;
       tmpmat.rowmajor = 1;
@@ -183,10 +234,11 @@ void splatt_cpd_cmd(
 
   /* cleanup */
   splatt_csf_free(csf, args.opts);
-  free(args.opts);
+  free_cpd_args(&args);
 
   /* free factor matrix allocations */
   splatt_free_kruskal(&factored);
 
+  return EXIT_SUCCESS;
 }
 

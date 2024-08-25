@@ -3,6 +3,7 @@
  * INCLUDES
  *****************************************************************************/
 #include "../splatt_mpi.h"
+#include "../util.h"
 
 
 /******************************************************************************
@@ -191,6 +192,7 @@ static void p_setup_fine(
   }
 }
 
+
 /**
 * @brief Setup communicatory info for a 3D distribution.
 *
@@ -302,6 +304,7 @@ void rank_free(
     for(idx_t m=0; m < nmodes; ++m) {
       MPI_Comm_free(&rinfo.layer_comm[m]);
       free(rinfo.mat_ptrs[m]);
+      free(rinfo.layer_ptrs[m]);
 
       /* send/recv structures */
       free(rinfo.nbr2globs_inds[m]);
@@ -328,7 +331,7 @@ void mpi_cpy_indmap(
   if(tt->indmap[mode] != NULL) {
     idx_t const dim = tt->dims[mode];
     rinfo->indmap[mode] = splatt_malloc(dim * sizeof(**(rinfo->indmap)));
-    memcpy(rinfo->indmap[mode], tt->indmap[mode],
+    par_memcpy(rinfo->indmap[mode], tt->indmap[mode],
         dim * sizeof(**(rinfo->indmap)));
 
   } else {

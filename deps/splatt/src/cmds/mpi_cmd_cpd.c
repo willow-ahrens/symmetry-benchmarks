@@ -19,16 +19,20 @@ static char cpd_args_doc[] = "TENSOR";
 static char cpd_doc[] =
   "splatt-cpd -- Compute the CPD of a sparse tensor.\n";
 
+#define TT_REG 251
+#define TT_SEED 252
 #define TT_NOWRITE 253
 #define TT_TOL 254
 #define TT_TILE 255
 static struct argp_option cpd_options[] = {
   {"iters", 'i', "NITERS", 0, "maximum number of iterations to use (default: 50)"},
   {"tol", TT_TOL, "TOLERANCE", 0, "minimum change for convergence (default: 1e-5)"},
+  {"reg", TT_REG, "REGULARIZATION", 0, "regularization parameter (default: 0)"},
   {"rank", 'r', "RANK", 0, "rank of decomposition to find (default: 10)"},
   {"threads", 't', "NTHREADS", 0, "number of threads to use (default: #cores)"},
   {"tile", TT_TILE, 0, 0, "use tiling during SPLATT"},
   {"nowrite", TT_NOWRITE, 0, 0, "do not write output to file (default: WRITE)"},
+  {"seed", TT_SEED, "SEED", 0, "random seed (default: system time)"},
   {"verbose", 'v', 0, 0, "turn on verbose output (default: no)"},
   {"distribute", 'd', "DIM", 0, "MPI: dimension of data distribution. "
                                  "Medium-grained decomposition is the default,"
@@ -97,11 +101,15 @@ static error_t parse_cpd_opt(
   case TT_TOL:
     args->opts[SPLATT_OPTION_TOLERANCE] = atof(arg);
     break;
+  case TT_REG:
+    args->opts[SPLATT_OPTION_REGULARIZE] = atof(arg);
+    break;
   case 't':
     args->opts[SPLATT_OPTION_NTHREADS] = (double) atoi(arg);
     break;
   case 'v':
     args->opts[SPLATT_OPTION_VERBOSITY] += 1;
+    timer_inc_verbose();
     break;
   case TT_TILE:
     args->opts[SPLATT_OPTION_TILE] = SPLATT_DENSETILE;
@@ -135,6 +143,9 @@ static error_t parse_cpd_opt(
   case 'p':
     args->pfname = arg;
     break;
+  case TT_SEED:
+    args->opts[SPLATT_OPTION_RANDSEED] = atoi(arg);
+    break;
 
   case ARGP_KEY_ARG:
     if(args->ifname != NULL) {
@@ -161,7 +172,7 @@ static struct argp cpd_argp =
  * SPLATT-CPD
  *****************************************************************************/
 
-void splatt_mpi_cpd_cmd(
+int splatt_mpi_cpd_cmd(
   int argc,
   char ** argv)
 {
@@ -169,6 +180,7 @@ void splatt_mpi_cpd_cmd(
   cpd_cmd_args args;
   default_cpd_opts(&args);
   argp_parse(&cpd_argp, argc, argv, ARGP_IN_ORDER, 0, &args);
+  srand(args.opts[SPLATT_OPTION_RANDSEED]);
 
   sptensor_t * tt  = NULL;
   splatt_csf * csf = NULL;
@@ -187,6 +199,9 @@ void splatt_mpi_cpd_cmd(
   }
 
   tt = mpi_tt_read(args.ifname, args.pfname, &rinfo);
+  if(tt == NULL) {
+    return SPLATT_ERROR_BADINPUT;
+  }
 
   /* In the default setting, mpi_tt_read will set rinfo distribution.
    * Copy that back into args. TODO: make this less dumb. */
@@ -272,6 +287,7 @@ void splatt_mpi_cpd_cmd(
   /* M, the result matrix is stored at mats[MAX_NMODES] */
   matrix_t * mats[MAX_NMODES+1];
   matrix_t * globmats[MAX_NMODES];
+
   for(idx_t m=0; m < nmodes; ++m) {
     /* ft[:] have different dimensionalities for 1D but ft[m+1] is guaranteed
      * to have the full dimensionality
@@ -282,11 +298,11 @@ void splatt_mpi_cpd_cmd(
     }
     max_dim = SS_MAX(max_dim, dim);
 
-    mats[m] = mat_rand(dim, args.nfactors);
+    /* actual factor */
+    globmats[m] = mpi_mat_rand(m, args.nfactors, perm, &rinfo);
 
-    /* for actual factor matrix */
-    globmats[m] = mat_rand(rinfo.mat_end[m] - rinfo.mat_start[m],
-        args.nfactors);
+    /* for MTTKRP */
+    mats[m] = mat_alloc(dim, args.nfactors);
   }
   mats[MAX_NMODES] = mat_alloc(max_dim, args.nfactors);
 
@@ -318,6 +334,7 @@ void splatt_mpi_cpd_cmd(
 
   perm_free(perm);
   rank_free(rinfo, nmodes);
+  return EXIT_SUCCESS;
 }
 
 #endif

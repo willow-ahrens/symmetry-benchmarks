@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <assert.h>
 #include <time.h>
@@ -21,8 +22,8 @@
 #define MAX_NMODES SPLATT_MAX_NMODES
 
 /* alias splatt types */
-#define val_t splatt_val_t
-#define idx_t splatt_idx_t
+typedef splatt_idx_t idx_t;
+typedef splatt_val_t val_t;
 
 #define SS_MIN(x,y) ((x) < (y) ? (x) : (y))
 #define SS_MAX(x,y) ((x) > (y) ? (x) : (y))

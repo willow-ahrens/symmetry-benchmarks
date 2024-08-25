@@ -15,8 +15,6 @@
 #include "stats.h"
 #include "util.h"
 
-#include <omp.h>
-
 static void p_log_mat(
   char const * const ofname,
   matrix_t const * const mat,
@@ -87,7 +85,7 @@ void bench_splatt(
   /* for each # threads */
   for(idx_t t=0; t < nruns; ++t) {
     idx_t const nthreads = threads[t];
-    omp_set_num_threads(nthreads);
+    splatt_omp_set_num_threads(nthreads);
     if(nruns > 1) {
       printf("## THREADS %" SPLATT_PF_IDX "\n", nthreads);
     }
@@ -149,6 +147,7 @@ void bench_csf(
   sp_timer_t modetime;
 
   double * cpd_opts = splatt_default_opts();
+  cpd_opts[SPLATT_OPTION_CSF_ALLOC] = SPLATT_CSF_ONEMODE;
   cpd_opts[SPLATT_OPTION_TILE] = SPLATT_DENSETILE;
   cpd_opts[SPLATT_OPTION_NTHREADS] = threads[nruns-1];
 
@@ -159,16 +158,15 @@ void bench_csf(
     TILE_SIZES[0] * nfactors * sizeof(val_t) + 64,
     (tt->nmodes * nfactors * sizeof(val_t)) + 64);
 
-  splatt_csf * cs = splatt_csf_alloc(tt, cpd_opts);
+  splatt_csf * cs = csf_alloc(tt, cpd_opts);
 
-#if 0
   printf("** CSF **\n");
-  unsigned long cs_bytes = csf_storage(cs);
+  unsigned long cs_bytes = csf_storage(cs, cpd_opts);
   char * bstr = bytes_str(cs_bytes);
   printf("CSF-STORAGE: %s\n\n", bstr);
   free(bstr);
 
-  stats_csf(&cs);
+  stats_csf(cs);
   printf("\n");
 
   timer_start(&timers[TIMER_MISC]);
@@ -176,17 +174,21 @@ void bench_csf(
   /* for each # threads */
   for(idx_t t=0; t < nruns; ++t) {
     idx_t const nthreads = threads[t];
-    omp_set_num_threads(nthreads);
+    splatt_omp_set_num_threads(nthreads);
     if(nruns > 1) {
       printf("## THREADS %" SPLATT_PF_IDX "\n", nthreads);
     }
+
+    cpd_opts[SPLATT_OPTION_NTHREADS] = nthreads;
+
+    splatt_mttkrp_ws * ws = splatt_mttkrp_alloc_ws(cs, nfactors, cpd_opts);
 
     for(idx_t i=0; i < niters; ++i) {
       timer_fstart(&itertime);
       /* time each mode */
       for(idx_t m=0; m < tt->nmodes; ++m) {
         timer_fstart(&modetime);
-        mttkrp_csf(&cs, mats, m, thds, nthreads);
+        mttkrp_csf(cs, mats, m, thds, ws, cpd_opts);
         timer_stop(&modetime);
         printf("  mode %" SPLATT_PF_IDX " %0.3fs\n", m+1, modetime.seconds);
         if(opts->write && t == nruns-1 && i == 0) {
@@ -201,6 +203,8 @@ void bench_csf(
       printf("    its = %3"SPLATT_PF_IDX" (%0.3fs)\n", i+1, itertime.seconds);
     }
 
+    splatt_mttkrp_free_ws(ws);
+
     /* output load balance info */
     if(nruns > 1 || nthreads > 1) {
       thd_times(thds, threads[nruns-1]);
@@ -211,13 +215,12 @@ void bench_csf(
   timer_stop(&timers[TIMER_MISC]);
 
   /* clean up */
-  csf_free(&cs, cpd_opts);
+  csf_free(cs, cpd_opts);
   thd_free(thds, threads[nruns-1]);
   free(cpd_opts);
 
   /* fix any matrices that we shuffled */
   p_shuffle_mats(mats, opts->perm->iperms, tt->nmodes);
-#endif
 }
 
 void bench_giga(
@@ -251,7 +254,7 @@ void bench_giga(
   timer_start(&timers[TIMER_GIGA]);
   for(idx_t t=0; t < nruns; ++t) {
     idx_t const nthreads = threads[t];
-    omp_set_num_threads(nthreads);
+    splatt_omp_set_num_threads(nthreads);
     if(nruns > 1) {
       printf("## THREADS %"SPLATT_PF_IDX"\n", nthreads);
     }
@@ -323,7 +326,7 @@ void bench_coord(
   /* for each # threads */
   for(idx_t t=0; t < nruns; ++t) {
     idx_t const nthreads = threads[t];
-    omp_set_num_threads(nthreads);
+    splatt_omp_set_num_threads(nthreads);
     if(nruns > 1) {
       printf("## THREADS %" SPLATT_PF_IDX "\n", nthreads);
     }
@@ -387,7 +390,7 @@ void bench_ttbox(
   timer_start(&timers[TIMER_TTBOX]);
   for(idx_t t=0; t < nruns; ++t) {
     idx_t const nthreads = threads[t];
-    omp_set_num_threads(nthreads);
+    splatt_omp_set_num_threads(nthreads);
     if(nruns > 1) {
       printf("## THREADS %"SPLATT_PF_IDX"\n", nthreads);
     }

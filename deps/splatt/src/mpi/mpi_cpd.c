@@ -7,9 +7,9 @@
 #include "../timer.h"
 #include "../thd_info.h"
 #include "../tile.h"
+#include "../util.h"
 
 #include <math.h>
-#include <omp.h>
 
 /**
 * @brief Resets serial and MPI timers that were activated during some CPD
@@ -69,7 +69,7 @@ static val_t p_tt_kruskal_inner(
   val_t myinner = 0;
   #pragma omp parallel reduction(+:myinner)
   {
-    int const tid = omp_get_thread_num();
+    int const tid = splatt_omp_get_thread_num();
     val_t * const restrict accumF = (val_t *) thds[tid].scratch[0];
 
     for(idx_t r=0; r < rank; ++r) {
@@ -91,10 +91,6 @@ static val_t p_tt_kruskal_inner(
 
 #ifdef SPLATT_USE_MPI
   timer_start(&timers[TIMER_MPI_FIT]);
-  timer_start(&timers[TIMER_MPI_IDLE]);
-  MPI_Barrier(rinfo->comm_3d);
-  timer_stop(&timers[TIMER_MPI_IDLE]);
-
   MPI_Allreduce(&myinner, &inner, 1, SPLATT_MPI_VAL, MPI_SUM, rinfo->comm_3d);
   timer_stop(&timers[TIMER_MPI_FIT]);
 #else
@@ -127,22 +123,27 @@ static val_t p_kruskal_norm(
   val_t norm_mats = 0;
 
   /* use aTa[MAX_NMODES] as scratch space */
-  for(idx_t x=0; x < rank*rank; ++x) {
-    av[x] = 1.;
+  for(idx_t i=0; i < rank; ++i) {
+    for(idx_t j=i; j < rank; ++j) {
+      av[j + (i*rank)] = 1.;
+    }
   }
 
   /* aTa[MAX_NMODES] = hada(aTa) */
   for(idx_t m=0; m < nmodes; ++m) {
     val_t const * const restrict atavals = aTa[m]->vals;
-    for(idx_t x=0; x < rank*rank; ++x) {
-      av[x] *= atavals[x];
+    for(idx_t i=0; i < rank; ++i) {
+      for(idx_t j=i; j < rank; ++j) {
+        av[j + (i*rank)] *= atavals[j + (i*rank)];
+      }
     }
   }
 
   /* now compute lambda^T * aTa[MAX_NMODES] * lambda */
   for(idx_t i=0; i < rank; ++i) {
-    for(idx_t j=0; j < rank; ++j) {
-      norm_mats += av[j+(i*rank)] * lambda[i] * lambda[j];
+    norm_mats += av[i+(i*rank)] * lambda[i] * lambda[i];
+    for(idx_t j=i+1; j < rank; ++j) {
+      norm_mats += av[j+(i*rank)] * lambda[i] * lambda[j] * 2;
     }
   }
 
@@ -184,7 +185,14 @@ static val_t p_calc_fit(
   /* Compute inner product of tensor with new model */
   val_t const inner = p_tt_kruskal_inner(nmodes, rinfo, thds, lambda, mats,m1);
 
-  val_t const residual = sqrt(ttnormsq + norm_mats - (2 * inner));
+  /*
+   * We actually want sqrt(<X,X> + <Y,Y> - 2<X,Y>), but if the fit is perfect
+   * just make it 0.
+   */
+  val_t residual = ttnormsq + norm_mats - (2 * inner);
+  if(residual > 0.) {
+    residual = sqrt(residual);
+  }
   timer_stop(&timers[TIMER_FIT]);
   return 1 - (residual / sqrt(ttnormsq));
 }
@@ -220,7 +228,7 @@ static void p_flush_glob_to_local(
 
   assert(start + nowned <= localmat->I);
 
-  memcpy(localmat->vals + (start*nfactors),
+  par_memcpy(localmat->vals + (start*nfactors),
          globalmat->vals,
          nowned * nfactors * sizeof(val_t));
 }
@@ -269,10 +277,6 @@ static void p_reduce_rows_all2all(
   int const * const restrict nbr2local_ptr = rinfo->local2nbr_ptr[m];
   int const * const restrict nbr2globs_disp = rinfo->nbr2globs_disp[m];
   int const * const restrict nbr2local_disp = rinfo->local2nbr_disp[m];
-
-  timer_start(&timers[TIMER_MPI_IDLE]);
-  MPI_Barrier(rinfo->layer_comm[m]);
-  timer_stop(&timers[TIMER_MPI_IDLE]);
 
   timer_start(&timers[TIMER_MPI_COMM]);
   /* exchange rows */
@@ -592,10 +596,6 @@ static void p_update_rows_all2all(
       int const * const restrict nbr2globs_disp = rinfo->nbr2globs_disp[m];
       int const * const restrict nbr2local_disp = rinfo->local2nbr_disp[m];
 
-      timer_start(&timers[TIMER_MPI_IDLE]);
-      MPI_Barrier(rinfo->layer_comm[m]);
-      timer_stop(&timers[TIMER_MPI_IDLE]);
-
       /* exchange rows */
       timer_start(&timers[TIMER_MPI_COMM]);
       MPI_Alltoallv(nbr2globs_buf, nbr2globs_ptr, nbr2globs_disp, SPLATT_MPI_VAL,
@@ -637,7 +637,7 @@ double mpi_cpd_als_iterate(
   idx_t const nthreads = (idx_t) opts[SPLATT_OPTION_NTHREADS];
 
   /* Setup thread structures. + 64 bytes is to avoid false sharing. */
-  omp_set_num_threads(nthreads);
+  splatt_omp_set_num_threads(nthreads);
   thd_info * thds =  thd_init(nthreads, 3,
     (nfactors * nfactors * sizeof(val_t)) + 64,
     (TILE_SIZES[0] * nfactors * sizeof(val_t)) + 64,
@@ -681,6 +681,9 @@ double mpi_cpd_als_iterate(
   /* used as buffer space */
   aTa[MAX_NMODES] = mat_alloc(nfactors, nfactors);
 
+  /* mttkrp workspace */
+  splatt_mttkrp_ws * mttkrp_ws = splatt_mttkrp_alloc_ws(tensors,nfactors,opts);
+
   /* Compute input tensor norm */
   double oldfit = 0;
   double fit = 0;
@@ -704,13 +707,13 @@ double mpi_cpd_als_iterate(
 
       /* M1 = X * (C o B) */
       timer_start(&timers[TIMER_MTTKRP]);
-      mttkrp_csf(tensors, mats, m, thds, opts);
+      mttkrp_csf(tensors, mats, m, thds, mttkrp_ws, opts);
       timer_stop(&timers[TIMER_MTTKRP]);
 
       m1->I = globmats[m]->I;
       m1ptr->I = globmats[m]->I;
 
-    if(rinfo->decomp != SPLATT_DECOMP_COARSE && rinfo->layer_size[m] > 1) {
+      if(rinfo->decomp != SPLATT_DECOMP_COARSE && rinfo->layer_size[m] > 1) {
         m1 = m1ptr;
         /* add my partial multiplications to globmats[m] */
         mpi_add_my_partials(rinfo->indmap[m], mats[MAX_NMODES], m1, rinfo,
@@ -723,12 +726,10 @@ double mpi_cpd_als_iterate(
         m1 = mats[MAX_NMODES];
       }
 
-      /* M2 = (CtC .* BtB .* ...)^-1 */
-      calc_gram_inv(m, nmodes, aTa);
-
-      /* A = M1 * M2 */
-      memset(globmats[m]->vals, 0, globmats[m]->I * nfactors * sizeof(val_t));
-      mat_matmul(m1, aTa[MAX_NMODES], globmats[m]);
+      /* invert normal equations (Cholesky factorization) for new factor */
+      par_memcpy(globmats[m]->vals, m1->vals, m1->I * nfactors * sizeof(val_t));
+      mat_solve_normals(m, nmodes, aTa, globmats[m],
+          opts[SPLATT_OPTION_REGULARIZE]);
 
       /* normalize columns and extract lambda */
       if(it == 0) {
@@ -784,6 +785,7 @@ double mpi_cpd_als_iterate(
   free(tmp);
 
   /* CLEAN UP */
+  splatt_mttkrp_free_ws(mttkrp_ws);
   for(idx_t m=0; m < nmodes; ++m) {
     mat_free(aTa[m]);
   }
@@ -881,7 +883,7 @@ void mpi_add_my_partials(
   idx_t const goffset = (indmap == NULL) ?
       start - mat_start : indmap[start] - mat_start;
 
-  memcpy(globmat->vals + (goffset * nfactors),
+  par_memcpy(globmat->vals + (goffset * nfactors),
          localmat->vals + (start * nfactors),
          nowned * nfactors * sizeof(val_t));
   timer_stop(&timers[TIMER_MPI_PARTIALS]);

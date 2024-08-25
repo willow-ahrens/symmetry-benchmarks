@@ -6,6 +6,11 @@
 #include "timer.h"
 #include <stdio.h>
 
+/******************************************************************************
+ * GLOBALS
+ *****************************************************************************/
+int timer_lvl;
+sp_timer_t timers[TIMER_NTIMERS];
 
 /******************************************************************************
  * PRIVATE STRUCTURES
@@ -28,6 +33,7 @@ static char const * const timer_names[] = {
   [TIMER_MATMUL]    = "MAT MULT",
   [TIMER_ATA]       = "MAT A^TA",
   [TIMER_MATNORM]   = "MAT NORM",
+  [TIMER_PART]      = "PART1D",
   [TIMER_MISC]      = "MISC",
 #ifdef SPLATT_USE_MPI
   [TIMER_MPI]           = "MPI",
@@ -46,16 +52,13 @@ static char const * const timer_names[] = {
 #endif
 };
 
-/* definition of global timers[] */
-sp_timer_t timers[TIMER_NTIMERS];
-int timer_lvl = TIMER_LVL1;
-
 
 /******************************************************************************
  * PUBLIC FUNCTIONS
  *****************************************************************************/
 void init_timers(void)
 {
+  timer_lvl = TIMER_LVL1;
   for(int t=0; t < TIMER_NTIMERS; ++t) {
     timer_reset(&timers[t]);
   }

@@ -7,6 +7,8 @@ RUN apt-get -y install g++
 RUN apt-get -y install python
 RUN apt-get -y install python3
 RUN apt-get -y install git
+RUN apt-get -y install libblas-dev
+RUN apt-get -y install liblapack-dev
 
 WORKDIR /symmetry-benchmarks
 

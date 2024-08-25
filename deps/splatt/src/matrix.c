@@ -7,14 +7,82 @@
 #include "matrix.h"
 #include "util.h"
 #include "timer.h"
-
+#include "splatt_lapack.h"
 #include <math.h>
-#include <omp.h>
+
+
 
 
 /******************************************************************************
  * PRIVATE FUNCTIONS
  *****************************************************************************/
+
+/**
+* @brief Form the Gram matrix from A^T * A.
+*
+* @param[out] neq_matrix The matrix to fill.
+* @param aTa The individual Gram matrices.
+* @param mode Which mode we are computing for.
+* @param nmodes How many total modes.
+* @param reg Regularization parameter (to add to the diagonal).
+*/
+static void p_form_gram(
+    matrix_t * neq_matrix,
+    matrix_t * * aTa,
+    idx_t const mode,
+    idx_t const nmodes,
+    val_t const reg)
+{
+  /* nfactors */
+  splatt_blas_int N = aTa[0]->J;
+
+  /* form upper-triangual normal equations */
+  val_t * const restrict neqs = neq_matrix->vals;
+  #pragma omp parallel
+  {
+    /* first initialize with 1s */
+    #pragma omp for schedule(static, 1)
+    for(splatt_blas_int i=0; i < N; ++i) {
+      neqs[i+(i*N)] = 1. + reg;
+      for(splatt_blas_int j=0; j < N; ++j) {
+        neqs[j+(i*N)] = 1.;
+      }
+    }
+
+    /* now Hadamard product all (A^T * A) matrices */
+    for(idx_t m=0; m < nmodes; ++m) {
+      if(m == mode) {
+        continue;
+      }
+
+      val_t const * const restrict mat = aTa[m]->vals;
+      #pragma omp for schedule(static, 1)
+      for(splatt_blas_int i=0; i < N; ++i) {
+        /* 
+         * `mat` is symmetric but stored upper right triangular, so be careful
+         * to only access that.
+         */
+
+        /* copy upper triangle */
+        for(splatt_blas_int j=i; j < N; ++j) {
+          neqs[j+(i*N)] *= mat[j+(i*N)];
+        }
+      }
+    } /* foreach mode */
+
+    #pragma omp barrier
+
+    /* now copy lower triangular */
+    #pragma omp for schedule(static, 1)
+    for(splatt_blas_int i=0; i < N; ++i) {
+      for(splatt_blas_int j=0; j < i; ++j) {
+        neqs[j+(i*N)] = neqs[i+(j*N)];
+      }
+    }
+  } /* omp parallel */
+}
+
+
 
 static void p_mat_2norm(
   matrix_t * const A,
@@ -28,7 +96,7 @@ static void p_mat_2norm(
 
   #pragma omp parallel
   {
-    int const tid = omp_get_thread_num();
+    int const tid = splatt_omp_get_thread_num();
     val_t * const mylambda = (val_t *) thds[tid].scratch[0];
     for(idx_t j=0; j < J; ++j) {
       mylambda[j] = 0;
@@ -49,10 +117,6 @@ static void p_mat_2norm(
 #ifdef SPLATT_USE_MPI
       /* now do an MPI reduction to get the global lambda */
       timer_start(&timers[TIMER_MPI_NORM]);
-      timer_start(&timers[TIMER_MPI_IDLE]);
-      MPI_Barrier(rinfo->comm_3d);
-      timer_stop(&timers[TIMER_MPI_IDLE]);
-
       timer_start(&timers[TIMER_MPI_COMM]);
       MPI_Allreduce(mylambda, lambda, J, SPLATT_MPI_VAL, MPI_SUM, rinfo->comm_3d);
       timer_stop(&timers[TIMER_MPI_COMM]);
@@ -92,7 +156,7 @@ static void p_mat_maxnorm(
 
   #pragma omp parallel
   {
-    int const tid = omp_get_thread_num();
+    int const tid = splatt_omp_get_thread_num();
     val_t * const mylambda = (val_t *) thds[tid].scratch[0];
     for(idx_t j=0; j < J; ++j) {
       mylambda[j] = 0;
@@ -113,10 +177,6 @@ static void p_mat_maxnorm(
 #ifdef SPLATT_USE_MPI
       /* now do an MPI reduction to get the global lambda */
       timer_start(&timers[TIMER_MPI_NORM]);
-      timer_start(&timers[TIMER_MPI_IDLE]);
-      MPI_Barrier(rinfo->comm_3d);
-      timer_stop(&timers[TIMER_MPI_IDLE]);
-
       timer_start(&timers[TIMER_MPI_COMM]);
       MPI_Allreduce(mylambda, lambda, J, SPLATT_MPI_VAL, MPI_MAX, rinfo->comm_3d);
       timer_stop(&timers[TIMER_MPI_COMM]);
@@ -179,6 +239,7 @@ static void p_mat_forwardsolve(
     }
   }
 }
+
 
 /**
 * @brief Solve the system UX = B.
@@ -369,51 +430,25 @@ void mat_aTa(
   idx_t const F = A->J;
   val_t const * const restrict Av = A->vals;
 
-  omp_set_num_threads(nthreads);
+  char uplo = 'L';
+  char trans = 'N'; /* actually do A * A' due to row-major ordering */
+  splatt_blas_int N = (splatt_blas_int) F;
+  splatt_blas_int K = (splatt_blas_int) I;
+  splatt_blas_int lda = N;
+  splatt_blas_int ldc = N;
+  val_t alpha = 1.;
+  val_t beta = 0.;
 
-  #pragma omp parallel
-  {
-    int const tid = omp_get_thread_num();
-    val_t * const accum = (val_t *) thds[tid].scratch[0];
-
-    /* compute upper triangular portion */
-    memset(accum, 0, F * F * sizeof(val_t));
-
-    /* compute each thread's partial matrix product */
-    #pragma omp for schedule(static)
-    for(idx_t i=0; i < I; ++i) {
-      for(idx_t mi=0; mi < F; ++mi) {
-        for(idx_t mj=mi; mj < F; ++mj) {
-          accum[mj + (mi*F)] += Av[mi + (i*F)] * Av[mj + (i*F)];
-        }
-      }
-    }
-
-    /* parallel reduction on accum */
-    thd_reduce(thds, 0, F * F, REDUCE_SUM);
-
-    /* copy to lower triangular matrix */
-    #pragma omp master
-    for(idx_t i=1; i < F; ++i) {
-      for(idx_t j=0; j < i; ++j) {
-        accum[j + (i*F)] = accum[i + (j*F)];
-      }
-    }
-  }
+  SPLATT_BLAS(syrk)(&uplo, &trans, &N, &K, &alpha, A->vals, &lda, &beta, ret->vals,
+      &ldc);
 
 #ifdef SPLATT_USE_MPI
   timer_start(&timers[TIMER_MPI_ATA]);
-  timer_start(&timers[TIMER_MPI_IDLE]);
-  MPI_Barrier(rinfo->comm_3d);
-  timer_stop(&timers[TIMER_MPI_IDLE]);
-
   timer_start(&timers[TIMER_MPI_COMM]);
-  MPI_Allreduce(thds[0].scratch[0], ret->vals, F * F, SPLATT_MPI_VAL, MPI_SUM,
+  MPI_Allreduce(MPI_IN_PLACE, ret->vals, F * F, SPLATT_MPI_VAL, MPI_SUM,
       rinfo->comm_3d);
   timer_stop(&timers[TIMER_MPI_COMM]);
   timer_stop(&timers[TIMER_MPI_ATA]);
-#else
-  memcpy(ret->vals, (val_t *) thds[0].scratch[0], F * F * sizeof(val_t));
 #endif
 
   timer_stop(&timers[TIMER_ATA]);
@@ -427,8 +462,11 @@ void mat_matmul(
   timer_start(&timers[TIMER_MATMUL]);
   /* check dimensions */
   assert(A->J == B->I);
-  assert(C->I == A->I);
-  assert(C->J == B->J);
+  assert(C->I * C->J <= A->I * B->J);
+
+  /* set dimensions */
+  C->I = A->I;
+  C->J = B->J;
 
   val_t const * const restrict av = A->vals;
   val_t const * const restrict bv = B->vals;
@@ -470,7 +508,7 @@ void mat_normalize(
 {
   timer_start(&timers[TIMER_MATNORM]);
 
-  omp_set_num_threads(nthreads);
+  splatt_omp_set_num_threads(nthreads);
 
   switch(which) {
   case MAT_NORM_2:
@@ -485,6 +523,89 @@ void mat_normalize(
   }
   timer_stop(&timers[TIMER_MATNORM]);
 }
+
+
+
+void mat_solve_normals(
+  idx_t const mode,
+  idx_t const nmodes,
+	matrix_t * * aTa,
+  matrix_t * rhs,
+  val_t const reg)
+{
+  timer_start(&timers[TIMER_INV]);
+
+  /* nfactors */
+  splatt_blas_int N = aTa[0]->J;
+
+  p_form_gram(aTa[MAX_NMODES], aTa, mode, nmodes, reg);
+
+  splatt_blas_int info;
+  char uplo = 'L';
+  splatt_blas_int lda = N;
+  splatt_blas_int ldb = N;
+  splatt_blas_int order = N;
+  splatt_blas_int nrhs = (splatt_blas_int) rhs->I;
+
+  val_t * const neqs = aTa[MAX_NMODES]->vals;
+
+  /* Cholesky factorization */
+  bool is_spd = true;
+  SPLATT_BLAS(potrf)(&uplo, &order, neqs, &lda, &info);
+  if(info) {
+    fprintf(stderr, "SPLATT: Gram matrix is not SPD. Trying `GELSS`.\n");
+    is_spd = false;
+  }
+
+  /* Continue with Cholesky */
+  if(is_spd) {
+    /* Solve against rhs */
+    SPLATT_BLAS(potrs)(&uplo, &order, &nrhs, neqs, &lda, rhs->vals, &ldb, &info);
+    if(info) {
+      fprintf(stderr, "SPLATT: DPOTRS returned %d\n", info);
+    }
+  } else {
+    /* restore gram matrix */
+    p_form_gram(aTa[MAX_NMODES], aTa, mode, nmodes, reg);
+
+    splatt_blas_int effective_rank;
+    val_t * conditions = splatt_malloc(N * sizeof(*conditions));
+
+    /* query worksize */
+    splatt_blas_int lwork = -1;
+
+    val_t rcond = -1.0f;
+
+    val_t work_query;
+    SPLATT_BLAS(gelss)(&N, &N, &nrhs,
+        neqs, &lda,
+        rhs->vals, &ldb,
+        conditions, &rcond, &effective_rank,
+        &work_query, &lwork, &info);
+    lwork = (splatt_blas_int) work_query;
+
+    /* setup workspace */
+    val_t * work = splatt_malloc(lwork * sizeof(*work));
+
+    /* Use an SVD solver */
+    SPLATT_BLAS(gelss)(&N, &N, &nrhs,
+        neqs, &lda,
+        rhs->vals, &ldb,
+        conditions, &rcond, &effective_rank,
+        work, &lwork, &info);
+    if(info) {
+      printf("SPLATT: DGELSS returned %d\n", info);
+    }
+    printf("SPLATT:   DGELSS effective rank: %d\n", effective_rank);
+
+    splatt_free(conditions);
+    splatt_free(work);
+  }
+
+  timer_stop(&timers[TIMER_INV]);
+}
+
+
 
 
 void calc_gram_inv(
