@@ -60,13 +60,16 @@ SPLATT_KERNELS = $(MTTKRP_SPLATT_DIM3) $(MTTKRP_SPLATT_DIM4) $(MTTKRP_SPLATT_DIM
 
 KERNELS = $(TACO_KERNELS) $(SPLATT_KERNELS)
 
-all: $(KERNELS)
+all: Manifest.toml $(KERNELS)
 
-deps: $(SPARSE_BENCH) $(TACO) $(SPLATT) $(SYSTEC)
+deps: $(SPARSE_BENCH) $(TACO) $(SPLATT) $(SYSTEC) Manifest.toml
 
 clean:
 	rm -f $(SSYMV) $(SYPRD) $(SSYRK) $(TTM) $(MTTKRP_TACO_DIM3) $(MTTKRP_TACO_DIM4) $(MTTKRP_TACO_DIM5) $(MTTKRP_SPLATT_DIM3) $(MTTKRP_SPLATT_DIM4) $(MTTKRP_SPLATT_DIM5)
 	rm -rf *.o *.dSYM *.trace
+
+Manifest.toml:
+	julia setup.jl
 
 kernels/ssymv/ssymv_taco: $(SPARSE_BENCH) $(TACO) kernels/ssymv/ssymv_taco.cpp
 	$(CXX) $(TACO_CXXFLAGS) -o $@ kernels/ssymv/ssymv_taco.cpp $(TACO_LDLIBS)
