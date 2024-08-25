@@ -1,3 +1,8 @@
+if abspath(PROGRAM_FILE) == @__FILE__
+    using Pkg
+    Pkg.activate(joinpath(@__DIR__, "../.."))
+    Pkg.instantiate()
+end
 using MatrixDepot
 using BenchmarkTools
 using ArgParse
@@ -21,10 +26,12 @@ methods = Dict(
 )
 
 results = []
+N = 3
 for (r, sp) in rank_sparsity
-    # triA = fsprand(n, n, n, sp)
-    # A = [triA[sort([i, j, k])...] for i = 1:n, j = 1:n, k = 1:n]
-    A = bspread("data/symmetric_3dim_n$(n)_sp$(sp).bsp.h5")
+    triA = fsprand(n, n, n, sp)
+    A_coords = unique(map(x->sort(collect(x)), zip(ffindnz(triA)[1:N]...)))
+    A = fsparse((map(coord -> coord[r], symA_coords) for r = 1:N)..., rand(length(symA_coords)), tuple((n for _ in 1:N)...))
+    # A = bspread("../../data/symmetric_n$(n)_sp$(sp).bsp.h5")
     B = rand(n, r)   
     C = zeros(r, n, n)
     C_ref = nothing

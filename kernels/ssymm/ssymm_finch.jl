@@ -7,7 +7,7 @@ B_T = Tensor(Dense(Dense(Element(0.0))))
 C = Tensor(Dense(Dense(Element(0.0))))
 C_T = Tensor(Dense(Dense(Element(0.0))))
 
-include("../../SySTeC/generated/ssymm.jl")
+include("../../generated/ssymm.jl")
 
 eval(@finch_kernel mode=:fast function ssymm_finch_ref_helper(C_T, A, B_T)
     C_T .= 0

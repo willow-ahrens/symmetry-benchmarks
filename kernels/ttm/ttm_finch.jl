@@ -7,7 +7,7 @@ B_T = Tensor(Dense(Dense(Element(0.0))))
 C = Tensor(Dense(Dense(Dense(Element(0.0)))))
 _C1 = Tensor(Dense(Dense(Dense(Element(0.0)))))
 
-include("../../SySTeC/generated/ttm.jl")
+include("../../generated/ttm.jl")
 
 eval(@finch_kernel mode=:fast function ttm_finch_ref_helper(C, A, B_T)
     C .= 0

@@ -1,3 +1,8 @@
+if abspath(PROGRAM_FILE) == @__FILE__
+    using Pkg
+    Pkg.activate(joinpath(@__DIR__, "../.."))
+    Pkg.instantiate()
+end
 using MatrixDepot
 using BenchmarkTools
 using ArgParse
@@ -8,7 +13,7 @@ using Printf
 using LinearAlgebra
 using Finch
 
-include("symv_mkl.jl")
+#include("symv_mkl.jl")
 include("ssymv_finch.jl")
 include("ssymv_taco.jl")
 
@@ -50,7 +55,7 @@ unsymmetric_oski = [
 
 methods = Dict(
     "ssymv_finch_ref" => ssymv_finch_ref,
-    "ssymv_mkl" => symv_mkl,
+#    "ssymv_mkl" => symv_mkl,
     "ssymv_finch_opt" => ssymv_finch_opt,
     "ssymv_taco" => ssymv_taco,
 )

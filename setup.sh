@@ -1,0 +1,2 @@
+make
+julia setup.jl

@@ -1,0 +1,26 @@
+
+language: c
+sudo: false
+
+os:
+  - linux
+  - osx
+
+compiler:
+  - gcc
+
+addons:
+  apt:
+    packages:
+      - libopenblas-dev
+      - liblapack-dev
+
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install homebrew/science/openblas; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install argp-standalone ; fi
+
+script:
+  - ./configure --precision=single && make && ./scripts/test.sh
+  - ./configure --precision=double && make && ./scripts/test.sh
+  - ./configure --debug --index-size=32 && make && ./scripts/test.sh

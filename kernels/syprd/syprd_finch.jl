@@ -6,7 +6,7 @@ diag = Tensor(Dense(Element(0.0)))
 x = Tensor(Dense(Element(0.0)))
 y = Scalar(0.0)
 
-include("../../SySTeC/generated/syprd.jl")
+include("../../generated/syprd.jl")
 
 eval(@finch_kernel mode=:fast function syprd_finch_ref_helper(y, A, x)
     y .= 0

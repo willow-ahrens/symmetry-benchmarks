@@ -4,7 +4,7 @@ using BenchmarkTools
 C = Tensor(SparseHash{2}(Element(0.0)))
 A = Tensor(Dense(SparseList(Element(0.0))))
 
-include("../../SySTeC/generated/ssyrk.jl")
+include("../../generated/ssyrk.jl")
 
 eval(@finch_kernel mode=:fast function ssyrk_finch_ref_helper(C, A)
     C .= 0

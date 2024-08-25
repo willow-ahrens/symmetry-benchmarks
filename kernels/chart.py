@@ -96,12 +96,12 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
 
 
 all_formats_chart("ssymv/ssymv_results.json", use_suitesparse_name, "ssymv_finch_ref", "ssymv_finch_opt",
-                ["ssymv_finch_opt", "ssymv_taco", "ssymv_mkl"],  
-                {"ssymv_finch_opt": "tab:blue", "ssymv_taco": "tab:orange", "ssymv_mkl": "tab:green"},
+                ["ssymv_finch_opt", "ssymv_taco"],#, "ssymv_mkl"],  
+                {"ssymv_finch_opt": "tab:blue", "ssymv_taco": "tab:orange"}, #, "ssymv_mkl": "tab:green"},
                 "SSYMV Performance",
                 "Speedup",
                 "Matrix Name",
-                ["SySTeC", "TACO", "MKL"],
+                ["SySTeC", "TACO"],#, "MKL"],
                 expected_speedup = 1, width=16)
 
 all_formats_chart("ssyrk/ssyrk_results.json", use_suitesparse_name, "ssyrk_ref", "ssyrk_opt",
