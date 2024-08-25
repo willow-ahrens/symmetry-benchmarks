@@ -10,15 +10,15 @@ COPY ./Makefile ./Makefile
 COPY ./deps/taco ./deps/taco
 COPY ./deps/splatt ./deps/splatt
 COPY ./deps/SparseRooflineBenchmark ./deps/SparseRooflineBenchmark
+COPY ./deps/SySTeC ./deps/SySTeC
 RUN make deps
+
+COPY ./Project.toml ./Project.toml
+COPY ./setup.jl ./setup.jl
+RUN make project
 
 COPY ./kernels ./kernels
 RUN make all
-
-COPY ./deps/SySTeC ./deps/SySTeC
-COPY ./Project.toml ./Project.toml
-COPY ./setup.jl ./setup.jl
-RUN julia setup.jl
 
 COPY ./run_SySTeC.jl ./run_SySTeC.jl
 RUN julia run_SySTeC.jl
