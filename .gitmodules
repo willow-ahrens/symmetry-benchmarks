@@ -1,3 +1,0 @@
-[submodule "deps/splatt"]
-	path = deps/splatt
-	url = https://github.com/ShadenSmith/splatt.git
