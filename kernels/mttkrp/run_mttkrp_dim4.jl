@@ -25,7 +25,7 @@ results = []
 for (r, sp) in rank_sparsity
     # triA = fsprand(n, n, n, n, sp)
     # A = [triA[sort([i, j, k, l])...] for i = 1:n, j = 1:n, k = 1:n, l = 1:n]
-    A = bspread("../../data/symmetric_4dim_n$(n)_sp$(sp).bsp.h5")
+    A = bspread("data/symmetric_4dim_n$(n)_sp$(sp).bsp.h5")
     B = rand(n, r)   
     C = zeros(n, r)
     C_ref = nothing
