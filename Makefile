@@ -31,6 +31,7 @@ $(SPARSE_BENCH):
 TACO_DIR = deps/taco
 TACO = deps/taco/build/lib/libtaco.*
 TACO_CXXFLAGS = $(CXXFLAGS) -I$(TACO_DIR)/include -I$(TACO_DIR)/src
+TACO_INCLUDES = -I$(TACO_DIR)/include -I$(TACO_DIR)/src
 TACO_LDLIBS = $(LDLIBS) -L$(TACO_DIR)/build/lib -ltaco -ldl
 
 $(TACO):
@@ -41,11 +42,11 @@ $(TACO):
 	make taco -j$(NPROC_VAL)
 
 SPLATT_DIR = deps/splatt
-SPLATT_BUILD = $(SPLATT_DIR)/build/$(uname -s)-$(uname -m)
-SPLATT = deps/splatt/$(SPLATT_BUILD_DIR)/lib/libsplatt.*
-SPLATT_CXXFLAGS = -O3 -mtune=corei7-avx -g0 -Wno-deprecated-declarations -DNDEBUG -std=c++17 -fopenmp
+SPLATT_BUILD_DIR = $(SPLATT_DIR)/build/$(shell uname -s)-$(shell uname -m)
+SPLATT = $(SPLATT_BUILD_DIR)/lib/libsplatt.*
+SPLATT_CXXFLAGS = -O3 -Wno-deprecated-declarations -DNDEBUG -std=c++17 -fopenmp
 SPLATT_INCLUDES = -I$(SPLATT_DIR)/include -I$(SPLATT_DIR)/src
-SPLATT_LDLIBS = -L$(SPLATT_BUILD_DIR)/lib -lsplatt
+SPLATT_LDLIBS = -L$(SPLATT_BUILD_DIR)/lib -lsplatt -llapack -lblas
 
 $(SPLATT):
 	cd $(SPLATT_DIR) ;\
@@ -59,7 +60,7 @@ SPLATT_KERNELS = $(MTTKRP_SPLATT_DIM3) $(MTTKRP_SPLATT_DIM4) $(MTTKRP_SPLATT_DIM
 
 KERNELS = $(TACO_KERNELS) $(SPLATT_KERNELS)
 
-all: KERNELS
+all: $(KERNELS)
 
 deps: $(SPARSE_BENCH) $(TACO) $(SPLATT) $(SYSTEC)
 
@@ -92,7 +93,7 @@ kernels/mttkrp/mttkrp_splatt_dim3: $(TACO) $(SPLATT) kernels/mttkrp/mttkrp_splat
 	$(CXX) $(SPLATT_CXXFLAGS) $(SPLATT_INCLUDES) $(TACO_INCLUDES) kernels/mttkrp/mttkrp_splatt_dim3.cpp $(SPLATT_LDLIBS) $(TACO_LDLIBS) -o kernels/mttkrp/mttkrp_splatt_dim3
 
 kernels/mttkrp/mttkrp_splatt_dim4: $(TACO) $(SPLATT) kernels/mttkrp/mttkrp_splatt_dim4.cpp
-	$(CXX) $(SPLATT_CXXFLAGS) $(SPLATT_INCLUDES)$(TACO_INCLUDES)  kernels/mttkrp/mttkrp_splatt_dim4.cpp $(SPLATT_LDLIBS) $(TACO_LDLIBS) -o kernels/mttkrp/mttkrp_splatt_dim4
+	$(CXX) $(SPLATT_CXXFLAGS) $(SPLATT_INCLUDES) $(TACO_INCLUDES)  kernels/mttkrp/mttkrp_splatt_dim4.cpp $(SPLATT_LDLIBS) $(TACO_LDLIBS) -o kernels/mttkrp/mttkrp_splatt_dim4
 
 kernels/mttkrp/mttkrp_splatt_dim5: $(TACO) $(SPLATT) kernels/mttkrp/mttkrp_splatt_dim5.cpp
 	$(CXX) $(SPLATT_CXXFLAGS) $(SPLATT_INCLUDES) $(TACO_INCLUDES) kernels/mttkrp/mttkrp_splatt_dim5.cpp $(SPLATT_LDLIBS) $(TACO_LDLIBS) -o kernels/mttkrp/mttkrp_splatt_dim5

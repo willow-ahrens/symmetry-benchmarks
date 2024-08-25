@@ -1,6 +1,7 @@
 FROM docker.io/library/julia:1.10.4-bullseye 
 
 RUN apt-get -y update 
+RUN apt-get -y install coreutils
 RUN apt-get -y install cmake
 RUN apt-get -y install gcc
 RUN apt-get -y install g++
@@ -16,6 +17,9 @@ COPY ./Makefile ./Makefile
 
 COPY ./deps ./deps
 RUN make deps
+
+COPY ./kernels ./kernels
+RUN make all
 
 # COPY spmv_taco.cpp ./spmv_taco.cpp
 # COPY spmspv_taco.cpp ./spmspv_taco.cpp
