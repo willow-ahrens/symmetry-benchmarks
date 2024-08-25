@@ -1,6 +1,17 @@
-include("symmetrize.jl")
+if abspath(PROGRAM_FILE) == @__FILE__
+    using Pkg
+    Pkg.activate(@__DIR__)
+    Pkg.instantiate()
+end
+
+using SySTeC
+using Finch
+using Finch.FinchNotation
 
 function generate_code()
+    output_dir = joinpath(@__DIR__, "generated")
+    mkpath(output_dir)
+
     y = :y
     x = :x
     A = :A
@@ -18,7 +29,7 @@ function generate_code()
     func_name = "ssymv_finch_opt_helper"
     symmetric_tns = [A]
     loop_order = [i, j]
-    filename = "./generated/ssymv.jl"
+    filename = joinpath(output_dir, "ssymv.jl")
     compile_symmetric_kernel(ex, func_name, symmetric_tns, loop_order, filename)
     println("Generated SySTeC SSYMV Kernel")
 
@@ -26,7 +37,7 @@ function generate_code()
     func_name = "syprd_finch_opt_helper"
     symmetric_tns = [A]
     loop_order = [i, j]
-    filename = "./generated/syprd.jl"
+    filename = joinpath(output_dir, "syprd.jl")
     compile_symmetric_kernel(ex, func_name, symmetric_tns, loop_order, filename)
     println("Generated SySTeC SYPRD Kernel")
 
@@ -34,7 +45,7 @@ function generate_code()
     func_name = "ssyrk_finch_opt_helper"
     symmetric_tns = []
     loop_order = [i, j, k]
-    filename = "./generated/ssyrk.jl"
+    filename = joinpath(output_dir, "ssyrk.jl")
     compile_symmetric_kernel(ex, func_name, symmetric_tns, loop_order, filename)
     println("Generated SySTeC SSYRK Kernel")
 
@@ -42,7 +53,7 @@ function generate_code()
     # func_name = "ssymm_finch_opt_helper"
     # symmetric_tns = [A]
     # loop_order = [j, i, k]
-    # filename = "./generated/ssymm.jl"
+    # filename = joinpath(output_dir, "ssymm.jl"
     # compile_symmetric_kernel(ex, func_name, symmetric_tns, loop_order, filename)
     # println("Generated SySTeC SSYMM Kernel")
 
@@ -50,7 +61,7 @@ function generate_code()
     func_name = "ttm_finch_opt_helper"
     symmetric_tns = [A]
     loop_order = [i, j, k, l]
-    filename = "./generated/ttm.jl"
+    filename = joinpath(output_dir, "ttm.jl")
     compile_symmetric_kernel(ex, func_name, symmetric_tns, loop_order, filename)
     println("Generated SySTeC TTM Kernel")
 
@@ -58,7 +69,7 @@ function generate_code()
     func_name = "mttkrp_dim3_finch_opt_helper"
     symmetric_tns = [A]
     loop_order = [j, i, k, l]
-    filename = "./generated/mttkrp_dim3.jl"
+    filename = joinpath(output_dir, "mttkrp_dim3.jl")
     compile_symmetric_kernel(ex, func_name, symmetric_tns, loop_order, filename)
     println("Generated SySTeC 3D MTTKRP Kernel")
 
@@ -66,7 +77,7 @@ function generate_code()
     func_name = "mttkrp_dim4_finch_opt_helper"
     symmetric_tns = [A]
     loop_order = [j, i, k, l, m]
-    filename = "./generated/mttkrp_dim4.jl"
+    filename = joinpath(output_dir, "mttkrp_dim4.jl")
     compile_symmetric_kernel(ex, func_name, symmetric_tns, loop_order, filename)
     println("Generated SySTeC 4D MTTKRP Kernel")
 
@@ -74,7 +85,7 @@ function generate_code()
     func_name = "mttkrp_dim5_finch_opt_helper"
     symmetric_tns = [A]
     loop_order = [j, i, k, l, m, n]
-    filename = "./generated/mttkrp_dim5.jl"
+    filename = joinpath(output_dir, "mttkrp_dim5.jl")
     compile_symmetric_kernel(ex, func_name, symmetric_tns, loop_order, filename)
     println("Generated SySTeC 5D MTTKRP Kernel")
 end

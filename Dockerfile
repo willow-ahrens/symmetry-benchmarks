@@ -1,25 +1,27 @@
-FROM docker.io/library/julia:1.10.4-bullseye 
+FROM julia:1.10.4-bullseye 
 
 RUN apt-get -y update 
-RUN apt-get -y install coreutils
-RUN apt-get -y install cmake
-RUN apt-get -y install gcc
-RUN apt-get -y install g++
-RUN apt-get -y install python
-RUN apt-get -y install python3
-RUN apt-get -y install git
-RUN apt-get -y install libblas-dev
-RUN apt-get -y install liblapack-dev
+RUN apt-get -y install coreutils cmake gcc g++ python python3 git libblas-dev liblapack-dev
 
 WORKDIR /symmetry-benchmarks
 
 COPY ./Makefile ./Makefile
 
-COPY ./deps ./deps
+COPY ./deps/taco ./deps/taco
+COPY ./deps/splatt ./deps/splatt
+COPY ./deps/SparseRooflineBenchmark ./deps/SparseRooflineBenchmark
 RUN make deps
 
 COPY ./kernels ./kernels
 RUN make all
+
+COPY ./deps/SySTeC ./deps/SySTeC
+COPY ./Project.toml ./Project.toml
+COPY ./setup.jl ./setup.jl
+RUN julia setup.jl
+
+COPY ./run_SySTeC.jl ./run_SySTeC.jl
+RUN julia run_SySTeC.jl
 
 # COPY spmv_taco.cpp ./spmv_taco.cpp
 # COPY spmspv_taco.cpp ./spmspv_taco.cpp
