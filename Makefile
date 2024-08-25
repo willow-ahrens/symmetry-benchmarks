@@ -60,21 +60,22 @@ $(SPLATT_CLONE):
 	git submodule update --init $(SPLATT_DIR)
 
 $(SPLATT):
-	./configure --prefix=$(SPLATT_DIR)
-	make
+	cd $(SPLATT_DIR) ;\
+	./configure --prefix=. ;\
+	make ;\
 	make install
 
-all: deps kernels
+TACO_KERNELS = $(SSYMV) $(SYPRD) $(SSYRK) $(TTM) $(MTTKRP_TACO_DIM3) $(MTTKRP_TACO_DIM4) $(MTTKRP_TACO_DIM5)
+
+SPLATT_KERNELS = $(MTTKRP_SPLATT_DIM3) $(MTTKRP_SPLATT_DIM4) $(MTTKRP_SPLATT_DIM5)
+
+KERNELS = $(TACO_KERNELS) $(SPLATT_KERNELS)
+
+all: KERNELS
 
 clone: $(SPARSE_CLONE) $(TACO_CLONE) $(SPLATT_CLONE)
 
 deps: $(SPARSE_BENCH) $(TACO) $(SPLATT)
-
-kernels: taco_kernels splatt_kernels
-
-taco_kernels: $(SSYMV) $(SYPRD) $(SSYRK) $(TTM) $(MTTKRP_TACO_DIM3) $(MTTKRP_TACO_DIM4) $(MTTKRP_TACO_DIM5)
-
-splatt_kernels: $(MTTKRP_SPLATT_DIM3) $(MTTKRP_SPLATT_DIM4) $(MTTKRP_SPLATT_DIM5)
 
 clean:
 	rm -f $(SSYMV) $(SYPRD) $(SSYRK) $(TTM) $(MTTKRP_TACO_DIM3) $(MTTKRP_TACO_DIM4) $(MTTKRP_TACO_DIM5) $(MTTKRP_SPLATT_DIM3) $(MTTKRP_SPLATT_DIM4) $(MTTKRP_SPLATT_DIM5)
