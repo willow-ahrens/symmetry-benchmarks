@@ -12,7 +12,7 @@ using SparseArrays
 using Printf
 using LinearAlgebra
 using Finch
-using HDF5
+#using HDF5
 
 include("ttm_finch.jl")
 include("ttm_taco.jl")
@@ -30,7 +30,7 @@ N = 3
 for (r, sp) in rank_sparsity
     triA = fsprand(n, n, n, sp)
     A_coords = unique(map(x->sort(collect(x)), zip(ffindnz(triA)[1:N]...)))
-    A = fsparse((map(coord -> coord[r], symA_coords) for r = 1:N)..., rand(length(symA_coords)), tuple((n for _ in 1:N)...))
+    A = fsparse((map(coord -> coord[r], A_coords) for r = 1:N)..., rand(length(A_coords)), tuple((n for _ in 1:N)...))
     # A = bspread("../../data/symmetric_n$(n)_sp$(sp).bsp.h5")
     B = rand(n, r)   
     C = zeros(r, n, n)

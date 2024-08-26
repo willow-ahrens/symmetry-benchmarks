@@ -95,73 +95,80 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
     plt.close()
 
 
-all_formats_chart("ssymv/ssymv_results.json", use_suitesparse_name, "ssymv_finch_ref", "ssymv_finch_opt",
-                ["ssymv_finch_opt", "ssymv_taco"],#, "ssymv_mkl"],  
-                {"ssymv_finch_opt": "tab:blue", "ssymv_taco": "tab:orange"}, #, "ssymv_mkl": "tab:green"},
-                "SSYMV Performance",
-                "Speedup",
-                "Matrix Name",
-                ["SySTeC", "TACO"],#, "MKL"],
-                expected_speedup = 1, width=16)
+if os.path.exists("ssymv/ssymv_results.json"):
+    all_formats_chart("ssymv/ssymv_results.json", use_suitesparse_name, "ssymv_finch_ref", "ssymv_finch_opt",
+                    ["ssymv_finch_opt", "ssymv_taco"],#, "ssymv_mkl"],  
+                    {"ssymv_finch_opt": "tab:blue", "ssymv_taco": "tab:orange"}, #, "ssymv_mkl": "tab:green"},
+                    "SSYMV Performance",
+                    "Speedup",
+                    "Matrix Name",
+                    ["SySTeC", "TACO"],#, "MKL"],
+                    expected_speedup = 1, width=16)
 
-all_formats_chart("ssyrk/ssyrk_results.json", use_suitesparse_name, "ssyrk_ref", "ssyrk_opt",
-                ["ssyrk_opt"],  
-                {"ssyrk_opt": "tab:blue"},
-                "SSYRK Performance",
-                "Speedup",
-                "Matrix Name",
-                ["SySTeC"],
-                expected_speedup = 2, width=16)
+if os.path.exists("ssyrk/ssyrk_results.json"):
+    all_formats_chart("ssyrk/ssyrk_results.json", use_suitesparse_name, "ssyrk_ref", "ssyrk_opt",
+                    ["ssyrk_opt"],  
+                    {"ssyrk_opt": "tab:blue"},
+                    "SSYRK Performance",
+                    "Speedup",
+                    "Matrix Name",
+                    ["SySTeC"],
+                    expected_speedup = 2, width=16)
 
-all_formats_chart("syprd/syprd_results.json", use_suitesparse_name, "syprd_ref", "syprd_opt",
-                ["syprd_opt", "syprd_taco"],  
-                {"syprd_opt": "tab:blue", "syprd_taco": "tab:orange"},
-                "SYPRD Performance",
-                "Speedup",
-                "Matrix Name",
-                ["SySTeC", "TACO"],
-                expected_speedup = 2, width=16)
+if os.path.exists("syprd/syprd_results.json"):
+    all_formats_chart("syprd/syprd_results.json", use_suitesparse_name, "syprd_ref", "syprd_opt",
+                    ["syprd_opt", "syprd_taco"],  
+                    {"syprd_opt": "tab:blue", "syprd_taco": "tab:orange"},
+                    "SYPRD Performance",
+                    "Speedup",
+                    "Matrix Name",
+                    ["SySTeC", "TACO"],
+                    expected_speedup = 2, width=16)
 
-all_formats_chart("ttm/ttm_results.json", use_sparsity_rank, "ttm_finch_ref", "ttm_finch_opt",
-                ["ttm_finch_opt", "ttm_taco"],  
-                {"ttm_finch_opt": "tab:blue", "ttm_taco": "tab:orange"},
-                "TTM Performance",
-                "Speedup",
-                "Sparsity, Numerical Rank",
-                ["SySTeC", "TACO"],
-                ordered = False,
-                width = 8,
-                expected_speedup = 2)
+if os.path.exists("ttm/ttm_results.json"):
+    all_formats_chart("ttm/ttm_results.json", use_sparsity_rank, "ttm_finch_ref", "ttm_finch_opt",
+                    ["ttm_finch_opt", "ttm_taco"],  
+                    {"ttm_finch_opt": "tab:blue", "ttm_taco": "tab:orange"},
+                    "TTM Performance",
+                    "Speedup",
+                    "Sparsity, Numerical Rank",
+                    ["SySTeC", "TACO"],
+                    ordered = False,
+                    width = 8,
+                    expected_speedup = 2)
 
-all_formats_chart("mttkrp/mttkrp_dim3_results.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
-                ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
-                {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:orange", "mttkrp_splatt": "tab:green"},
-                "3D MTTKRP Performance",
-                "Speedup",
-                "", #"Sparsity, Numerical Rank",
-                [], # ["SySTeC", "TACO", "SPLATT"], 
-                ordered = False,
-                width = 5,
-                expected_speedup = 2)
+if os.path.exists("mttkrp/mttkrp_dim3_results.json"):
+    all_formats_chart("mttkrp/mttkrp_dim3_results.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
+                    ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
+                    {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:orange", "mttkrp_splatt": "tab:green"},
+                    "3D MTTKRP Performance",
+                    "Speedup",
+                    "", #"Sparsity, Numerical Rank",
+                    ["SySTeC", "TACO", "SPLATT"], 
+                    ordered = False,
+                    width = 5,
+                    expected_speedup = 2)
 
-all_formats_chart("mttkrp/mttkrp_dim4_results.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
-                ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
-                {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:orange", "mttkrp_splatt": "tab:green"},
-                "4D MTTKRP Performance",
-                "", #"Speedup",
-                "", #"Sparsity, Numerical Rank",
-                [], # ["SySTeC", "TACO", "SPLATT"],
-                ordered = False,
-                width = 5,
-                expected_speedup = 6)
+if os.path.exists("mttkrp/mttkrp_dim4_results.json"):
+    all_formats_chart("mttkrp/mttkrp_dim4_results.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
+                    ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
+                    {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:orange", "mttkrp_splatt": "tab:green"},
+                    "4D MTTKRP Performance",
+                    "Speedup",
+                    "", #"Sparsity, Numerical Rank",
+                    ["SySTeC", "TACO", "SPLATT"],
+                    ordered = False,
+                    width = 5,
+                    expected_speedup = 6)
 
-all_formats_chart("mttkrp/mttkrp_dim5_results.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
-                ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
-                {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:orange", "mttkrp_splatt": "tab:green"},
-                "5D MTTKRP Performance",
-                "", #"Speedup",
-                "", #"Sparsity, Numerical Rank",
-                ["SySTeC", "TACO", "SPLATT"],
-                ordered = False,
-                width = 5,
-                expected_speedup = 24)
+if os.path.exists("mttkrp/mttkrp_dim5_results.json"):
+    all_formats_chart("mttkrp/mttkrp_dim5_results.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
+                    ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
+                    {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:orange", "mttkrp_splatt": "tab:green"},
+                    "5D MTTKRP Performance",
+                    "Speedup",
+                    "", #"Sparsity, Numerical Rank",
+                    ["SySTeC", "TACO", "SPLATT"],
+                    ordered = False,
+                    width = 5,
+                    expected_speedup = 24)

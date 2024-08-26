@@ -1,7 +1,7 @@
 using Finch
 using BenchmarkTools
 
-C = Tensor(SparseHash{2}(Element(0.0)))
+C = Tensor(SparseDict(SparseDict(Element(0.0))))
 A = Tensor(Dense(SparseList(Element(0.0))))
 
 include("../../generated/ssyrk.jl")
@@ -15,7 +15,7 @@ eval(@finch_kernel mode=:fast function ssyrk_finch_ref_helper(C, A)
 end)
 
 function ssyrk_finch_opt(C, A)
-    _C = Tensor(SparseHash{2}(Element(0.0)), C)
+    _C = Tensor(SparseDict(SparseDict(Element(0.0))), C)
     _A = Tensor(Dense(SparseList(Element(0.0))), A)
 
     time = @belapsed ssyrk_finch_opt_helper($_A, $_C)
@@ -36,7 +36,7 @@ function ssyrk_finch_opt(C, A)
 end
 
 function ssyrk_finch_ref(C, A)
-    _C = Tensor(SparseHash{2}(Element(0.0)), C)
+    _C = Tensor(SparseDict(SparseDict(Element(0.0))), C)
     _A = Tensor(Dense(SparseList(Element(0.0))), A)
 
     C = Ref{Any}()
