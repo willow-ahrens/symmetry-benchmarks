@@ -40,7 +40,7 @@ for (r, sp) in rank_sparsity
         @info "testing" key n sp r
         res = method(C, A, B)
         time = res.time
-        C_res = nothing
+        C_res = res.C
         nondiag_time = nothing
         diag_time = nothing
         try
@@ -49,11 +49,6 @@ for (r, sp) in rank_sparsity
         catch
             nondiag_time = nothing
             diag_time = nothing
-        end
-        try
-            C_res = res.C.C
-        catch
-            C_res = res.C
         end
         C_ref = something(C_ref, C_res)
         norm(C_res - C_ref)/norm(C_ref) < 0.1 || throw("Incorrect result via norm")

@@ -71,12 +71,7 @@ for (symmetric, dataset) in [(true, symmetric_oski), (false, unsymmetric_oski)]
             @info "testing" key mtx
             res = method(C, A, B)
             time = res.time
-            C_res = nothing
-            try
-                C_res = res.C.C
-            catch
-                C_res = res.C
-            end
+            C_res = res.C
             C_ref = something(C_ref, C_res)
             norm(C_res - C_ref)/norm(C_ref) < 0.1 || throw("Incorrect result via norm")
 
