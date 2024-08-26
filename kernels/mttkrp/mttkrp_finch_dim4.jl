@@ -32,7 +32,13 @@ function mttkrp_finch_ref_dim4(C, A, B)
         end 
     end  
 
-    time = @belapsed mttkrp_finch_ref_dim4_helper($_C_T, $_A, $_B_T)
+    _C_T2 = [_C_T]
+    _A2 = [_A]
+    _B_T2 = [_B_T]
+    time = @belapsed mttkrp_finch_ref_dim4_helper($_C_T2[], $_A2[], $_B_T2[])
+    empty!(_C_T2)
+    empty!(_A2)
+    empty!(_B_T2)
     _C = Tensor(Dense(Dense(Element(0.0))), C)
     @finch begin 
         _C .= 0
@@ -71,8 +77,18 @@ function mttkrp_finch_opt_dim4(C, A, B)
         end 
     end
 
+    _A_nondiag2 = [_A_nondiag]
+    _A_diag2 = [_A_diag]
+    _B_T2 = [_B_T]
+    _C_T_nondiag2 = [_C_T_nondiag]
+    _C_T_diag2 = [_C_T_diag]
     time_1 = @belapsed mttkrp_dim4_finch_opt_helper_base($_A_nondiag, $_B_T, $_C_T_nondiag)
     time_2 = @belapsed mttkrp_dim4_finch_opt_helper_edge($_A_diag, $_B_T, $_C_T_diag)
+    empty!( _A_nondiag2)
+    empty!(_A_diag2)
+    empty!(_B_T2)
+    empty!(_C_T_nondiag2)
+    empty!(_C_T_diag2)
     C_full = Tensor(Dense(Dense(Element(0.0))), C)
     @finch mode=:fast for i=_, j=_
         C_full[i, j] = _C_T_nondiag[j, i] + _C_T_diag[j, i]

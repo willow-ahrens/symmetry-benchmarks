@@ -21,9 +21,17 @@ function syprd_finch_ref(y, A, x)
     _A = Tensor(Dense(SparseList(Element(0.0))), A)
     _x = Tensor(Dense(Element(0.0)), x)
 
-    y = Ref{Any}()
-    time = @belapsed $y[] = syprd_finch_ref_helper($_y, $_A, $_x)
-    return (;time = time, y = y[])
+    y2 = [_y]
+    _A2 = [_A]
+    _x2 = [_x]
+    _y2 = [_y]
+    time = @belapsed $y2[] = syprd_finch_ref_helper($_y2[], $_A2[], $_x2[]).y
+    y = y2[]
+    empty!(y2)
+    empty!(_A2)
+    empty!(_x2)
+    empty!(_y2)
+    return (;time = time, y = y)
 end
 
 function syprd_finch_opt(y, A, x)
@@ -45,7 +53,17 @@ function syprd_finch_opt(y, A, x)
         end
     end
 
-    y = Ref{Any}()
-    time = @belapsed $y[] = syprd_finch_opt_helper($_A, $_d, $_x, $_y)
-    return (;time = time, y = y[])
+    y2 = [_y]
+    _A2 = [_A]
+    _x2 = [_x]
+    _y2 = [_y]
+    _d2 = [_d]
+    time = @belapsed $y2[] = syprd_finch_opt_helper($_A2[], $_d2[], $_x2[], $_y2[]).y
+    y = y2[]
+    empty!(y2)
+    empty!(_A2)
+    empty!(_x2)
+    empty!(_y2)
+    empty!(_d2)
+    return (;time = time, y = y)
 end

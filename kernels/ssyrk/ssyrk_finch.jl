@@ -18,7 +18,11 @@ function ssyrk_finch_opt(C, A)
     _C = Tensor(SparseDict(SparseDict(Element(0.0))), C)
     _A = Tensor(Dense(SparseList(Element(0.0))), A)
 
-    time = @belapsed ssyrk_finch_opt_helper($_A, $_C)
+    _A2 = [_A]
+    _C2 = [_C]
+    time = @belapsed ssyrk_finch_opt_helper($_A2[], $_C2[])
+    empty!(_A2)
+    empty!(_C2)
     C_full = Tensor(Dense(Dense(Element(0.0))))
     @finch mode=:fast begin
         C_full .= 0
@@ -39,7 +43,13 @@ function ssyrk_finch_ref(C, A)
     _C = Tensor(SparseDict(SparseDict(Element(0.0))), C)
     _A = Tensor(Dense(SparseList(Element(0.0))), A)
 
-    C = Ref{Any}()
-    time = @belapsed $C[] = ssyrk_finch_ref_helper($_C, $_A)
-    return (;time = time, C = C[])
+    C2 = [_C]
+    _A2 = [_A]
+    _C2 = [_C]
+    time = @belapsed $C2[] = ssyrk_finch_ref_helper($_C2[], $_A2[]).C
+    C = C2[]
+    empty!(C2)
+    empty!(_A2)
+    empty!(_C2)
+    return (;time = time, C = C)
 end
