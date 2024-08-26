@@ -11,7 +11,7 @@ function mttkrp_splatt_dim3_helper(args, A, B)
         fwrite(B_path, Tensor(Dense(Dense(Element(0.0))), B))
         taco_path = joinpath(@__DIR__, "../../deps/taco/build/lib")
         withenv("DYLD_FALLBACK_LIBRARY_PATH"=>"$taco_path", "LD_LIBRARY_PATH" => "$taco_path", "TACO_CFLAGS" => "-O3 -ffast-math -std=c99 -march=native -ggdb") do
-            mttkrp_path = joinpath(@__DIR__, "mttkrp_splatt")
+            mttkrp_path = joinpath(@__DIR__, "mttkrp_splatt_dim3")
             run(`$mttkrp_path -i $tmpdir -o $tmpdir $args`)
         end
         # run(`mttkrp_splatt -i $tmpdir -o $tmpdir`)
