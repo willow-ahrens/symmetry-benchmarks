@@ -23,7 +23,7 @@ function ssyrk_finch_opt(C, A)
     time = @belapsed ssyrk_finch_opt_helper($_A2[], $_C2[])
     empty!(_A2)
     empty!(_C2)
-    C_full = Tensor(Dense(Dense(Element(0.0))))
+    C_full = Tensor(SparseDict(SparseDict(Element(0.0))))
     @finch mode=:fast begin
         C_full .= 0
         for j=_, i=_

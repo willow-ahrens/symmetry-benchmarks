@@ -12,12 +12,13 @@ using SparseArrays
 using Printf
 using LinearAlgebra
 using Finch
+using Combinatorics
 
 include("mttkrp_finch_dim4.jl")
 include("mttkrp_taco_dim4.jl")
 include("mttkrp_splatt_dim4.jl")
 
-n = 100
+n = 30
 rank_sparsity = [(10, 0.1), (10, 0.0001), (100, 0.1), (100, 0.0001)]
 methods = Dict(
     "mttkrp_finch_ref" => mttkrp_finch_ref_dim4,
@@ -30,8 +31,21 @@ results = []
 N = 4
 for (r, sp) in rank_sparsity
     triA = fsprand(n, n, n, n, sp)
-    A_coords = unique(map(x->sort(collect(x)), zip(ffindnz(triA)[1:N]...)))
-    A = fsparse((map(coord -> coord[r], A_coords) for r = 1:N)..., rand(length(A_coords)), tuple((n for _ in 1:N)...))
+    tmp = Dict{NTuple{N, Int}, Float64}()
+    for coord in zip(ffindnz(triA)[1:N]...)
+        for perm in permutations(1:N)
+            tmp[coord[perm]] = coord[end]
+        end
+    end
+    symA_coords = [Vector{Int}() for _ in 1:N]
+    symA_vals = Float64[]
+    for (coord, val) in tmp
+        push!(symA_vals, val)
+        for r = 1:N
+            push!(symA_coords[r], coord[r])
+        end
+    end
+    A = fsparse(symA_coords..., symA_vals, tuple((n for _ in 1:N)...))
     # A = bspread("../../data/symmetric_4dim_n$(n)_sp$(sp).bsp.h5")
     B = rand(n, r)   
     C = zeros(n, r)
