@@ -129,12 +129,15 @@ The SySTeC compiler itself is contained in `deps/SySTeC/src/SySTeC.jl`.
 
 ## Run the experiements
 
-Running `sh run_benchmarks.sh` will run all the benchmarks. Benchmarks
-should take less than four hours total to run. The benchmarks may be run
-individually with the individual commands in the `run_benchmarks.sh`
-script. Results will be generated in the `kernels/` directory next to the
-corresponding experiment script. Corresponding reference results used in the
-publication are available with the filename suffix `_reference.json`.
+You can run the experiments with
+```
+sh run_benchmarks.sh
+```
+Benchmarks took us a little over an hour to run. The benchmarks may be
+run individually with the individual commands in the `run_benchmarks.sh` script.
+Results will be generated in the `kernels/` directory next to the corresponding
+experiment script. Corresponding reference results used in the publication are
+available with the filename suffix `_reference.json`.
 
 ## Plot the results
 
@@ -150,7 +153,7 @@ publication are available with the filename suffix `_reference.json`.
 
 # Evaluation and expected result
 
-You should expect to see similar results to the paper, notably SpMV (Figure 5), SYPRD (Figure 6), TTM (Figure 7), and MTTKRP (Figure 8).  We expect
+You should expect to see similar results to the paper, notably SSYMV (Figure 5), SYPRD (Figure 6), TTM (Figure 7), and MTTKRP (Figure 8).  We expect
 that the more dramatic speedups will be seen in the MTTKRP benchmarks, as the
 compiler is able to exploit the most symmetry in 5-dimensional kernels. Note
 that we have reduced the size of the tensors in TTM and MTTKRP to keep the
