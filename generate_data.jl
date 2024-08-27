@@ -5,15 +5,32 @@ if abspath(PROGRAM_FILE) == @__FILE__
 end
 
 using Finch
+using Combinatorics
 using HDF5
 
-for (n, N) = [(500, 3), (100, 4), (40, 5)]
+function symmetrize(A)
+end
+
+for (n, N) = [(100, 3), (30, 4), (15, 5)]
     for sp = [0.1, 0.01, 0.001, 0.0001]
         println("n = $n, N = $N, sp = $sp")
-        triA = fsprand([n for _ in 1:N]..., sp)
+        A = fsprand([n for _ in 1:N]..., sp)
         println("generated tensor")
-        symA_coords = unique(map(x->sort(collect(x)), zip(ffindnz(triA)[1:N]...)))
-        symA = fsparse((map(coord -> coord[r], symA_coords) for r = 1:N)..., rand(length(symA_coords)), tuple((n for _ in 1:N)...))
+        tmp = Dict{NTuple{N, Int}, Float64}()
+        for coord in zip(ffindnz(A)[1:N]...)
+            for perm in permutations(1:N)
+                tmp[coord[perm]] = coord[end]
+            end
+        end
+        symA_coords = [Vector{Int}() for _ in 1:N]
+        symA_vals = Float64[]
+        for (coord, val) in tmp
+            push!(symA_vals, val)
+            for r = 1:N
+                push!(symA_coords[r], coord[r])
+            end
+        end
+        symA = fsparse(symA_coords..., symA_vals, tuple((n for _ in 1:N)...))
         println("symmetrized tensor")
         fmt = Element(0.0)
         for _ = 1:N-1

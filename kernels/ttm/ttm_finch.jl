@@ -28,9 +28,17 @@ function ttm_finch_ref(C, A, B)
         end 
     end 
 
-    C = Ref{Any}()
-    time = @belapsed $C[] = ttm_finch_ref_helper($_C, $_A, $_B_T)
-    return (;time = time, C = C[])
+    C2 = [_C]
+    _C2 = [_C]
+    _A2 = [_A]
+    _B_T2 = [_B_T]
+    time = @belapsed $C2[] = ttm_finch_ref_helper($_C2[], $_A2[], $_B_T2[]).C
+    C = C2[]
+    empty!(C2)
+    empty!(_C2)
+    empty!(_A2)
+    empty!(_B_T2)
+    return (;time = time, C = C)
 end
 
 function ttm_finch_opt(C, A, B)
@@ -44,7 +52,13 @@ function ttm_finch_opt(C, A, B)
         end 
     end
 
-    time = @belapsed ttm_finch_opt_helper($_A, $_B_T, $_C)
+    _A2 = [_A]
+    _B_T2 = [_B_T]
+    _C2 = [_C]
+    time = @belapsed ttm_finch_opt_helper($_A2[], $_B_T2[], $_C2[])
+    empty!(_A2)
+    empty!(_B_T2)
+    empty!(_C2)
     C_full = Tensor(Dense(Dense(Dense(Element(0.0)))), _C)
     @finch mode=:fast for l=_, j=_, i=_
         if j > l

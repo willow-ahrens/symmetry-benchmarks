@@ -28,7 +28,13 @@ function ssymm_finch_opt(C, A, B)
         end 
     end
 
-    time = @belapsed ssymm_finch_opt_helper($_A, $_B_T, $_C_T)
+    _A2 = [_A]
+    _C_T2 = [_C_T]
+    _B_T2 = [_B_T]
+    time = @belapsed ssymm_finch_opt_helper($_A2[], $_B_T2[], $_C_T2[])
+    empty!(_A2)
+    empty!(_C_T2)
+    empty!(_B_T2)
     _C = Tensor(Dense(Dense(Element(0.0))), C)
     @finch mode=:fast begin 
         _C .= 0
@@ -50,7 +56,13 @@ function ssymm_finch_ref(C, A, B)
         end 
     end
 
-    time = @belapsed ssymm_finch_ref_helper($_C_T, $_A, $_B_T)
+    _A2 = [_A]
+    _C_T2 = [_C_T]
+    _B_T2 = [_B_T]
+    time = @belapsed ssymm_finch_ref_helper($_C_T2[], $_A2[], $_B_T2[])
+    empty!(_A2)
+    empty!(_C_T2)
+    empty!(_B_T2)
     _C = Tensor(Dense(Dense(Element(0.0))), C)
     @finch mode=:fast begin 
         _C .= 0
