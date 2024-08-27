@@ -4,8 +4,8 @@ julia kernels/ssymv/run_ssymv.jl
 echo "Benchmarking SYPRD kernel"
 julia kernels/syprd/run_syprd.jl
 
-echo "Benchmarking SSYRK kernel"
-julia kernels/ssyrk/run_ssyrk.jl
+#echo "Benchmarking SSYRK kernel"
+#julia kernels/ssyrk/run_ssyrk.jl
 
 echo "Benchmarking TTM kernel"
 julia kernels/ttm/run_ttm.jl

@@ -29,4 +29,4 @@ RUN make all
 COPY ./run_benchmarks.sh run_benchmarks.sh
 
 COPY ./charts ./charts
-COPY ./chart.py ./chart.py
+COPY ./plot_results.py ./plot_results.py

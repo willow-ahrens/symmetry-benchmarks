@@ -74,7 +74,7 @@ for (symmetric, dataset) in [(true, symmetric_oski), (false, unsymmetric_oski)]
             res = method(y, A, x)
             time = res.time
             # y_ref = something(y_ref, res.y.y[])
-            # norm(res.y.y - y_ref)/norm(y_ref) < 0.1 || throw("Incorrect result via norm")
+            # norm(res.y.y - y_ref)/norm(y_ref) < 0.1 || @warn("Incorrect result via norm")
 
             @info "results" time
             push!(results, OrderedDict(

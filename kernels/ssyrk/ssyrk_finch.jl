@@ -31,7 +31,7 @@ function ssyrk_finch_opt(C, A)
                 C_full[i, j] = _C[j, i]
             end
             if i <= j
-                C_full[i, j] = _C[i, j]
+                C_full[j, i] = _C[j, i]
             end
         end
     end

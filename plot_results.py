@@ -95,8 +95,8 @@ def make_grouped_bar_chart(labels, x_axis, data, colors = None, labeled_groups =
     plt.close()
 
 
-if os.path.exists("kernels/ssymv/ssymv_results.json"):
-    all_formats_chart("kernels/ssymv/ssymv_results.json", use_suitesparse_name, "ssymv_finch_ref", "ssymv_finch_opt",
+if os.path.exists("ssymv_results.json"):
+    all_formats_chart("ssymv_results.json", use_suitesparse_name, "ssymv_finch_ref", "ssymv_finch_opt",
                     ["ssymv_finch_opt", "ssymv_taco"],#, "ssymv_mkl"],  
                     {"ssymv_finch_opt": "tab:blue", "ssymv_taco": "tab:orange"}, #, "ssymv_mkl": "tab:green"},
                     "SSYMV Performance",
@@ -115,8 +115,8 @@ if os.path.exists("kernels/ssyrk/ssyrk_results.json"):
                     ["SySTeC"],
                     expected_speedup = 2, width=16)
 
-if os.path.exists("kernels/syprd/syprd_results.json"):
-    all_formats_chart("kernels/syprd/syprd_results.json", use_suitesparse_name, "syprd_ref", "syprd_opt",
+if os.path.exists("syprd_results.json"):
+    all_formats_chart("syprd_results.json", use_suitesparse_name, "syprd_ref", "syprd_opt",
                     ["syprd_opt", "syprd_taco"],  
                     {"syprd_opt": "tab:blue", "syprd_taco": "tab:orange"},
                     "SYPRD Performance",
@@ -125,8 +125,8 @@ if os.path.exists("kernels/syprd/syprd_results.json"):
                     ["SySTeC", "TACO"],
                     expected_speedup = 2, width=16)
 
-if os.path.exists("kernels/ttm/ttm_results.json"):
-    all_formats_chart("kernels/ttm/ttm_results.json", use_sparsity_rank, "ttm_finch_ref", "ttm_finch_opt",
+if os.path.exists("ttm_results.json"):
+    all_formats_chart("ttm_results.json", use_sparsity_rank, "ttm_finch_ref", "ttm_finch_opt",
                     ["ttm_finch_opt", "ttm_taco"],  
                     {"ttm_finch_opt": "tab:blue", "ttm_taco": "tab:orange"},
                     "TTM Performance",
@@ -137,8 +137,8 @@ if os.path.exists("kernels/ttm/ttm_results.json"):
                     width = 8,
                     expected_speedup = 2)
 
-if os.path.exists("kernels/mttkrp/mttkrp_dim3_results.json"):
-    all_formats_chart("kernels/mttkrp/mttkrp_dim3_results.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
+if os.path.exists("mttkrp_dim3_results.json"):
+    all_formats_chart("mttkrp_dim3_results.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
                     ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
                     {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:orange", "mttkrp_splatt": "tab:green"},
                     "3D MTTKRP Performance",
@@ -149,8 +149,8 @@ if os.path.exists("kernels/mttkrp/mttkrp_dim3_results.json"):
                     width = 5,
                     expected_speedup = 2)
 
-if os.path.exists("kernels/mttkrp/mttkrp_dim4_results.json"):
-    all_formats_chart("kernels/mttkrp/mttkrp_dim4_results.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
+if os.path.exists("mttkrp_dim4_results.json"):
+    all_formats_chart("mttkrp_dim4_results.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
                     ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
                     {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:orange", "mttkrp_splatt": "tab:green"},
                     "4D MTTKRP Performance",
@@ -161,8 +161,8 @@ if os.path.exists("kernels/mttkrp/mttkrp_dim4_results.json"):
                     width = 5,
                     expected_speedup = 6)
 
-if os.path.exists("kernels/mttkrp/mttkrp_dim5_results.json"):
-    all_formats_chart("kernels/mttkrp/mttkrp_dim5_results.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
+if os.path.exists("mttkrp_dim5_results.json"):
+    all_formats_chart("mttkrp_dim5_results.json", use_sparsity_rank, "mttkrp_finch_ref", "mttkrp_finch_opt",
                     ["mttkrp_finch_opt", "mttkrp_taco", "mttkrp_splatt"],  
                     {"mttkrp_finch_opt": "tab:blue", "mttkrp_taco": "tab:orange", "mttkrp_splatt": "tab:green"},
                     "5D MTTKRP Performance",
