@@ -135,11 +135,11 @@ You can run the experiments with
 ```
 sh run_benchmarks.sh
 ```
-Benchmarks took us a little over an hour to run. The benchmarks may be
-run individually with the individual commands in the `run_benchmarks.sh` script.
-Results will be generated in the `kernels/` directory next to the corresponding
-experiment script. Corresponding reference results used in the publication are
-available with the filename suffix `_reference.json`.
+Benchmarks took us a little over an hour to run. The benchmarks may be run
+individually with the individual commands in the `run_benchmarks.sh` script.
+Results will be generated in the toplevel directory. Corresponding reference
+results used in the publication are available with the filename suffix
+`_reference.json`.
 
 ## Plot the results
 
