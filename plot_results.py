@@ -5,6 +5,7 @@ import json
 import math
 from collections import defaultdict
 import re
+import os
 
 CHARTS_DIRECTORY = "charts/"
 

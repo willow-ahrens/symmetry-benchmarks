@@ -5,7 +5,9 @@ compilation and charts presented in the paper, with the exception of SSYRK
 (which takes too much time and memory), and MKL, which is too cumbersome to
 install. The datasets given to TTM and MTTKRP are smaller here than in the
 paper. We claim that all speedups should be within 1.5 of the expected, with few
-exceptions.
+exceptions.  We note that there was a bug in the TACO TTM results in the
+submitted version which has been fixed here, so the results may not match the
+submitted version, but do match the camera ready.
 
 ## Artifact check-list (meta-information)
 
@@ -14,7 +16,7 @@ exceptions.
 - Kernels. We compare against naive Finch, TACO, and SPLATT, all of which are
 included.
 - Compilation:  We require Finch v0.6.32 and Julia v1.10.4 to compile.
-- Binary:  We provide a Docker image \texttt{systec-artifact.tar} with all dependencies pre-installed.
+- Binary:  We provide a Docker image \texttt{systec-artifact.tar} with all dependencies pre-installed, which requires ARM hardware to run as it was built for Apple M2. If different hardware is used, one can build the docker image for that hardware using the provided instructions.
 - Data set:  Matrix datasets are downloaded automatically from \url{http://sparse.tamu.edu/}.
 - Run-time environment:  The artifact requires a Unix System (Mac or Linux).
 - Hardware:  We benchmark on an Intel Xeon E5-2695 v2 @ 2.40GHz, and our benchmarks run well on Apple M2.
@@ -40,7 +42,7 @@ We benchmark on an Intel Xeon E5-2695 v2 @ 2.40GHz, and our benchmarks run well 
 
 ## Software dependencies
 
-A Unix (Mac or Linux) system is required to run the artifact.
+A Unix (Mac or Linux) system is required to run the artifact. ARM hardware is required to use the pre-built docker image included with the artifact.
 
 Dependencies which must be downloaded are documented in \texttt{Dockerfile}:
 - Julia v1.10.4
