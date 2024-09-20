@@ -165,7 +165,7 @@ speedup as more time is spent on diagonal edge cases.
 If you are using our provided Docker image or using Docker to run the
 experiments, you can view the charts by copying them to the host.
 ```
-docker cp evaluator:/home/evaluator/systec/charts .
+docker cp evaluator:symmetry-benchmarks/charts .
 ```
 
 # Experiment customization
