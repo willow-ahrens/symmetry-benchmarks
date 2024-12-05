@@ -19,7 +19,7 @@ included.
 - Binary:  We provide a Docker image \texttt{systec-artifact.tar} with all dependencies pre-installed, which requires ARM hardware to run as it was built for Apple M2. If different hardware is used, one can build the docker image for that hardware using the provided instructions.
 - Data set:  Matrix datasets are downloaded automatically from \url{http://sparse.tamu.edu/}.
 - Run-time environment:  The artifact requires a Unix System (Mac or Linux).
-- Hardware:  We benchmark on an Intel Xeon E5-2695 v2 @ 2.40GHz, and our benchmarks run well on Apple M2.
+- Hardware:  We benchmark on an Intel Xeon CPU E5-2680 v3 running at 2.50GHz, and our benchmarks run well on Apple M2.
 - Execution:  We assume that TACO and SPLATT will run in single-threaded mode.
 - Metrics:  We measure runtime of all methods we test.
 - Output:  The numerical output of each kernel is collected and validated against comparison methods in the script itself. The experiments themselves output json files in the same subdirectory they run in. The artifact includes instructions to plot the results.
@@ -38,7 +38,7 @@ included.
 These experiments require at least 24GB of memory and 4GB disk space. A network
 connection is required to download the matrix datasets.
 
-We benchmark on an Intel Xeon E5-2695 v2 @ 2.40GHz, and our benchmarks run well on Apple M2.
+We benchmark on an Intel Xeon CPU E5-2680 v3 running at 2.50GHz, and our benchmarks run well on Apple M2.
 
 ## Software dependencies
 
