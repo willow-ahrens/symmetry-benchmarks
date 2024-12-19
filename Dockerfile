@@ -1,4 +1,4 @@
-FROM julia:1.10.4-bullseye 
+FROM docker.io/library/julia:1.10.4-bullseye 
 
 RUN apt-get -y update 
 RUN apt-get -y install coreutils cmake gcc g++ python python3 python3-pip python3-venv git libblas-dev liblapack-dev
