@@ -18,3 +18,6 @@ julia kernels/mttkrp/run_mttkrp_dim4.jl
 
 echo "Benchmarking 5D MTTKRP kernel"
 julia kernels/mttkrp/run_mttkrp_dim5.jl
+
+echo "Benchmarking Bellman kernel"
+julia kernels/mttkrp/run_bellman.jl

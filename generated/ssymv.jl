@@ -4,7 +4,7 @@ eval(@finch_kernel mode=:fast function ssymv_finch_opt_helper(A, diag, temp, x, 
         temp .= 0
         for i = _
             let A_ij = A[i, j]
-                y[i] += *(x[j], A_ij)
+                y[i] += *(A_ij, x[j])
                 temp[] += *(A_ij, x[i])
             end
         end

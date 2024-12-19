@@ -20,12 +20,26 @@ module SySTeC
     same symmetry group and can be permuted with each other.
     """
     function get_permutable_idxs(rhs, issymmetric)
-        permutable = Dict()
+        permutable = []
         Postwalk(@rule access(~tn::issymmetric, ~mode, ~idxs...) => begin 
-            permutable_idxs = get(permutable, tn.val, Set())
-            permutable[tn.val] = union(permutable_idxs, Set(idxs))
+            push!(permutable, collect(idxs))
         end)(rhs)
-        return [collect(idxs) for idxs in values(permutable)]
+        all_idxs = Set()
+        Postwalk(@rule access(~tn, ~mode, ~idxs...) => begin 
+            union!(all_idxs, collect(idxs))
+        end)(rhs)
+        for i in all_idxs
+            for j in all_idxs
+                if hash(i) < hash(j)
+                    replacer = Dict(i => j, j => i)
+                    rhs2 = Rewrite(Postwalk((x) -> get(replacer, x, nothing)))(rhs)
+                    if rhs == normalize(rhs2, issymmetric)
+                        push!(permutable, [i, j])
+                    end
+                end
+            end
+        end
+        return unique(permutable)
     end
 
 
@@ -1139,26 +1153,26 @@ module SySTeC
     end
 
 
-    function workspace_transform(ex)
+    function workspace_transform(ex, fill)
         loop_idxs = []
         all_temps = Dict()
         ex = Rewrite(Postwalk(@rule loop(~idx, ~dim, ~body) => begin
             push!(loop_idxs, idx)
             temps = Dict()
-            body = Rewrite(Postwalk(@rule assign(~lhs, +, ~rhs) => begin
+            body = Rewrite(Postwalk(@rule assign(~lhs, ~op, ~rhs) => begin
                 if @capture lhs access(~tn, ~mode, ~idxs...) 
                     if length(idxs) > 0 && isempty(intersect(Set(loop_idxs), Set(idxs)))
                         var = :temp
-                        temps[var] = lhs
+                        temps[var] = (lhs, op)
                         lhs = access(literal(var), literal(Reader()))
                     end
                 end
-                assign(lhs, +, rhs)
+                assign(lhs, ~op, rhs)
             end))(body)
             body = loop(idx, dim, body)
-            for (var, val) in pairs(temps)
-                body = block(declare(var, literal(0)), body)
-                all_temps[var] = val
+            for (var, (val, op)) in pairs(temps)
+                body = block(declare(var, literal(fill)), body)
+                all_temps[var] = (val, op)
             end
             body
         end))(ex)
@@ -1166,41 +1180,17 @@ module SySTeC
         loop_idxs = []
         ex = Rewrite(Prewalk(@rule loop(~idx, ~dim, ~body) => begin 
             push!(loop_idxs, idx)
-            for (var, val) in pairs(all_temps)
+            for (var, (val, op)) in pairs(all_temps)
                 @capture val access(~tn, ~mode, ~idxs...) 
                 if all(x -> x in loop_idxs, idxs)
                     if @capture body block(~s...)
-                        body = block(s..., assign(val, +, access(literal(var), literal(Reader()))))
+                        body = block(s..., assign(val, op, access(literal(var), literal(Reader()))))
                     end
                 end
             end
             loop(idx, dim, body)
         end))(ex)
         ex
-    end
-
-    function is_binary_op(ex)
-        issymmetric(tn) = false
-
-        if !(@capture ex assign(access(~lhs_tn, updater, ~idxs...), ~mode, ~rhs))
-            return false
-        end
-        
-        perms = _permute_indices(ex, idxs, permutations(idxs))
-        normalized = [normalize(perm, issymmetric) for perm in perms]
-        
-        for normalized_ex in normalized
-            @capture normalized_ex assign(~lhs, ~mode, ~rhs_normalized)
-            if normalize(rhs, issymmetric) != rhs_normalized
-                return false
-            end
-        end
-        return true
-    end
-
-    function triangularize_binary_op(ex)
-        @capture ex assign(access(~lhs_tn, updater, ~idxs...), ~mode, call(~op, access(~tn, reader, ~idxs_1...), access(~tn, reader, ~idxs_2...)))
-        return triangularize(ex, idxs)
     end
 
     function consolidate_updates(ex, permutable_idxs)
@@ -1248,7 +1238,7 @@ module SySTeC
     # TODO: transpose some tensors?
     # TODO: option to generate code to initialize tensors 
     # TODO: stress testing - for what sizes/complexities of tensors/kernels does this work?
-    function symmetrize(ex, symmetric_tns, loop_order=[], diagonals=true, include_lookup_table=false)
+    function symmetrize(ex, symmetric_tns, loop_order=[], diagonals=true, include_lookup_table=false, fill=0)
         # helper methods
         issymmetric(tn) = tn.val in symmetric_tns
 
@@ -1276,18 +1266,13 @@ module SySTeC
             base = consolidate_reads(base)
             diag = get_diag_assignment(ex, issymmetric, loop_order)
             ex = wrap_canonical_fill_mode(base, diag, loop_order)
-            ex = workspace_transform(ex)
+            ex = workspace_transform(ex, fill)
             # io = IOBuffer()
             # Finch.FinchNotation.display_statement(io, MIME"text/plain", ex, 0)
             # return String(take!(io))
             return ex, nothing, transposed, replicate, nothing
         end
 
-        if is_binary_op(ex)
-            ex = triangularize_binary_op(ex)
-            ex = insert_loops(ex, permutable_idxs, loop_order)
-            return ex, nothing, transposed, replicate, nothing
-        end
 
         conditions = get_conditions(permutable_idxs, diagonals)
         ex = add_updates(ex, conditions, permutable_idxs, issymmetric)
@@ -1334,7 +1319,7 @@ module SySTeC
         end
     end
 
-    function initialize(original_ex, symmetrized_ex, transposed, replicate)
+    function initialize(original_ex, symmetrized_ex, transposed, replicate, fill)
         @capture original_ex assign(~lhs, ~op, ~rhs)
         @capture lhs access(~output, ~idxs...)
         for (key, transposed_tn) in transposed
@@ -1352,7 +1337,7 @@ module SySTeC
 
         output = get(transposed, output, output)
 
-        return block(declare(output, literal(0)), symmetrized_ex, yieldbind(output))
+        return block(declare(output, literal(fill)), symmetrized_ex, yieldbind(output))
     end
 
     function remove_indices!(lst, indices)
@@ -1436,8 +1421,8 @@ module SySTeC
         return signature * prgm * ending
     end
 
-    function make_runnable(ex, ex_symmetrized, func_name, symmetric_tns, transposed, replicate)
-        prgm = initialize(ex, ex_symmetrized, transposed, replicate)
+    function make_runnable(ex, ex_symmetrized, func_name, symmetric_tns, transposed, replicate, fill = 0)
+        prgm = initialize(ex, ex_symmetrized, transposed, replicate, fill)
 
         io = IOBuffer()
         Finch.FinchNotation.display_statement(io, MIME"text/plain", prgm, 0)
@@ -1459,16 +1444,16 @@ module SySTeC
         return "lookup = [$formatted]"
     end
 
-    function compile_symmetric_kernel(ex, func_name, symmetric_tns, loop_order, filename)
-        ex_base, ex_edge, transposed, replicate, lookup_table = symmetrize(ex, symmetric_tns, loop_order) 
+    function compile_symmetric_kernel(ex, func_name, symmetric_tns, loop_order, filename, fill = 0)
+        ex_base, ex_edge, transposed, replicate, lookup_table = symmetrize(ex, symmetric_tns, loop_order, true, false, fill) 
         
         if ex_edge != nothing
-            prgm = make_runnable(ex, ex_base, func_name * "_base", symmetric_tns, transposed, replicate)
+            prgm = make_runnable(ex, ex_base, func_name * "_base", symmetric_tns, transposed, replicate, fill)
             write_to_file(prgm, filename, false)
-            prgm = make_runnable(ex, ex_edge, func_name * "_edge", symmetric_tns, transposed, replicate)
+            prgm = make_runnable(ex, ex_edge, func_name * "_edge", symmetric_tns, transposed, replicate, fill)
             write_to_file(prgm, filename, true)
         else
-            prgm = make_runnable(ex, ex_base, func_name, symmetric_tns, transposed, replicate)
+            prgm = make_runnable(ex, ex_base, func_name, symmetric_tns, transposed, replicate, fill)
             write_to_file(prgm, filename, false)
         end
 

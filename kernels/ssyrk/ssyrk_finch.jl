@@ -39,6 +39,31 @@ function ssyrk_finch_opt(C, A)
     return (;time = time, C = C_final)
 end
 
+function ssysyrk_finch_opt(C, A)
+    _C = Tensor(SparseDict(SparseDict(Element(0.0))), C)
+    _A = Tensor(Dense(SparseList(Element(0.0))), A)
+
+    _A2 = [_A]
+    _C2 = [_C]
+    time = @belapsed ssysyrk_finch_opt_helper($_A2[], $_C2[])
+    empty!(_A2)
+    empty!(_C2)
+    C_full = Tensor(SparseDict(SparseDict(Element(0.0))))
+    @finch mode=:fast begin
+        C_full .= 0
+        for j=_, i=_
+            if i > j
+                C_full[i, j] = _C[j, i]
+            end
+            if i <= j
+                C_full[j, i] = _C[j, i]
+            end
+        end
+    end
+    C_final = Tensor(Dense(SparseList(Element(0.0))), C_full)
+    return (;time = time, C = C_final)
+end
+
 function ssyrk_finch_ref(C, A)
     _C = Tensor(SparseDict(SparseDict(Element(0.0))), C)
     _A = Tensor(Dense(SparseList(Element(0.0))), A)

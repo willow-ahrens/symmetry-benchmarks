@@ -13,27 +13,25 @@ using Printf
 using LinearAlgebra
 using Finch
 
-include("ssyrk_finch.jl")
-include("ssyrk_taco.jl")
+include("bellman_finch.jl")
+include("bellman_taco.jl")
 
 symmetric_oski = [
-    # "Boeing/ct20stif", # OOM error
+    "Boeing/ct20stif",
     "Simon/olafu",
     "Boeing/bcsstk35",
     "Boeing/crystk02",
     "Boeing/crystk03",
-    # "Nasa/nasasrb", # OOM error
-    "Rothberg/3dtube",    "Simon/raefsky4",
-    # "Mulvey/finan512", # OOM error
-    "Pothen/pwt",
+    "Nasa/nasasrb",
+    "Simon/raefsky4",
+    "Mulvey/finan512",
     "Cote/vibrobox",
     "HB/saylr4",
 ]
 
-
 unsymmetric_oski = [
     "Simon/raefsky3",
-    # "Simon/venkat01", # OOM error
+    "Simon/venkat01", 
     "FIDAP/ex11",
     "Zitney/rdist1",
     "HB/orani678",
@@ -50,34 +48,35 @@ unsymmetric_oski = [
     "HB/lnsp3937",
     "HB/sherman5",
     "HB/sherman3",
-    # "Shyy/shyy161", # OOM error
+    "Shyy/shyy161", 
     "Wang/wang3",
 ]
 
 methods = Dict(
-    "ssysyrk_opt" => ssysyrk_finch_opt,
-    "ssyrk_opt" => ssyrk_finch_opt,
-    "ssyrk_ref" => ssyrk_finch_ref,
-    # "ssyrk_taco" => ssyrk_taco, # skip due to TACO sparse output problem
+    "bellman_finch_ref" => bellman_finch_ref,
+    "bellman_finch_opt" => bellman_finch_opt,
+    "bellman_taco" => bellman_taco,
 )
 
 results = []
 for (symmetric, dataset) in [(true, symmetric_oski), (false, unsymmetric_oski)]
     for mtx in dataset 
-        A = SparseMatrixCSC(matrixdepot(mtx)) 
-        (m, n) = size(A)
-        C = zeros(m, m)
-        C_ref = nothing
+        A = SparseMatrixCSC(matrixdepot(mtx))
+        if !symmetric
+            A += transpose(A)
+        end
+        A = set_fill_value!(Tensor(A), Inf)
+        (n, n) = size(A)
+        x = rand(n)
+        y = zeros(n)
+        y_ref = nothing
         for (key, method) in methods
-            if key == "ssysyrk_opt" && !symmetric
-                continue
-            end
             @info "testing" key mtx
-            res = method(C, A)
+            res = method(y, A, x)
             time = res.time
-            C_res = res.C
-            C_ref = something(C_ref, C_res)
-            norm(C_res - C_ref)/norm(C_ref) < 0.1 || @warn("Incorrect result via norm")
+            y_res = res.y
+            y_ref = something(y_ref, y_res)
+            norm(y_res - y_ref)/norm(y_ref) < 0.1 || @warn("Incorrect result via norm")
 
             @info "results" time
             push!(results, OrderedDict(
@@ -85,7 +84,7 @@ for (symmetric, dataset) in [(true, symmetric_oski), (false, unsymmetric_oski)]
                 "method" => key,
                 "matrix" => mtx,
             ))
-            write("ssyrk_results.json", JSON.json(results, 4))
+            write("bellman_results.json", JSON.json(results, 4))
         end
     end
 end

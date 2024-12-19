@@ -14,6 +14,7 @@ SSYMV = kernels/ssymv/ssymv_taco
 SYPRD = kernels/syprd/syprd_taco
 SSYRK = kernels/ssyrk/ssyrk_taco
 TTM = kernels/ttm/ttm_taco
+BELLMAN = kernels/bellman/bellman_taco
 MTTKRP_TACO_DIM3 = kernels/mttkrp/mttkrp_taco_dim3
 MTTKRP_TACO_DIM4 = kernels/mttkrp/mttkrp_taco_dim4
 MTTKRP_TACO_DIM5 = kernels/mttkrp/mttkrp_taco_dim5
@@ -37,7 +38,7 @@ SPLATT_CXXFLAGS = -O3 -Wno-deprecated-declarations -DNDEBUG -std=c++17 -fopenmp
 SPLATT_INCLUDES = -I$(SPLATT_DIR)/include -I$(SPLATT_DIR)/src
 SPLATT_LDLIBS = -L$(SPLATT_BUILD_DIR)/lib -lsplatt -llapack -lblas
 
-TACO_KERNELS = $(SSYMV) $(SYPRD) $(SSYRK) $(TTM) $(MTTKRP_TACO_DIM3) $(MTTKRP_TACO_DIM4) $(MTTKRP_TACO_DIM5)
+TACO_KERNELS = $(SSYMV) $(SYPRD) $(SSYRK) $(TTM) $(MTTKRP_TACO_DIM3) $(MTTKRP_TACO_DIM4) $(MTTKRP_TACO_DIM5) $(BELLMAN)
 
 SPLATT_KERNELS = $(MTTKRP_SPLATT_DIM3) $(MTTKRP_SPLATT_DIM4) $(MTTKRP_SPLATT_DIM5)
 
@@ -45,8 +46,10 @@ KERNELS = $(TACO_KERNELS) $(SPLATT_KERNELS)
 
 all: deps envs kernels
 
+taco: $(TACO_KERNELS)
+
 clean:
-	rm -f $(SSYMV) $(SYPRD) $(SSYRK) $(TTM) $(MTTKRP_TACO_DIM3) $(MTTKRP_TACO_DIM4) $(MTTKRP_TACO_DIM5) $(MTTKRP_SPLATT_DIM3) $(MTTKRP_SPLATT_DIM4) $(MTTKRP_SPLATT_DIM5)
+	rm -f $(SSYMV) $(SYPRD) $(SSYRK) $(TTM) $(MTTKRP_TACO_DIM3) $(MTTKRP_TACO_DIM4) $(MTTKRP_TACO_DIM5) $(MTTKRP_SPLATT_DIM3) $(MTTKRP_SPLATT_DIM4) $(MTTKRP_SPLATT_DIM5) $(BELLMAN)
 	rm -rf *.o *.dSYM *.trace
 
 envs: Manifest.toml poetry.lock
@@ -107,3 +110,6 @@ kernels/mttkrp/mttkrp_splatt_dim4: $(TACO) $(SPLATT) kernels/mttkrp/mttkrp_splat
 
 kernels/mttkrp/mttkrp_splatt_dim5: $(TACO) $(SPLATT) kernels/mttkrp/mttkrp_splatt_dim5.cpp
 	$(CXX) $(SPLATT_CXXFLAGS) $(SPLATT_INCLUDES) $(TACO_INCLUDES) kernels/mttkrp/mttkrp_splatt_dim5.cpp $(SPLATT_LDLIBS) $(TACO_LDLIBS) -o kernels/mttkrp/mttkrp_splatt_dim5
+
+kernels/bellman/bellman_taco: $(SPARSE_BENCH) $(TACO) kernels/bellman/bellman_taco.cpp
+	$(CXX) $(TACO_CXXFLAGS) -o $@ kernels/bellman/bellman_taco.cpp $(TACO_LDLIBS)

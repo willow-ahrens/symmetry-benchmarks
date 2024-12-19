@@ -88,6 +88,22 @@ function generate_code()
     filename = joinpath(output_dir, "mttkrp_dim5.jl")
     compile_symmetric_kernel(ex, func_name, symmetric_tns, loop_order, filename)
     println("Generated SySTeC 5D MTTKRP Kernel")
+
+    ex = @finch_program y[i] <<min>>= A[i, j] + x[j]
+    func_name = "bellman_finch_opt_helper"
+    symmetric_tns = [A]
+    loop_order = [i, j]
+    filename = joinpath(output_dir, "bellman.jl")
+    compile_symmetric_kernel(ex, func_name, symmetric_tns, loop_order, filename, Inf)
+    println("Generated Bellman Step")
+
+    ex = @finch_program B[i, j] += A[i, k] * A[j, k]
+    func_name = "ssysyrk_finch_opt_helper"
+    symmetric_tns = [A]
+    loop_order = [i, j, k]
+    filename = joinpath(output_dir, "ssysyrk.jl")
+    compile_symmetric_kernel(ex, func_name, symmetric_tns, loop_order, filename)
+    println("Generated ssysyrk")
 end
 
 generate_code()

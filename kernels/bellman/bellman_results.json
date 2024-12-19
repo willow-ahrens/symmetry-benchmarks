@@ -1,0 +1,27 @@
+[
+    {
+        "time": 0.000720125,
+        "method": "bellman_finch_opt",
+        "matrix": "Boeing/ct20stif"
+    },
+    {
+        "time": 0.000962292,
+        "method": "bellman_taco",
+        "matrix": "Boeing/ct20stif"
+    },
+    {
+        "time": 0.000958334,
+        "method": "bellman_finch_ref",
+        "matrix": "Boeing/ct20stif"
+    },
+    {
+        "time": 0.000247625,
+        "method": "bellman_finch_opt",
+        "matrix": "Simon/olafu"
+    },
+    {
+        "time": 0.00036475,
+        "method": "bellman_taco",
+        "matrix": "Simon/olafu"
+    }
+]
