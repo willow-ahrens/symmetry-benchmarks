@@ -2,9 +2,13 @@ using Finch
 using BenchmarkTools
 
 C = Tensor(SparseDict(SparseDict(Element(0.0))))
+_C1 = C
+_B1 = C
 A = Tensor(Dense(SparseList(Element(0.0))))
+using Finch.FinchNotation: and, or
 
 include("../../generated/ssyrk.jl")
+include("../../generated/ssysyrk.jl")
 
 eval(@finch_kernel mode=:fast function ssyrk_finch_ref_helper(C, A)
     C .= 0
@@ -23,7 +27,7 @@ function ssyrk_finch_opt(C, A)
     time = @belapsed ssyrk_finch_opt_helper($_A2[], $_C2[])
     empty!(_A2)
     empty!(_C2)
-    C_full = Tensor(SparseDict(SparseDict(Element(0.0))))
+    C_full = Tensor(Dense(SparseDict(Element(0.0))))
     @finch mode=:fast begin
         C_full .= 0
         for j=_, i=_
@@ -45,10 +49,12 @@ function ssysyrk_finch_opt(C, A)
 
     _A2 = [_A]
     _C2 = [_C]
+    println("running")
     time = @belapsed ssysyrk_finch_opt_helper($_A2[], $_C2[])
+    println("ran")
     empty!(_A2)
     empty!(_C2)
-    C_full = Tensor(SparseDict(SparseDict(Element(0.0))))
+    C_full = Tensor(Dense(SparseDict(Element(0.0))))
     @finch mode=:fast begin
         C_full .= 0
         for j=_, i=_

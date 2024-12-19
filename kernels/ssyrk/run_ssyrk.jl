@@ -55,14 +55,14 @@ unsymmetric_oski = [
 ]
 
 methods = Dict(
-    "ssysyrk_opt" => ssysyrk_finch_opt,
-    "ssyrk_opt" => ssyrk_finch_opt,
     "ssyrk_ref" => ssyrk_finch_ref,
+    "ssyrk_opt" => ssyrk_finch_opt,
+    "ssysyrk_opt" => ssysyrk_finch_opt,
     # "ssyrk_taco" => ssyrk_taco, # skip due to TACO sparse output problem
 )
 
 results = []
-for (symmetric, dataset) in [(true, symmetric_oski), (false, unsymmetric_oski)]
+for (symmetric, dataset) in [(true, symmetric_oski)]#, (false, unsymmetric_oski)]
     for mtx in dataset 
         A = SparseMatrixCSC(matrixdepot(mtx)) 
         (m, n) = size(A)
@@ -85,7 +85,7 @@ for (symmetric, dataset) in [(true, symmetric_oski), (false, unsymmetric_oski)]
                 "method" => key,
                 "matrix" => mtx,
             ))
-            write("ssyrk_results.json", JSON.json(results, 4))
+            write("ssyrk_results2.json", JSON.json(results, 4))
         end
     end
 end

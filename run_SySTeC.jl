@@ -89,7 +89,7 @@ function generate_code()
     compile_symmetric_kernel(ex, func_name, symmetric_tns, loop_order, filename, Inf)
     println("Generated Bellman Step")
 
-    ex = @finch_program B[i, j] += A[i, k] * A[j, k]
+    ex = @finch_program C[i, j] += A[i, k] * A[j, k]
     func_name = "ssysyrk_finch_opt_helper"
     symmetric_tns = [A]
     loop_order = [i, j, k]

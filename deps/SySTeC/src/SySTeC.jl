@@ -1282,7 +1282,8 @@ module SySTeC
         # TODO: grouping takes a LONG time - constrain when we actually do this?
         grouped, ex = group_sieves(ex, issymmetric, permutable_idxs)
         ex = triangularize(ex, permutable_idxs, diagonals)
-        if !grouped 
+        if false && !grouped 
+		println("foo")
             ex_2 = consolidate_conditions(ex)
             # TODO: maybe there is a better metric to determine which expression to keep?
             ex = conditions_count(ex_2) < conditions_count(ex) ? ex_2 : ex
